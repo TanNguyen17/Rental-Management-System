@@ -10,7 +10,8 @@
 
 - **Programming Language**: Java
 - **Frameworks**: JavaFX
-- **Database Management**: PostgreSQL // Put later
+- **Database Management**: PostgreSQL 
+- **Database Hosting**: // Add later 
 - **Build Tool**: Maven
 - **Testing**: JUnit 5
 - **Version Control**: Git and GitHub
@@ -36,7 +37,7 @@ Run the following commands in your terminal to clone the repository and navigate
 
 `git clone https://github.com/RMIT-Vietnam-Teaching/further-programming-assignment-2-build-a-backend-FTECH.git`
 
-`cd further-programming-assignment-2-build-a-backend-FTECH`
+`cd further-programming-assignment-2-build-a-backend-FTECH\rental-management-system`
 
 ### Configure the Database
 // Put later
