@@ -25,5 +25,6 @@
 
         <!-- Mapping with model class containing annotations -->
         <mapping class="com.yourcompany.rentalmanagement.model.Owner"/>
+        <mapping class="com.yourcompany.rentalmanagement.model.Host"/>
     </session-factory>
 </hibernate-configuration>

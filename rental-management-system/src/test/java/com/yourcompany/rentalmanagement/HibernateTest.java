@@ -13,12 +13,12 @@ public class HibernateTest {
 
     public static void main(String[] args) {
         Owner owner = new Owner();
-        owner.setUsername("Pankaj");
-        owner.setPassword("Pankaj");
-        owner.setEmail("Pankaj@gmail.com");
+        owner.setUsername("ManhTan");
+        owner.setPassword("ManhTan");
+        owner.setEmail("ManhTan@gmail.com");
         owner.setDob(LocalDate.now());
-        owner.setPhoneNumber("08235235");
-        owner.setProfileImage("fdagaga");
+        owner.setPhoneNumber("0859493676");
+        owner.setProfileImage("sfsfsfsf");
 
         Transaction transaction = null;
 
