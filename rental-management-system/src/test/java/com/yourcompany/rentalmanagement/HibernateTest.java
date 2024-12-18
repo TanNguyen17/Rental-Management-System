@@ -1,5 +1,6 @@
 package com.yourcompany.rentalmanagement;
 
+import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.model.Owner;
 import org.hibernate.Session;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
@@ -12,50 +13,53 @@ import java.util.List;
 public class HibernateTest {
 
     public static void main(String[] args) {
-        Owner owner = new Owner();
-        owner.setUsername("ManhTan");
-        owner.setPassword("ManhTan");
-        owner.setEmail("ManhTan@gmail.com");
-        owner.setDob(LocalDate.now());
-        owner.setPhoneNumber("0859493676");
-        owner.setProfileImage("sfsfsfsf");
+        Host host = new Host();
+        host.setUsername("hahah");
+        host.setPassword("hahah");
+        host.setEmail("hahah@gmail.com");
+        host.setDob(LocalDate.now());
+        host.setPhoneNumber("0859433676");
+        host.setProfileImage("hahah");
 
         Transaction transaction = null;
 
         //Get Session
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        try (session) {
+//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+//            transaction = session.beginTransaction();
+//
+//            //Save the Model object
+//            session.persist(host);
+//            //Commit transaction
+//            transaction.commit();
+//            System.out.println("Owner ID=" + host.getId());
+//
+//        } catch (Exception e) {
+//            if (transaction != null) {
+//                transaction.rollback();
+//            }
+//            e.printStackTrace();
+//        }
+//
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+            List<Owner> owners = session.createQuery("from Owner", Owner.class).list();
+            List<Host> hosts = session.createQuery("from Host", Host.class).list();
+            owners.forEach(o -> {
+                o.addHost(hosts.get(0));
+                hosts.get(0).addOwner(o);
+                System.out.println("Print owner name : " + o.getUsername());
+            });
 
-            //Save the Model object
-            session.persist(owner);
-            //Commit transaction
+//            session.persist(owners);
+//            session.persist(hosts);
             transaction.commit();
-            System.out.println("Owner ID=" + owner.getId());
 
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-        } finally {
-            session.close();
         }
-//
-//        try (session) {
-//            List<Owner> books = session.createQuery("from Owner", Owner.class).list();
-//            books.forEach(o -> {
-//                System.out.println("Print book name : " + o.getUsername());
-//            });
-//            session.close();
-//        } catch (Exception e) {
-//            if (transaction != null) {
-//                transaction.rollback();
-//            }
-//            e.printStackTrace();
-//        } finally {
-//            session.close();
-//        }
     }
 
 }
