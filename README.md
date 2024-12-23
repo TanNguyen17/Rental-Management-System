@@ -9,9 +9,9 @@
 ## Technologies Used
 
 - **Programming Language**: Java
-- **Frameworks**: JavaFX
+- **Frameworks**: JavaFX (with Scene Builder)
 - **Database Management**: PostgreSQL 
-- **Database Hosting**: // Add later 
+- **Database Hosting**: Neon 
 - **Build Tool**: Maven
 - **Testing**: JUnit 5
 - **Version Control**: Git and GitHub
@@ -61,6 +61,10 @@ We follow a structured branching strategy to facilitate collaboration among our 
 - **Main Branch (`main`)**
 - **Development Branch (`dev`)**
 - **Feature Branches (`feature/{username}-{task}`)**
+
+
+## Report
+// Put later
 
 ## Video Demonstration
 
