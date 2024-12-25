@@ -28,6 +28,10 @@ public class Tenant extends User{
         this.rentalAgreements = rentalAgreements;
     }
 
+    public void addRentalAgreement(RentalAgreement rentalAgreement) {
+        rentalAgreements.add(rentalAgreement);
+    }
+
     public List<Payment> getPayments() {
         return payments;
     }

@@ -2,6 +2,7 @@ package com.yourcompany.rentalmanagement.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +20,7 @@ public class RentalAgreement {
     private RentalAgreement.rentalAgreementStatus status;
 
     @Column(name = "contractDate", nullable = false)
-    private Date contractDate;
+    private LocalDate contractDate;
 
     @Column(name = "rentingFee", nullable = false)
     private double rentingFee;
@@ -91,6 +92,30 @@ public class RentalAgreement {
 
     public void setResidentialProperty(ResidentialProperty residentialProperty) {
         this.residentialProperty = residentialProperty;
+    }
+
+    public rentalAgreementStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(rentalAgreementStatus status) {
+        this.status = status;
+    }
+
+    public LocalDate getContractDate() {
+        return contractDate;
+    }
+
+    public void setContractDate(LocalDate contractDate) {
+        this.contractDate = contractDate;
+    }
+
+    public double getRentingFee() {
+        return rentingFee;
+    }
+
+    public void setRentingFee(double rentingFee) {
+        this.rentingFee = rentingFee;
     }
 
     public enum rentalAgreementStatus {
