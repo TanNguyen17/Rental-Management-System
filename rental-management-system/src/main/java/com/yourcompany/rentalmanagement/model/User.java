@@ -29,6 +29,10 @@ public class User {
     @Column(name = "profileImage")
     private String profileImage;
 
+    @OneToOne(targetEntity = Address.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
+
     public long getId() {
         return id;
     }

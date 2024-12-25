@@ -2,6 +2,7 @@ package com.yourcompany.rentalmanagement.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -14,32 +15,24 @@ public class Tenant extends User{
             joinColumns = { @JoinColumn(name = "tenant_id") },
             inverseJoinColumns = { @JoinColumn(name = "rental_agreement_id") }
     )
-    private Set<RentalAgreement> rentalAgreements;
+    private List<RentalAgreement> rentalAgreements = new ArrayList<>();
 
     @OneToMany(mappedBy = "tenant", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH })
-    private Set<Payment> payments;
+    private List<Payment> payments = new ArrayList<>();
 
-    public Set<RentalAgreement> getRentalAgreements() {
+    public List<RentalAgreement> getRentalAgreements() {
         return rentalAgreements;
     }
 
-    public void setRentalAgreements(Set<RentalAgreement> rentalAgreements) {
+    public void setRentalAgreements(List<RentalAgreement> rentalAgreements) {
         this.rentalAgreements = rentalAgreements;
     }
 
-    public void addRentalAgreement(RentalAgreement rentalAgreement) {
-        rentalAgreements.add(rentalAgreement);
-    }
-
-    public Set<Payment> getPayments() {
+    public List<Payment> getPayments() {
         return payments;
     }
 
-    public void setPayments(Set<Payment> payments) {
+    public void setPayments(List<Payment> payments) {
         this.payments = payments;
-    }
-
-    public void addPayment(Payment payment) {
-        payments.add(payment);
     }
 }

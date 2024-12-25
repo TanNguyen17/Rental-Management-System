@@ -26,16 +26,16 @@ public class Payment {
     @JoinColumn(name = "tenant_id", nullable = false)
     private Tenant tenant;
 
-    @ManyToOne(targetEntity = RentalAgreement.class)
-    @JoinColumn(name = "rental_agreement_id", nullable = false)
+    @OneToOne(targetEntity = RentalAgreement.class)
+    @JoinColumn(name = "rental_agreement_id")
     private RentalAgreement rentalAgreement;
 
-    public RentalAgreement getRentalAgreement() {
-        return rentalAgreement;
+    public long getId() {
+        return id;
     }
 
-    public void setRentalAgreement(RentalAgreement rentalAgreement) {
-        this.rentalAgreement = rentalAgreement;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Tenant getTenant() {
@@ -46,43 +46,11 @@ public class Payment {
         this.tenant = tenant;
     }
 
-    public String getStatus() {
-        return status;
+    public RentalAgreement getRentalAgreement() {
+        return rentalAgreement;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    public String getReceipt() {
-        return receipt;
-    }
-
-    public void setReceipt (String receipt) {
-        this.receipt = receipt;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public void setRentalAgreement(RentalAgreement rentalAgreement) {
+        this.rentalAgreement = rentalAgreement;
     }
 }
