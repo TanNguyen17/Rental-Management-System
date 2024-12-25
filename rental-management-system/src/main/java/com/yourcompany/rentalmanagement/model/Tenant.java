@@ -22,4 +22,24 @@ public class Tenant extends User{
     public Set<RentalAgreement> getRentalAgreements() {
         return rentalAgreements;
     }
+
+    public void setRentalAgreements(Set<RentalAgreement> rentalAgreements) {
+        this.rentalAgreements = rentalAgreements;
+    }
+
+    public void addRentalAgreement(RentalAgreement rentalAgreement) {
+        rentalAgreements.add(rentalAgreement);
+    }
+
+    public Set<Payment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(Set<Payment> payments) {
+        this.payments = payments;
+    }
+
+    public void addPayment(Payment payment) {
+        payments.add(payment);
+    }
 }

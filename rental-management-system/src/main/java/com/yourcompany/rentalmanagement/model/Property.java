@@ -24,11 +24,9 @@ public class Property {
     @JoinColumn(name = "owner_id", nullable = false)
     private Owner owner;
 
-    @OneToOne(targetEntity = RentalAgreement.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "rental_agreement_id", referencedColumnName = "id")
-    private RentalAgreement rentalAgreement;
-
-    @ManyToOne
+//    @OneToOne(targetEntity = RentalAgreement.class, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "rental_agreement_id", referencedColumnName = "id")
+//    private RentalAgreement rentalAgreement;
 
     public long getId() {
         return id;
@@ -70,13 +68,13 @@ public class Property {
         this.owner = owner;
     }
 
-    public RentalAgreement getRentalAgreement() {
-        return rentalAgreement;
-    }
-
-    public void setRentalAgreement(RentalAgreement rentalAgreement) {
-        this.rentalAgreement = rentalAgreement;
-    }
+//    public RentalAgreement getRentalAgreement() {
+//        return rentalAgreement;
+//    }
+//
+//    public void setRentalAgreement(RentalAgreement rentalAgreement) {
+//        this.rentalAgreement = rentalAgreement;
+//    }
 
     public enum propertyStatus {
         AVAILABLE,

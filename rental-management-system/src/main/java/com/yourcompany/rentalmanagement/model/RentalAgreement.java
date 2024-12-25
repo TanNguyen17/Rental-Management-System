@@ -54,6 +54,13 @@ public class RentalAgreement {
         this.tenants.addAll(tenants);
     }
 
+    public void addTenant(Tenant tenant) {
+        if (tenant == null) {
+            this.tenants = new HashSet<>();
+        }
+        this.tenants.add(tenant);
+    }
+
     public Owner getOwner() {
         return owner;
     }
