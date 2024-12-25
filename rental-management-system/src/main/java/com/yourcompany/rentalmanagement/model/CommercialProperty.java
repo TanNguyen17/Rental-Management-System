@@ -2,7 +2,7 @@ package com.yourcompany.rentalmanagement.model;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,7 +18,7 @@ public class CommercialProperty extends Property {
     private double squareFootage;
 
     @ManyToMany(mappedBy = "commercialProperties")
-    private Set<Host> hosts;
+    private List<Host> hosts;
 
     public String getBusinessType() {
         return businessType;
@@ -44,11 +44,15 @@ public class CommercialProperty extends Property {
         this.squareFootage = squareFootage;
     }
 
-    public Set<Host> getHosts() {
+    public List<Host> getHosts() {
         return hosts;
     }
 
-    public void setHosts(Set<Host> hosts) {
+    public void setHosts(List<Host> hosts) {
         this.hosts = hosts;
+    }
+
+    public void addHost(Host host) {
+        hosts.add(host);
     }
 }

@@ -20,15 +20,16 @@ public class Property {
     @Column(name = "status", nullable = false)
     private propertyStatus status;
 
+    @Column(name = "imageLink")
+    private String imageLink;
+
     @ManyToOne(targetEntity = Owner.class, cascade = {CascadeType.ALL})
     @JoinColumn(name = "owner_id", nullable = false)
     private Owner owner;
 
     @OneToOne(targetEntity = RentalAgreement.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "rental_agreement_id", referencedColumnName = "id")
+    @JoinColumn(name = "rental_agreement_id", referencedColumnName = "id", unique = true, nullable = false)
     private RentalAgreement rentalAgreement;
-
-    @ManyToOne
 
     public long getId() {
         return id;
@@ -76,6 +77,14 @@ public class Property {
 
     public void setRentalAgreement(RentalAgreement rentalAgreement) {
         this.rentalAgreement = rentalAgreement;
+    }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
     }
 
     public enum propertyStatus {

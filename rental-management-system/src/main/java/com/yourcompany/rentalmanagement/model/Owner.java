@@ -1,9 +1,16 @@
 package com.yourcompany.rentalmanagement.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinTable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Owner", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
@@ -15,16 +22,16 @@ public class Owner extends User {
             joinColumns = { @JoinColumn(name = "owner_id") },
             inverseJoinColumns = { @JoinColumn(name = "host_id") }
     )
-    private Set<Host> hosts = new HashSet<>();
+    private List<Host> hosts = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RentalAgreement> rentalAgreements = new HashSet<>();
+    private List<RentalAgreement> rentalAgreements = new ArrayList<>();
 
-    public Set<Host> getHosts() {
+    public List<Host> getHosts() {
         return hosts;
     }
 
-    public void setHosts(Set<Host> hosts) {
+    public void setHosts(List<Host> hosts) {
         this.hosts = hosts;
     }
 
@@ -32,11 +39,15 @@ public class Owner extends User {
         hosts.add(host);
     }
 
-    public Set<RentalAgreement> getRentalAgreements() {
+    public List<RentalAgreement> getRentalAgreements() {
         return rentalAgreements;
     }
 
-    public void setRentalAgreements(Set<RentalAgreement> rentalAgreements) {
+    public void setRentalAgreements(List<RentalAgreement> rentalAgreements) {
         this.rentalAgreements = rentalAgreements;
+    }
+
+    public void addRentalAgreement(RentalAgreement rentalAgreement) {
+        rentalAgreements.add(rentalAgreement);
     }
 }

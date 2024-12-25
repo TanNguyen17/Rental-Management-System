@@ -1,15 +1,22 @@
 package com.yourcompany.rentalmanagement.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinTable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Host", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
 public class Host extends User {
     @ManyToMany(mappedBy = "hosts", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Owner> owners;
+    private List<Owner> owners = new ArrayList<>();
 
     @ManyToMany(targetEntity = ResidentialProperty.class, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
@@ -17,7 +24,7 @@ public class Host extends User {
             joinColumns = { @JoinColumn(name = "host_id") },
             inverseJoinColumns = { @JoinColumn(name = "residential_property_id") }
     )
-    private Set<ResidentialProperty> residentialProperties;
+    private List<ResidentialProperty> residentialProperties = new ArrayList<>();
 
     @ManyToMany(targetEntity = CommercialProperty.class, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
@@ -25,50 +32,52 @@ public class Host extends User {
             joinColumns = { @JoinColumn(name = "host_id"), },
             inverseJoinColumns = { @JoinColumn(name = "commercial_property_id") }
     )
-    private Set<CommercialProperty> commercialProperties;
+    private List<CommercialProperty> commercialProperties;
 
     @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
-    private Set<RentalAgreement> rentalAgreements;
+    private List<RentalAgreement> rentalAgreements = new ArrayList<>();
 
-    public Set<Owner> getOwners() {
+    public List<Owner> getOwners() {
         return owners;
     }
 
-    public void setOwners(Set<Owner> owners) {
-        if (owners == null) {
-            this.owners = new HashSet<>();
-        }
-        this.owners.addAll(owners);
+    public void setOwners(List<Owner> owners) {
+        this.owners = owners;
     }
 
     public void addOwner(Owner owner) {
-        if (owners == null) {
-            owners = new HashSet<>();
-        }
         owners.add(owner);
     }
 
-    public Set<RentalAgreement> getRentalAgreements() {
+    public List<RentalAgreement> getRentalAgreements() {
         return rentalAgreements;
     }
 
-    public void setRentalAgreements(Set<RentalAgreement> rentalAgreements) {
+    public void setRentalAgreements(List<RentalAgreement> rentalAgreements) {
         this.rentalAgreements = rentalAgreements;
     }
 
-    public Set<CommercialProperty> getCommercialProperties() {
+    public  List<CommercialProperty> getCommercialProperties() {
         return commercialProperties;
     }
 
-    public void setCommercialProperties(Set<CommercialProperty> commercialProperties) {
+    public void setCommercialProperties(List<CommercialProperty> commercialProperties) {
         this.commercialProperties = commercialProperties;
     }
 
-    public Set<ResidentialProperty> getResidentialProperties() {
+    public void addCommercialProperty(CommercialProperty commercialProperty) {
+        commercialProperties.add(commercialProperty);
+    }
+
+    public List<ResidentialProperty> getResidentialProperties() {
         return residentialProperties;
     }
 
-    public void setResidentialProperties(Set<ResidentialProperty> residentialProperties) {
+    public void setResidentialProperties(List<ResidentialProperty> residentialProperties) {
         this.residentialProperties = residentialProperties;
+    }
+
+    public void addResidentialProperty(ResidentialProperty residentialProperty) {
+        residentialProperties.add(residentialProperty);
     }
 }
