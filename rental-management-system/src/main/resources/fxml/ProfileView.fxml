@@ -30,7 +30,12 @@
             </HBox>
             <HBox prefHeight="100.0" prefWidth="780.0">
                <children>
-                  <ImageView fitHeight="143.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <HBox prefHeight="143.0" prefWidth="259.0">
+                     <children>
+                        <ImageView fx:id="profileImage" fitHeight="143.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <Button fx:id="uploadImageButton" mnemonicParsing="false" onAction="#handleUploadImage" prefHeight="25.0" prefWidth="195.0" text="Upload" />
+                     </children>
+                  </HBox>
                   <VBox alignment="CENTER_LEFT" prefHeight="108.0" prefWidth="173.0">
                      <children>
                         <Text fx:id="username" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
@@ -48,7 +53,7 @@
                   <Insets />
                </VBox.margin>
             </HBox>
-            <TabPane prefHeight="479.0" prefWidth="522.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane prefHeight="479.0" prefWidth="1037.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab text="Profile">
                      <content>
@@ -142,10 +147,13 @@
                                        </children>
                                     </VBox>
                                  </children>
+                                 <VBox.margin>
+                                    <Insets top="20.0" />
+                                 </VBox.margin>
                               </HBox>
                               <HBox prefHeight="46.0" prefWidth="880.0">
                                  <children>
-                                    <Button fx:id="submitButton" mnemonicParsing="false" onAction="#submit" text="Button">
+                                    <Button fx:id="submitButton" mnemonicParsing="false" onAction="#submit" text="Update">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -163,9 +171,9 @@
                      <content>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <HBox prefHeight="531.0" prefWidth="1037.0">
+                              <HBox prefHeight="531.0" prefWidth="1037.0" spacing="40.0">
                                  <children>
-                                    <VBox prefHeight="213.0" prefWidth="366.0">
+                                    <VBox prefHeight="236.0" prefWidth="366.0">
                                        <children>
                                           <VBox prefHeight="122.0" prefWidth="499.0">
                                              <children>
@@ -189,6 +197,10 @@
                                                 <Text fx:id="errorPhoneNumber111" fill="RED" />
                                              </children>
                                           </VBox>
+                                       </children>
+                                    </VBox>
+                                    <VBox prefHeight="449.0" prefWidth="291.0">
+                                       <children>
                                           <VBox prefHeight="122.0" prefWidth="499.0">
                                              <children>
                                                 <Label text="City">
@@ -200,15 +212,107 @@
                                                 <Text fx:id="errorPhoneNumber1111" fill="RED" />
                                              </children>
                                           </VBox>
+                                          <VBox prefHeight="122.0" prefWidth="499.0">
+                                             <children>
+                                                <Label text="State">
+                                                   <font>
+                                                      <Font size="20.0" />
+                                                   </font>
+                                                </Label>
+                                                <ChoiceBox fx:id="cityChoice1" prefWidth="150.0" />
+                                                <Text fx:id="errorPhoneNumber11111" fill="RED" />
+                                             </children>
+                                          </VBox>
                                        </children>
                                     </VBox>
-                                    <VBox prefHeight="449.0" prefWidth="291.0" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="46.0" prefWidth="880.0">
+                                 <children>
+                                    <Button fx:id="submitButton1" mnemonicParsing="false" onAction="#submit" text="Button">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Button>
                                  </children>
                               </HBox>
                            </children>
                         </VBox>
                      </content>
                 </Tab>
+                  <Tab text="Password">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <HBox prefHeight="531.0" prefWidth="1037.0" spacing="40.0">
+                                 <children>
+                                    <VBox prefHeight="236.0" prefWidth="366.0">
+                                       <children>
+                                          <VBox prefHeight="122.0" prefWidth="499.0">
+                                             <children>
+                                                <Label text="Street Number">
+                                                   <font>
+                                                      <Font size="20.0" />
+                                                   </font>
+                                                </Label>
+                                                <TextField prefHeight="37.0" prefWidth="366.0" />
+                                                <Text fx:id="errorPhoneNumber111" fill="RED" />
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="122.0" prefWidth="499.0">
+                                             <children>
+                                                <Label text="Street Name">
+                                                   <font>
+                                                      <Font size="20.0" />
+                                                   </font>
+                                                </Label>
+                                                <TextField prefHeight="37.0" prefWidth="366.0" />
+                                                <Text fx:id="errorPhoneNumber1111" fill="RED" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </VBox>
+                                    <VBox prefHeight="449.0" prefWidth="291.0">
+                                       <children>
+                                          <VBox prefHeight="122.0" prefWidth="499.0">
+                                             <children>
+                                                <Label text="City">
+                                                   <font>
+                                                      <Font size="20.0" />
+                                                   </font>
+                                                </Label>
+                                                <ChoiceBox fx:id="cityChoice1" prefWidth="150.0" />
+                                                <Text fx:id="errorPhoneNumber11111" fill="RED" />
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="122.0" prefWidth="499.0">
+                                             <children>
+                                                <Label text="State">
+                                                   <font>
+                                                      <Font size="20.0" />
+                                                   </font>
+                                                </Label>
+                                                <ChoiceBox fx:id="cityChoice11" prefWidth="150.0" />
+                                                <Text fx:id="errorPhoneNumber111111" fill="RED" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="46.0" prefWidth="880.0">
+                                 <children>
+                                    <Button fx:id="submitButton11" mnemonicParsing="false" onAction="#submit" text="Button">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </content>
+                  </Tab>
               </tabs>
             </TabPane>
          </children>

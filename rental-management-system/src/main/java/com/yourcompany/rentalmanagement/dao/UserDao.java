@@ -7,4 +7,5 @@ import java.util.Objects;
 public interface UserDao {
     public void loadData();
     public <T extends Object> T getUserById(long id);
+    public void updateUserImage(long id, String imageLink);
 }
