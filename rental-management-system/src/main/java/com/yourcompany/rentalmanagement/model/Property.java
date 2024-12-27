@@ -10,8 +10,9 @@ public class Property {
     @Column(name = "id", unique = true ,updatable = false, nullable = false, length = 10)
     private long id;
 
-    @Column(name = "address", unique = true , nullable = false)
-    private String address;
+    @OneToOne(targetEntity = Address.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id", nullable = false ,referencedColumnName = "id")
+    private Address address;
 
     @Column(name = "price", nullable = false)
     private double price;
@@ -28,7 +29,7 @@ public class Property {
     private Owner owner;
 
     @OneToOne(targetEntity = RentalAgreement.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "rental_agreement_id", referencedColumnName = "id", unique = true, nullable = false)
+    @JoinColumn(name = "rental_agreement_id", referencedColumnName = "id", unique = true)
     private RentalAgreement rentalAgreement;
 
     public long getId() {
@@ -39,11 +40,11 @@ public class Property {
         this.id = id;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
@@ -77,14 +78,6 @@ public class Property {
 
     public void setRentalAgreement(RentalAgreement rentalAgreement) {
         this.rentalAgreement = rentalAgreement;
-    }
-
-    public String getImageLink() {
-        return imageLink;
-    }
-
-    public void setImageLink(String imageLink) {
-        this.imageLink = imageLink;
     }
 
     public enum propertyStatus {
