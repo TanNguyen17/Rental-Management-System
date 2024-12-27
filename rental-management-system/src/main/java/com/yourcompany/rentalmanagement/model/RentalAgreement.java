@@ -1,20 +1,10 @@
 package com.yourcompany.rentalmanagement.model;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "Rental_Agreement", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
@@ -23,6 +13,16 @@ public class RentalAgreement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false, length = 10)
     private long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private RentalAgreement.rentalAgreementStatus status;
+
+    @Column(name = "contractDate", nullable = false)
+    private Date contractDate;
+
+    @Column(name = "rentingFee", nullable = false)
+    private double rentingFee;
 
     @ManyToOne(targetEntity = Owner.class, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "owner_id")
@@ -33,7 +33,13 @@ public class RentalAgreement {
     private Host host;
 
     @ManyToMany(mappedBy = "rentalAgreements")
-    private Set<Tenant> tenants;
+    private List<Tenant> tenants = new ArrayList<>();
+
+    @OneToOne(mappedBy = "rentalAgreement")
+    private CommercialProperty commercialProperty;
+
+    @OneToOne(mappedBy = "rentalAgreement")
+    private ResidentialProperty residentialProperty;
 
     public long getId() {
         return id;
@@ -43,15 +49,12 @@ public class RentalAgreement {
         this.id = id;
     }
 
-    public Set<Tenant> getTenants() {
+    public List<Tenant> getTenants() {
         return tenants;
     }
 
-    public void setTenants(Set<Tenant> tenants) {
-        if (tenants == null) {
-            this.tenants = new HashSet<>();
-        }
-        this.tenants.addAll(tenants);
+    public void setTenants(List<Tenant> tenants) {
+        this.tenants = tenants;
     }
 
     public Owner getOwner() {
@@ -68,5 +71,27 @@ public class RentalAgreement {
 
     public void setHost(Host host) {
         this.host = host;
+    }
+
+    public CommercialProperty getCommercialProperty() {
+        return commercialProperty;
+    }
+
+    public void setCommercialProperty(CommercialProperty commercialProperty) {
+        this.commercialProperty = commercialProperty;
+    }
+
+    public ResidentialProperty getResidentialProperty() {
+        return residentialProperty;
+    }
+
+    public void setResidentialProperty(ResidentialProperty residentialProperty) {
+        this.residentialProperty = residentialProperty;
+    }
+
+    public enum rentalAgreementStatus {
+        NEW,
+        ACTIVE,
+        COMPLETED
     }
 }

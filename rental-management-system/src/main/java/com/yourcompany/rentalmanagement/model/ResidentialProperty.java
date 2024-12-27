@@ -2,6 +2,8 @@ package com.yourcompany.rentalmanagement.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,7 +20,7 @@ public class ResidentialProperty extends Property {
     private boolean petFriendliness;
 
     @ManyToMany(mappedBy = "residentialProperties")
-    private Set<Host> hosts;
+    private List<Host> hosts = new ArrayList<>();
 
     public int getNumberOfBedrooms() {
         return numberOfBedrooms;
@@ -44,11 +46,11 @@ public class ResidentialProperty extends Property {
         this.petFriendliness = petFriendliness;
     }
 
-    public Set<Host> getHosts() {
+    public List<Host> getHosts() {
         return hosts;
     }
 
-    public void setHosts(Set<Host> hosts) {
+    public void setHosts(List<Host> hosts) {
         this.hosts = hosts;
     }
 }

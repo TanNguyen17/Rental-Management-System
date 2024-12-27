@@ -57,6 +57,13 @@
             <version>42.7.4</version>
         </dependency>
 
+<!--        Material FX-->
+        <dependency>
+            <groupId>io.github.palexdev</groupId>
+            <artifactId>materialfx</artifactId>
+            <version>11.17.0</version>
+        </dependency>
+
         <!-- You guys can add other dependencies like Hibernate, PostgreSQL, etc., mng nho update readme as well nhe -->
     </dependencies>
 
