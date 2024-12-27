@@ -12,6 +12,8 @@ import jakarta.persistence.JoinTable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.System.*;
+
 @Entity
 @Table(name = "Host", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
 public class Host extends User {
@@ -79,5 +81,10 @@ public class Host extends User {
 
     public void addResidentialProperty(ResidentialProperty residentialProperty) {
         residentialProperties.add(residentialProperty);
+    }
+
+    @Override
+    public String toString() {
+        return this.getUsername();
     }
 }

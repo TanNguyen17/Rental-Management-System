@@ -24,6 +24,7 @@
 
 
         <!-- Mapping with model class containing annotations -->
+        <mapping class="com.yourcompany.rentalmanagement.model.Address"/>
         <mapping class="com.yourcompany.rentalmanagement.model.Owner"/>
         <mapping class="com.yourcompany.rentalmanagement.model.Host"/>
         <mapping class="com.yourcompany.rentalmanagement.model.Tenant"/>
