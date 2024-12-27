@@ -14,15 +14,22 @@ public class PaymentDaoImp implements PaymentDao {
     private List<Payment> payments = new ArrayList<Payment>();
 
     public PaymentDaoImp() {
-        loadData();
+
     }
 
     @Override
-    public void loadData() {
+    public List<Payment> loadData() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             payments = session.createQuery("from Payment").list();
-
+            transaction.commit();
+            
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
         }
+        return payments;
     }
 }

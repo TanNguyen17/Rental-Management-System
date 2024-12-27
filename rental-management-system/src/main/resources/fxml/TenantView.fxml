@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.PaymentViewController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.TenantView">
    <top>
       <VBox alignment="CENTER" prefHeight="102.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
@@ -33,7 +33,7 @@
           <TableColumn fx:id="method" prefWidth="75.0" text="METHOD" />
             <TableColumn fx:id="amount" prefWidth="75.0" text="AMOUNT" />
             <TableColumn fx:id="status" prefWidth="75.0" text="STATUS" />
-            <TableColumn prefWidth="75.0" text="ACTIONS" />
+            <TableColumn fx:id="actions" prefWidth="75.0" text="ACTIONS" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
