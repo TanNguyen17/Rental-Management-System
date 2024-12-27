@@ -12,11 +12,19 @@ public class UserController {
         user = ownerDaoImp.getUserById(id);
         return user;
     }
-    public void updateUserProfile(Map<String, Object> data) {
-
+    public void updateProfile(long userId, Map<String, Object> data) {
+        ownerDaoImp.updateProfile(userId, data);
     }
 
-    public void updateUserImageLink(long userId, String imageLink) {
+    public void updateAddress(long userId, Map<String, Object> data) {
+        ownerDaoImp.updateAddress(userId, data);
+    }
+
+    public void updateImageLink(long userId, String imageLink) {
         ownerDaoImp.updateUserImage(userId, imageLink);
+    }
+
+    public void updatePassword(long userId, String password) {
+        ownerDaoImp.updatePassword(userId, password);
     }
 }

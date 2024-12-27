@@ -23,5 +23,5 @@ public class CloudinaryService {
         return (String) uploadResult.get("secure_url");
     }
 
-//    public String reloadImage
+
 }

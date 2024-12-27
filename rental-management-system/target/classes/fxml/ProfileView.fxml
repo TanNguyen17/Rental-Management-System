@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
@@ -153,7 +154,7 @@
                               </HBox>
                               <HBox prefHeight="46.0" prefWidth="880.0">
                                  <children>
-                                    <Button fx:id="submitButton" mnemonicParsing="false" onAction="#submit" text="Update">
+                                    <Button fx:id="updateProfileButton" mnemonicParsing="false" onAction="#updateProfile" text="Update">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -182,8 +183,12 @@
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField prefHeight="37.0" prefWidth="366.0" />
-                                                <Text fx:id="errorPhoneNumber11" fill="RED" />
+                                                <TextField fx:id="streetNumber" prefHeight="35.0" prefWidth="366.0">
+                                                   <VBox.margin>
+                                                      <Insets right="100.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <Text fx:id="errorStreetNumber" fill="RED" />
                                              </children>
                                           </VBox>
                                           <VBox prefHeight="122.0" prefWidth="499.0">
@@ -193,8 +198,12 @@
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField prefHeight="37.0" prefWidth="366.0" />
-                                                <Text fx:id="errorPhoneNumber111" fill="RED" />
+                                                <TextField fx:id="streetName" prefHeight="35.0" prefWidth="366.0">
+                                                   <VBox.margin>
+                                                      <Insets right="100.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <Text fx:id="errorStreetName" fill="RED" />
                                              </children>
                                           </VBox>
                                        </children>
@@ -208,7 +217,7 @@
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <ChoiceBox fx:id="cityChoice" prefWidth="150.0" />
+                                                <ChoiceBox fx:id="cityChoice" prefHeight="35.0" prefWidth="150.0" />
                                                 <Text fx:id="errorPhoneNumber1111" fill="RED" />
                                              </children>
                                           </VBox>
@@ -219,17 +228,20 @@
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <ChoiceBox fx:id="cityChoice1" prefWidth="150.0" />
+                                                <ChoiceBox fx:id="cityChoice1" prefHeight="35.0" prefWidth="150.0" />
                                                 <Text fx:id="errorPhoneNumber11111" fill="RED" />
                                              </children>
                                           </VBox>
                                        </children>
                                     </VBox>
                                  </children>
+                                 <VBox.margin>
+                                    <Insets top="20.0" />
+                                 </VBox.margin>
                               </HBox>
                               <HBox prefHeight="46.0" prefWidth="880.0">
                                  <children>
-                                    <Button fx:id="submitButton1" mnemonicParsing="false" onAction="#submit" text="Button">
+                                    <Button fx:id="updateAddressButton" mnemonicParsing="false" onAction="#updateAddress" text="Update">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -250,59 +262,60 @@
                                        <children>
                                           <VBox prefHeight="122.0" prefWidth="499.0">
                                              <children>
-                                                <Label text="Street Number">
+                                                <Label text="Enter Current Password">
                                                    <font>
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField prefHeight="37.0" prefWidth="366.0" />
-                                                <Text fx:id="errorPhoneNumber111" fill="RED" />
+                                                <HBox prefHeight="23.0" prefWidth="366.0">
+                                                   <children>
+                                                      <MFXPasswordField fx:id="currentPassword" prefHeight="28.0" prefWidth="270.0" />
+                                                   </children>
+                                                </HBox>
+                                                <Text fx:id="errorCurrentPassword" fill="RED" />
                                              </children>
                                           </VBox>
                                           <VBox prefHeight="122.0" prefWidth="499.0">
                                              <children>
-                                                <Label text="Street Name">
+                                                <Label text="Enter New Password">
                                                    <font>
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField prefHeight="37.0" prefWidth="366.0" />
-                                                <Text fx:id="errorPhoneNumber1111" fill="RED" />
+                                                <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="366.0" spacing="10.0">
+                                                   <children>
+                                                      <MFXPasswordField fx:id="newPassword" prefHeight="49.0" prefWidth="270.0" />
+                                                   </children>
+                                                </HBox>
+                                                <Text fx:id="errorNewPassword" fill="RED" />
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="122.0" prefWidth="499.0">
+                                             <children>
+                                                <Label text="Confirm New Password">
+                                                   <font>
+                                                      <Font size="20.0" />
+                                                   </font>
+                                                </Label>
+                                                <HBox prefHeight="38.0" prefWidth="366.0">
+                                                   <children>
+                                                      <MFXPasswordField fx:id="confirmPassword" prefHeight="35.0" prefWidth="270.0" />
+                                                   </children>
+                                                </HBox>
+                                                <Text fx:id="errorConfirmPassword" fill="RED" />
                                              </children>
                                           </VBox>
                                        </children>
                                     </VBox>
-                                    <VBox prefHeight="449.0" prefWidth="291.0">
-                                       <children>
-                                          <VBox prefHeight="122.0" prefWidth="499.0">
-                                             <children>
-                                                <Label text="City">
-                                                   <font>
-                                                      <Font size="20.0" />
-                                                   </font>
-                                                </Label>
-                                                <ChoiceBox fx:id="cityChoice1" prefWidth="150.0" />
-                                                <Text fx:id="errorPhoneNumber11111" fill="RED" />
-                                             </children>
-                                          </VBox>
-                                          <VBox prefHeight="122.0" prefWidth="499.0">
-                                             <children>
-                                                <Label text="State">
-                                                   <font>
-                                                      <Font size="20.0" />
-                                                   </font>
-                                                </Label>
-                                                <ChoiceBox fx:id="cityChoice11" prefWidth="150.0" />
-                                                <Text fx:id="errorPhoneNumber111111" fill="RED" />
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </VBox>
+                                    <VBox prefHeight="449.0" prefWidth="291.0" />
                                  </children>
+                                 <VBox.margin>
+                                    <Insets top="20.0" />
+                                 </VBox.margin>
                               </HBox>
                               <HBox prefHeight="46.0" prefWidth="880.0">
                                  <children>
-                                    <Button fx:id="submitButton11" mnemonicParsing="false" onAction="#submit" text="Button">
+                                    <Button fx:id="updatePasswordButton" mnemonicParsing="false" onAction="#updatePassword" text="Update">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
