@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement;
 
+import com.yourcompany.rentalmanagement.dao.HostDaoImp;
+import com.yourcompany.rentalmanagement.dao.OwnerDaoImp;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,6 +18,8 @@ public class MainApp extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
+        //launch(args);
+        HostDaoImp hostDao = new HostDaoImp();
+        hostDao.loadData();
     }
 }

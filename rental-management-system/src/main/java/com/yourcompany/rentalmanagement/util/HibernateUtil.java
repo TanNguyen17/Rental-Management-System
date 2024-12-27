@@ -15,7 +15,7 @@ public class HibernateUtil {
         if (sessionFactory == null) {
             try {
                 // Create registry
-                registry = new StandardServiceRegistryBuilder().configure().build();
+                registry = new StandardServiceRegistryBuilder().configure("hibernate/hibernate.cfg.xml").build();
 
                 // Create MetadataSources
                 MetadataSources sources = new MetadataSources(registry);
@@ -42,3 +42,5 @@ public class HibernateUtil {
         }
     }
 }
+
+
