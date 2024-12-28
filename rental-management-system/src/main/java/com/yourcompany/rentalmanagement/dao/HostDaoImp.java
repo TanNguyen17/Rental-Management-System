@@ -13,7 +13,6 @@ public class HostDaoImp implements UserDao{
     private Transaction transaction;
 
     public HostDaoImp() {
-        loadData();
         transaction = null;
     }
 
@@ -21,7 +20,8 @@ public class HostDaoImp implements UserDao{
     public void loadData() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             hosts = session.createQuery("from Host", Host.class).list();
-            hosts.forEach(System.out::println);
+            //hosts.forEach(System.out::println);
+            System.out.println(hosts.size());
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();

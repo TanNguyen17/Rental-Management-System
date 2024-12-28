@@ -94,4 +94,9 @@ public class RentalAgreement {
         ACTIVE,
         COMPLETED
     }
+
+    @Override
+    public String toString() {
+        return ("id = " + id);
+    }
 }

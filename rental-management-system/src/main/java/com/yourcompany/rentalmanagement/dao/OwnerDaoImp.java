@@ -13,7 +13,6 @@ public class OwnerDaoImp implements UserDao {
     private Transaction transaction;
 
     public OwnerDaoImp() {
-        loadData();
         transaction = null;
     }
 
