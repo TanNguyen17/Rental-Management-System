@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import io.github.palexdev.materialfx.controls.MFXTableView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
@@ -19,7 +18,7 @@
    <center>
       <Pane BorderPane.alignment="CENTER">
          <BorderPane.margin>
-            <Insets />
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </BorderPane.margin>
          <children>
             <HBox alignment="CENTER" prefHeight="400.0" prefWidth="1191.0" spacing="40.0">
@@ -28,7 +27,7 @@
                      <children>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <LineChart layoutX="117.0" maxHeight="300.0" maxWidth="500.0" prefHeight="265.0" prefWidth="500.0">
+                              <LineChart layoutX="88.0" maxHeight="300.0" maxWidth="500.0" prefHeight="265.0" prefWidth="500.0">
                                 <xAxis>
                                   <CategoryAxis side="BOTTOM" />
                                 </xAxis>
@@ -110,9 +109,9 @@
                   </VBox>
                   <VBox prefHeight="400.0" prefWidth="400.0">
                      <children>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                        <AnchorPane prefHeight="266.0" prefWidth="408.0">
                            <children>
-                              <PieChart maxHeight="300.0" prefHeight="266.0" prefWidth="500.0" />
+                              <PieChart layoutX="4.0" layoutY="1.0" maxHeight="300.0" prefHeight="263.0" prefWidth="410.0" />
                            </children>
                         </AnchorPane>
                         <Separator prefHeight="86.0" prefWidth="500.0" />
@@ -139,7 +138,4 @@
          </children>
       </Pane>
    </center>
-   <bottom>
-      <MFXTableView prefHeight="274.0" prefWidth="1280.0" BorderPane.alignment="CENTER" />
-   </bottom>
 </BorderPane>
