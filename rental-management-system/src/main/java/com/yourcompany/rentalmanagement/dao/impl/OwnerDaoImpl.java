@@ -1,25 +1,27 @@
-package com.yourcompany.rentalmanagement.dao;
+package com.yourcompany.rentalmanagement.dao.impl;
 
-import com.yourcompany.rentalmanagement.model.Address;
-import com.yourcompany.rentalmanagement.model.Owner;
-import com.yourcompany.rentalmanagement.util.HibernateUtil;
-import com.yourcompany.rentalmanagement.util.TimeFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.yourcompany.rentalmanagement.dao.UserDao;
+import com.yourcompany.rentalmanagement.model.Address;
+import com.yourcompany.rentalmanagement.model.Owner;
+import com.yourcompany.rentalmanagement.util.HibernateUtil;
+import com.yourcompany.rentalmanagement.util.TimeFormat;
 
-public class OwnerDaoImp implements UserDao {
+public class OwnerDaoImpl implements UserDao {
+
     private List<Owner> owners = new ArrayList<>();
     private Owner owner;
     private Transaction transaction;
 
-    public OwnerDaoImp() {
+    public OwnerDaoImpl() {
         transaction = null;
     }
 

@@ -1,10 +1,13 @@
 package com.yourcompany.rentalmanagement.model;
 
-import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "Residential_Property", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
@@ -21,6 +24,7 @@ public class ResidentialProperty extends Property {
 
     @ManyToMany(mappedBy = "residentialProperties")
     private List<Host> hosts = new ArrayList<>();
+    // This
 
     public int getNumberOfBedrooms() {
         return numberOfBedrooms;

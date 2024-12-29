@@ -3,9 +3,11 @@ package com.yourcompany.rentalmanagement.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import org.mindrot.jbcrypt.BCrypt;
 
 @MappedSuperclass
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false, length = 10)
@@ -32,6 +34,13 @@ public class User {
     @OneToOne(targetEntity = Address.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private UserRole role;
+
+    @Column(name = "salt", nullable = false)
+    private String salt;
 
     public long getId() {
         return id;
@@ -95,5 +104,30 @@ public class User {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public void setHashedPassword(String plainPassword) {
+        this.salt = BCrypt.gensalt();
+        this.password = BCrypt.hashpw(plainPassword, this.salt);
+    }
+
+    public boolean checkPassword(String plainPassword) {
+        return BCrypt.checkpw(plainPassword, this.password);
     }
 }

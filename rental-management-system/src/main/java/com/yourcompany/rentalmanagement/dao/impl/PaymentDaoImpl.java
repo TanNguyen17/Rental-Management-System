@@ -1,6 +1,7 @@
-package com.yourcompany.rentalmanagement.dao;
+package com.yourcompany.rentalmanagement.dao.impl;
 
 import com.yourcompany.rentalmanagement.model.Payment;
+import com.yourcompany.rentalmanagement.dao.PaymentDao;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -8,12 +9,12 @@ import org.hibernate.Transaction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PaymentDaoImp implements PaymentDao {
+public class PaymentDaoImpl implements PaymentDao {
 
     private Transaction transaction = null;
     private List<Payment> payments = new ArrayList<Payment>();
 
-    public PaymentDaoImp() {
+    public PaymentDaoImpl() {
         loadData();
     }
 
