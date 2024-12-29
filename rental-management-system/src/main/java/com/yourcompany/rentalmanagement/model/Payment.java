@@ -1,15 +1,6 @@
 package com.yourcompany.rentalmanagement.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Column;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Payment", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
@@ -18,6 +9,18 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false, length = 10)
     private long id;
+
+    @Column(name = "receipt", nullable = false, unique = true, updatable = false)
+    private String receipt;
+
+    @Column(name = "method", nullable = false)
+    private String method;
+
+    @Column(name = "amount", nullable = false, unique = true, updatable = false, length = 10)
+    private double amount;
+
+    @Column(name = "status", nullable = false, length = 10)
+    private String status;
 
     @ManyToOne(targetEntity = Tenant.class)
     @JoinColumn(name = "tenant_id", nullable = false)
@@ -49,5 +52,37 @@ public class Payment {
 
     public void setRentalAgreement(RentalAgreement rentalAgreement) {
         this.rentalAgreement = rentalAgreement;
+    }
+
+    public String getReceipt() {
+        return receipt;
+    }
+
+    public void setReceipt(String receipt) {
+        this.receipt = receipt;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
