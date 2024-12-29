@@ -126,6 +126,6 @@ public class RentalAgreement {
 
     @Override
     public String toString() {
-        return ("id = " + id);
+        return ("Hello");
     }
 }

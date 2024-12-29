@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RentalAgreementForm.fxml"));
         Scene scene = new Scene(loader.load(), 1280, 720);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Rental Management System");
@@ -20,8 +20,6 @@ public class MainApp extends Application {
     }
 
     public static void main(String[] args) {
-        //launch(args);
-        RentalAgreementDaoImp rentalAgreementDao = new RentalAgreementDaoImp();
-        rentalAgreementDao.loadData();
+        launch(args);
     }
 }

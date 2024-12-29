@@ -31,6 +31,8 @@ public class RentalAgreementDaoImp implements RentalAgreementDao {
     }
 
     @Override
+    public void getRentalAgreementsById(long id){};
+    @Override
     public void createRentalAgreement(RentalAgreement rentalAgreement) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
@@ -44,4 +46,11 @@ public class RentalAgreementDaoImp implements RentalAgreementDao {
         }
 
     }
+    @Override
+    public void updateRentalAgreement(RentalAgreement rentalAgreement) {
+
+    }
+    @Override
+    public void deleteRentalAgreement(RentalAgreement rentalAgreement) {}
+
 }
