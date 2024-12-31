@@ -19,7 +19,7 @@
                   <ComboBox fx:id="statusOption" prefWidth="150.0" promptText="Status" />
                </children>
             </HBox>
-            <MFXButton buttonType="RAISED" text="Find" />
+            <MFXButton fx:id="findButton" buttonType="RAISED" onAction="#findPayment" text="Find" />
          </children>
          <padding>
             <Insets bottom="15.0" />

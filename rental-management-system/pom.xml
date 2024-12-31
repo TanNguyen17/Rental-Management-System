@@ -89,7 +89,14 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20230227</version> </dependency>
+            <version>20230227</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
 
         <!-- You guys can add other dependencies like Hibernate, PostgreSQL, etc., mng nho update readme as well nhe -->
     </dependencies>

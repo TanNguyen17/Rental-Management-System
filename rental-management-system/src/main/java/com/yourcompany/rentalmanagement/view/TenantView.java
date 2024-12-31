@@ -2,6 +2,9 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.PaymentController;
 import com.yourcompany.rentalmanagement.model.Payment;
+import com.yourcompany.rentalmanagement.model.Tenant;
+import com.yourcompany.rentalmanagement.util.EmailUtil;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,11 +26,10 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -65,11 +67,14 @@ public class TenantView implements Initializable {
     private TableView<Payment> paymentTable;
 
     @FXML
+    private MFXButton findButton;
+
+    @FXML
     ObservableList<Payment> initialData() {
         paymentList = paymentController.getAllPayment();
 
-        methodOption.setItems(FXCollections.observableArrayList("Cash", "Card"));
-        statusOption.setItems(FXCollections.observableArrayList("Done", "Not Done"));
+        methodOption.setItems(FXCollections.observableArrayList("Debit Card", "Credit Card", "Bank Transfer"));
+        statusOption.setItems(FXCollections.observableArrayList("Failed", "Completed", "Pending"));
 
         return FXCollections.observableArrayList(paymentList);
     }
@@ -97,6 +102,8 @@ public class TenantView implements Initializable {
                         setGraphic(null);
                     } else {
                         FontAwesomeIconView viewIcon = new FontAwesomeIconView(FontAwesomeIcon.DOT_CIRCLE_ALT);
+                        FontAwesomeIconView sendEmail = new FontAwesomeIconView(FontAwesomeIcon.MAIL_FORWARD);
+
                         viewIcon.setStyle(
                                 "-fx-cursor: hand ;"
                                 + "-glyph-size:28px;"
@@ -122,7 +129,20 @@ public class TenantView implements Initializable {
                             stage.setScene(new Scene(parent));
                             stage.show();
                         });
-                        HBox viewButton = new HBox(viewIcon);
+
+                        sendEmail.setOnMouseClicked(event -> {
+                            payment = paymentTable.getSelectionModel().getSelectedItem();
+                            Tenant tenant = paymentController.getTenant(payment.getId());
+                            System.out.println(tenant.getEmail());
+
+                            try {
+                                EmailUtil.sendEmail(tenant.getEmail(), "gagag", "gagaga");
+                            } catch (MessagingException e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+
+                        HBox viewButton = new HBox(viewIcon, sendEmail);
                         viewButton.setStyle("-fx-alignment:center");
                         setGraphic(viewButton);
                         setText(null);
@@ -133,5 +153,18 @@ public class TenantView implements Initializable {
         };
         this.actions.setCellFactory(cellFactory);
         paymentTable.setItems(initialData());
+    }
+
+    @FXML
+    public void findPayment(ActionEvent event) {
+        String method = methodOption.getValue();
+        String status = statusOption.getValue();
+        System.out.println(method);
+        System.out.println(status);
+        Map<String, String> filter = new HashMap<>();
+        filter.put("method", method);
+        filter.put("status", status);
+        paymentList = paymentController.getFilterPayment(filter);
+        paymentTable.setItems(FXCollections.observableArrayList(paymentList));
     }
 }
