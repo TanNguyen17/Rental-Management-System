@@ -8,7 +8,9 @@ import java.util.Map;
 
 public interface PaymentDao {
     public List<Payment> loadData();
+    public List<Payment> loadDataPag(int pageNumber);
     public Tenant getTenant(long paymentId);
     public List<Payment> filterData(Map<String, String> filterValue);
+    public Long getTotalPaymentCount();
 }
 

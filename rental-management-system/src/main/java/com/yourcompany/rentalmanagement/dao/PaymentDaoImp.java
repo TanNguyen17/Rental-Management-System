@@ -25,7 +25,10 @@ public class PaymentDaoImp implements PaymentDao {
     public List<Payment> loadData() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            payments = session.createQuery("from Payment").list();
+
+            Query<Payment> query = session.createQuery("from Payment", Payment.class);
+            payments = query.list();
+
             transaction.commit();
             
         } catch (Exception e) {
@@ -36,6 +39,27 @@ public class PaymentDaoImp implements PaymentDao {
         }
         return payments;
     }
+
+    @Override
+    public List<Payment> loadDataPag(int pageNumber) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Query<Payment> query = session.createQuery("from Payment", Payment.class);
+            query.setFirstResult((pageNumber - 1) * 10);
+            query.setMaxResults(10);
+            payments = query.list();
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return payments;
+    }
+
 
     @Override
     public Tenant getTenant(long paymentId) {
@@ -87,5 +111,18 @@ public class PaymentDaoImp implements PaymentDao {
         return payments;
     }
 
+    @Override
+    public Long getTotalPaymentCount() {
+        Long count = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Query<Long> query = session.createQuery("SELECT COUNT(*) FROM Payment", Long.class);
+            count = (Long) query.uniqueResult();
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 
 }

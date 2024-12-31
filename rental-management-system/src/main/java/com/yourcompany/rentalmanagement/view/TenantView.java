@@ -12,12 +12,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -38,6 +36,7 @@ public class TenantView implements Initializable {
     PaymentController paymentController = new PaymentController();
     List<Payment> paymentList = new ArrayList<>();
     Payment payment;
+    private int currentPageIndex = 1;
 
     @FXML
     private PaymentView paymentView;
@@ -70,13 +69,12 @@ public class TenantView implements Initializable {
     private MFXButton findButton;
 
     @FXML
-    ObservableList<Payment> initialData() {
-        paymentList = paymentController.getAllPayment();
+    private Pagination pagination;
 
-        methodOption.setItems(FXCollections.observableArrayList("Debit Card", "Credit Card", "Bank Transfer"));
-        statusOption.setItems(FXCollections.observableArrayList("Failed", "Completed", "Pending"));
-
-        return FXCollections.observableArrayList(paymentList);
+    @FXML
+    public void initialData() {
+        paymentList = paymentController.getPaymentsPag(currentPageIndex);
+        paymentTable.setItems(FXCollections.observableList(paymentList));
     }
 
     @FXML
@@ -86,6 +84,9 @@ public class TenantView implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        methodOption.setItems(FXCollections.observableArrayList("Debit Card", "Credit Card", "Bank Transfer"));
+        statusOption.setItems(FXCollections.observableArrayList("Failed", "Completed", "Pending"));
+
         receipt.setCellValueFactory(new PropertyValueFactory<Payment, String>("receipt"));
         method.setCellValueFactory(new PropertyValueFactory<Payment, String>("method"));
         amount.setCellValueFactory(new PropertyValueFactory<Payment, Double>("amount"));
@@ -96,7 +97,6 @@ public class TenantView implements Initializable {
                 @Override
                 public void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
-
                     if (empty) {
                         setText(null);
                         setGraphic(null);
@@ -151,8 +151,16 @@ public class TenantView implements Initializable {
             };
             return cell;
         };
+
+        long paymentCount = paymentController.getPaymentCount();
+        int pageCount = (int) Math.ceil((double) paymentCount / 10);
+
+        pagination.setPageCount(pageCount);
+        pagination.setCurrentPageIndex(0);
+        pagination.setPageFactory(this::createPage);
+
         this.actions.setCellFactory(cellFactory);
-        paymentTable.setItems(initialData());
+        initialData();
     }
 
     @FXML
@@ -166,5 +174,11 @@ public class TenantView implements Initializable {
         filter.put("status", status);
         paymentList = paymentController.getFilterPayment(filter);
         paymentTable.setItems(FXCollections.observableArrayList(paymentList));
+    }
+
+    private Node createPage(int pageIndex) {
+        currentPageIndex = pageIndex + 1;
+        initialData();
+        return paymentTable;
     }
 }
