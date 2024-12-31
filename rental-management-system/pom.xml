@@ -86,6 +86,11 @@
             <version>4.7.0-9.1.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20230227</version> </dependency>
+
         <!-- You guys can add other dependencies like Hibernate, PostgreSQL, etc., mng nho update readme as well nhe -->
     </dependencies>
 
