@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;

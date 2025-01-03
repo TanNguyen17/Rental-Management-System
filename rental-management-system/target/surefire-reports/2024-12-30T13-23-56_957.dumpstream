@@ -1,0 +1,5 @@
+# Created at 2024-12-30T13:23:57.131
+Boot Manifest-JAR contains absolute paths in classpath 'D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
