@@ -33,9 +33,11 @@ import java.util.logging.Logger;
 
 public class TenantView implements Initializable {
 
-    PaymentController paymentController = new PaymentController();
-    List<Payment> paymentList = new ArrayList<>();
-    Payment payment;
+    private PaymentController paymentController = new PaymentController();
+    private List<Payment> paymentList = new ArrayList<>();
+    private Payment payment;
+    private Map<Integer, List<Payment>> pageCache = new HashMap<>();
+
     private int currentPageIndex = 1;
 
     @FXML
@@ -73,7 +75,13 @@ public class TenantView implements Initializable {
 
     @FXML
     public void initialData() {
+        if (pageCache.containsKey(currentPageIndex)) {
+            List<Payment> cachedPayments = pageCache.get(currentPageIndex);
+            paymentTable.setItems(FXCollections.observableList(cachedPayments));
+            return;
+        }
         paymentList = paymentController.getPaymentsPag(currentPageIndex);
+        pageCache.put(currentPageIndex, paymentList);
         paymentTable.setItems(FXCollections.observableList(paymentList));
     }
 
