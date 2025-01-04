@@ -64,14 +64,14 @@
                                  <children>
                                     <VBox prefHeight="357.0" prefWidth="437.0">
                                        <children>
-                                          <VBox prefHeight="200.0" prefWidth="437.0">
+                                          <VBox prefHeight="0.0" prefWidth="437.0">
                                              <children>
                                                 <Label text="First Name">
                                                    <font>
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="firstName" prefHeight="37.0" prefWidth="200.0">
+                                                <TextField fx:id="firstName" prefHeight="40.0" prefWidth="200.0">
                                                    <font>
                                                       <Font size="20.0" />
                                                    </font>
@@ -82,32 +82,41 @@
                                                 <Text fx:id="errorFirstName" fill="RED" />
                                              </children>
                                           </VBox>
-                                          <VBox prefHeight="200.0" prefWidth="100.0">
+                                          <VBox prefHeight="0.0" prefWidth="337.0">
                                              <children>
                                                 <Label text="Last Name">
                                                    <font>
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="lastName" prefHeight="43.0" prefWidth="313.0">
+                                                <TextField fx:id="lastName" prefHeight="40.0" prefWidth="321.0">
                                                    <font>
                                                       <Font size="20.0" />
                                                    </font>
+                                                   <VBox.margin>
+                                                      <Insets right="100.0" />
+                                                   </VBox.margin>
                                                 </TextField>
                                                 <Text fx:id="errorLastName" fill="RED" />
                                              </children>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
                                           </VBox>
-                                          <VBox prefHeight="200.0" prefWidth="100.0">
+                                          <VBox prefHeight="29.0" prefWidth="437.0">
                                              <children>
                                                 <Label text="Email">
                                                    <font>
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="email" prefHeight="37.0" prefWidth="200.0">
+                                                <TextField fx:id="email" prefHeight="35.0" prefWidth="200.0">
                                                    <font>
                                                       <Font size="20.0" />
                                                    </font>
+                                                   <VBox.margin>
+                                                      <Insets right="100.0" />
+                                                   </VBox.margin>
                                                 </TextField>
                                                 <Text fx:id="errorEmail" fill="RED" />
                                              </children>
@@ -123,7 +132,7 @@
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="phoneNumber" prefHeight="43.0" prefWidth="378.0">
+                                                <TextField fx:id="phoneNumber" prefHeight="35.0" prefWidth="378.0">
                                                    <font>
                                                       <Font size="20.0" />
                                                    </font>
@@ -141,7 +150,7 @@
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <DatePicker fx:id="dateOfBirth" prefHeight="43.0" prefWidth="345.0" />
+                                                <DatePicker fx:id="dateOfBirth" prefHeight="40.0" prefWidth="345.0" />
                                                 <Text fx:id="errorPhoneNumber1" fill="RED" />
                                              </children>
                                           </VBox>
@@ -158,6 +167,9 @@
                                        <font>
                                           <Font size="20.0" />
                                        </font>
+                                       <HBox.margin>
+                                          <Insets bottom="100.0" />
+                                       </HBox.margin>
                                     </Button>
                                  </children>
                                  <VBox.margin>
@@ -183,7 +195,7 @@
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="streetNumber" prefHeight="35.0" prefWidth="366.0">
+                                                <TextField fx:id="streetNumber" prefHeight="40.0" prefWidth="366.0">
                                                    <VBox.margin>
                                                       <Insets right="100.0" />
                                                    </VBox.margin>
@@ -198,7 +210,7 @@
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="streetName" prefHeight="35.0" prefWidth="366.0">
+                                                <TextField fx:id="streetName" prefHeight="40.0" prefWidth="366.0">
                                                    <VBox.margin>
                                                       <Insets right="100.0" />
                                                    </VBox.margin>
@@ -245,6 +257,9 @@
                                        <font>
                                           <Font size="20.0" />
                                        </font>
+                                       <HBox.margin>
+                                          <Insets bottom="100.0" />
+                                       </HBox.margin>
                                     </Button>
                                  </children>
                               </HBox>
@@ -299,7 +314,10 @@
                                                 </Label>
                                                 <HBox prefHeight="38.0" prefWidth="366.0">
                                                    <children>
-                                                      <MFXPasswordField fx:id="confirmPassword" prefHeight="35.0" prefWidth="270.0" />
+                                                      <MFXPasswordField fx:id="confirmPassword" prefHeight="35.0" prefWidth="270.0">
+                                                         <HBox.margin>
+                                                            <Insets bottom="20.0" />
+                                                         </HBox.margin></MFXPasswordField>
                                                    </children>
                                                 </HBox>
                                                 <Text fx:id="errorConfirmPassword" fill="RED" />
@@ -319,6 +337,9 @@
                                        <font>
                                           <Font size="20.0" />
                                        </font>
+                                       <HBox.margin>
+                                          <Insets bottom="90.0" />
+                                       </HBox.margin>
                                     </Button>
                                  </children>
                               </HBox>
