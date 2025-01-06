@@ -27,35 +27,35 @@ public class HibernateTest {
         Transaction transaction = null;
         Random random = new Random();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            List<Owner> owners = session.createQuery("from Owner", Owner.class).list();
-            List<Host> hosts = session.createQuery("from Host", Host.class).list();
-            List<Tenant> tenants = session.createQuery("from Tenant", Tenant.class).list();
+//            transaction = session.beginTransaction();
+//            List<Owner> owners = session.createQuery("from Owner", Owner.class).list();
+//            List<Host> hosts = session.createQuery("from Host", Host.class).list();
+//            List<Tenant> tenants = session.createQuery("from Tenant", Tenant.class).list();
             List<RentalAgreement> rentalAgreements = session.createQuery("from RentalAgreement", RentalAgreement.class).list();
+            System.out.println(rentalAgreements.size());
+
+//            for (int i = 0; i < 20; i++) {
+//                Payment payment = new Payment();
+//
+//                String receipt = UUID.randomUUID().toString().substring(0, 10); // Generate unique receipt
+//                String method = PAYMENT_METHODS[random.nextInt(PAYMENT_METHODS.length)];
+//                double amount = 500 + random.nextInt(2000); // Random amount between 500 and 2500
+//                String status = PAYMENT_STATUSES[random.nextInt(PAYMENT_STATUSES.length)];
+//
+//                payment.setReceipt(receipt);
+//                payment.setMethod(method);
+//                payment.setAmount(amount);
+//                payment.setStatus(status);
+//
+//                payment.setTenant(tenants.get(i));
+//                payment.setRentalAgreement(rentalAgreements.get(i));
+//
+//                session.persist(payment);
+//            }
 
 
-            for (int i = 0; i < 20; i++) {
-                Payment payment = new Payment();
-
-                String receipt = UUID.randomUUID().toString().substring(0, 10); // Generate unique receipt
-                String method = PAYMENT_METHODS[random.nextInt(PAYMENT_METHODS.length)];
-                double amount = 500 + random.nextInt(2000); // Random amount between 500 and 2500
-                String status = PAYMENT_STATUSES[random.nextInt(PAYMENT_STATUSES.length)];
-
-                payment.setReceipt(receipt);
-                payment.setMethod(method);
-                payment.setAmount(amount);
-                payment.setStatus(status);
-
-                payment.setTenant(tenants.get(i));
-                payment.setRentalAgreement(rentalAgreements.get(i));
-
-                session.persist(payment);
-            }
-
-
-            //Commit transaction
-            transaction.commit();
+//            //Commit transaction
+//            transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();

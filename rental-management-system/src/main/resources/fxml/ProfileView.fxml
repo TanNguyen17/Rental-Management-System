@@ -229,7 +229,7 @@
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <ChoiceBox fx:id="cityChoice" prefHeight="35.0" prefWidth="150.0" />
+                                                <ChoiceBox fx:id="provinceChoice" prefHeight="35.0" prefWidth="150.0" />
                                                 <Text fx:id="errorPhoneNumber1111" fill="RED" />
                                              </children>
                                           </VBox>
@@ -240,7 +240,7 @@
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <ChoiceBox fx:id="cityChoice1" prefHeight="35.0" prefWidth="150.0" />
+                                                <ChoiceBox fx:id="cityChoice" prefHeight="35.0" prefWidth="150.0" />
                                                 <Text fx:id="errorPhoneNumber11111" fill="RED" />
                                              </children>
                                           </VBox>
