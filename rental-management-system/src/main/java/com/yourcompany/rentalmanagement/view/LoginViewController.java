@@ -1,15 +1,24 @@
 package com.yourcompany.rentalmanagement.view;
 
+import java.io.IOException;
+
 import com.yourcompany.rentalmanagement.controller.LoginController;
+import com.yourcompany.rentalmanagement.model.Manager;
+import com.yourcompany.rentalmanagement.model.Owner;
+import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.model.UserRole;
+import com.yourcompany.rentalmanagement.util.UserSession;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 public class LoginViewController {
 
@@ -133,8 +142,23 @@ public class LoginViewController {
     }
 
     public void navigateToMainView() {
-        // Will implement navigation later
-        showSuccessMessage("Login successful! Navigation will be implemented later...");
+        try {
+            User currentUser = UserSession.getInstance().getCurrentUser();
+            if (currentUser instanceof Owner || currentUser instanceof Manager) {
+                // Load ViewRentalProperties instead of PropertyForm
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewRentalProperties.fxml"));
+                Scene scene = new Scene(loader.load());
+                Stage stage = (Stage) messageLabel.getScene().getWindow();
+                stage.setScene(scene);
+                stage.setTitle("Rental Properties");
+                stage.show();
+            } else {
+                // Load for different roles
+                showSuccessMessage("Login successful! Other views will be implemented later...");
+            }
+        } catch (IOException e) {
+            showErrorMessage("Error loading view: " + e.getMessage());
+        }
     }
 
     public void showSuccessMessage(String message) {
