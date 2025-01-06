@@ -21,8 +21,14 @@ public class LoginController {
             if (user != null) {
                 String token = authService.generateToken(user);
                 UserSession.getInstance().setCurrentUser(user, token);
-                System.out.println("Successfully logged in as " + user.getRole()
-                        + " with username: " + username);
+                String successMessage = String.format(
+                        "Successfully logged in as %s (Role: %s, ID: %d)",
+                        user.getUsername(),
+                        user.getRole(),
+                        user.getId()
+                );
+                System.out.println(successMessage);
+                viewController.showSuccessMessage(successMessage);
                 viewController.navigateToMainView();
             } else {
                 viewController.showErrorMessage("Invalid credentials");
@@ -37,8 +43,14 @@ public class LoginController {
             User user = authService.registerUser(username, password, email, role);
             String token = authService.generateToken(user);
             UserSession.getInstance().setCurrentUser(user, token);
-            System.out.println("Successfully signed up as " + role
-                    + " with username: " + username);
+            String successMessage = String.format(
+                    "Successfully registered as %s (Role: %s, ID: %d)",
+                    user.getUsername(),
+                    user.getRole(),
+                    user.getId()
+            );
+            System.out.println(successMessage);
+            viewController.showSuccessMessage(successMessage);
             viewController.navigateToMainView();
         } catch (Exception e) {
             viewController.showErrorMessage("Registration failed: " + e.getMessage());

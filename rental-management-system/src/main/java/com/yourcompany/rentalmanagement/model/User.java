@@ -27,7 +27,7 @@ public class User {
     @Column(name = "username", nullable = false, unique = true, length = 50)
     private String username;
 
-    @Column(name = "password", nullable = false, length = 50)
+    @Column(name = "password", nullable = false, length = 100)
     private String password;
 
     @Column(name = "dob", nullable = true) // test
@@ -50,7 +50,7 @@ public class User {
     @Column(name = "role", nullable = false)
     private UserRole role;
 
-    @Column(name = "salt", nullable = false)
+    @Column(name = "salt", nullable = false, length = 100)
     private String salt;
 
     public long getId() {

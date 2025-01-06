@@ -9,6 +9,7 @@ com\yourcompany\rentalmanagement\model\RentalAgreement$rentalAgreementStatus.cla
 com\yourcompany\rentalmanagement\model\ResidentialProperty.class
 com\yourcompany\rentalmanagement\model\User.class
 com\yourcompany\rentalmanagement\model\Payment.class
+com\yourcompany\rentalmanagement\util\TokenStorage.class
 com\yourcompany\rentalmanagement\model\Owner.class
 com\yourcompany\rentalmanagement\controller\LoginController.class
 com\yourcompany\rentalmanagement\MainApp.class

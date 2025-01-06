@@ -72,24 +72,35 @@ public class AuthService {
     }
 
     public User registerUser(String username, String password, String email, UserRole role) {
+        System.out.println("Attempting to register user: " + username + " with role: " + role);
+
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
 
             // Check if username already exists
             if (authenticateUser(username, password) != null) {
+                System.out.println("Username already exists: " + username);
                 throw new RuntimeException("Username already exists");
             }
 
             User newUser;
             switch (role) {
-                case TENANT ->
+                case TENANT -> {
+                    System.out.println("Creating new Tenant");
                     newUser = new Tenant();
-                case HOST ->
+                }
+                case HOST -> {
+                    System.out.println("Creating new Host");
                     newUser = new Host();
-                case OWNER ->
+                }
+                case OWNER -> {
+                    System.out.println("Creating new Owner");
                     newUser = new Owner();
-                case MANAGER ->
+                }
+                case MANAGER -> {
+                    System.out.println("Creating new Manager");
                     newUser = new Manager();
+                }
                 default ->
                     throw new RuntimeException("Invalid role");
             }
@@ -99,14 +110,61 @@ public class AuthService {
             newUser.setEmail(email);
             newUser.setRole(role);
 
+            System.out.println("Persisting new user to database...");
             session.persist(newUser);
             session.getTransaction().commit();
+            System.out.println("Successfully created user with ID: " + newUser.getId());
 
-            System.out.println("Successfully created new user: " + username + " with role: " + role);
             return newUser;
         } catch (Exception e) {
-            System.err.println("Registration error: " + e.getMessage());
+            System.err.println("Error during registration: " + e.getMessage());
+            e.printStackTrace();
             throw e;
+        }
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(JWT_SECRET)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public User getUserFromToken(String token) {
+        try {
+            var claims = Jwts.parserBuilder()
+                    .setSigningKey(JWT_SECRET)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            String username = claims.get("username", String.class);
+            UserRole role = UserRole.valueOf(claims.get("role", String.class));
+
+            try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+                // Find user based on role
+                Class<? extends User> userClass = switch (role) {
+                    case TENANT ->
+                        Tenant.class;
+                    case HOST ->
+                        Host.class;
+                    case OWNER ->
+                        Owner.class;
+                    case MANAGER ->
+                        Manager.class;
+                    default ->
+                        throw new RuntimeException("Invalid role in token");
+                };
+                return findUserByUsername(session, userClass, username);
+            }
+        } catch (Exception e) {
+            System.err.println("Error getting user from token: " + e.getMessage());
+            return null;
         }
     }
 }

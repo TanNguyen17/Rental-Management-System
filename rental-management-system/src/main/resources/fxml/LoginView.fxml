@@ -29,9 +29,11 @@
                             
                             <Text text="Welcome Back!" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
                             <TextField fx:id="loginUsername" promptText="Username" 
-                                     style="-fx-pref-height: 35;"/>
+                                     style="-fx-pref-height: 35;"
+                                     onKeyPressed="#handleLoginKeyPress"/>
                             <PasswordField fx:id="loginPassword" promptText="Password"
-                                         style="-fx-pref-height: 35;"/>
+                                         style="-fx-pref-height: 35;"
+                                         onKeyPressed="#handleLoginKeyPress"/>
                             <Button text="Login" onAction="#handleLogin"
                                     style="-fx-pref-width: 200; -fx-pref-height: 35;"/>
                             <Button text="Continue as Visitor" onAction="#handleVisitor"
@@ -48,13 +50,17 @@
                             
                             <Text text="Create Account" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
                             <TextField fx:id="signupUsername" promptText="Username"
-                                     style="-fx-pref-height: 35;"/>
+                                     style="-fx-pref-height: 35;"
+                                     onKeyPressed="#handleSignupKeyPress"/>
                             <PasswordField fx:id="signupPassword" promptText="Password"
-                                         style="-fx-pref-height: 35;"/>
+                                         style="-fx-pref-height: 35;"
+                                         onKeyPressed="#handleSignupKeyPress"/>
                             <TextField fx:id="signupEmail" promptText="Email"
-                                     style="-fx-pref-height: 35;"/>
+                                     style="-fx-pref-height: 35;"
+                                     onKeyPressed="#handleSignupKeyPress"/>
                             <ComboBox fx:id="roleComboBox" promptText="Select Role"
-                                    style="-fx-pref-width: 340; -fx-pref-height: 35;"/>
+                                    style="-fx-pref-width: 340; -fx-pref-height: 35;"
+                                    onKeyPressed="#handleSignupKeyPress"/>
                             <Button text="Sign Up" onAction="#handleSignup"
                                     style="-fx-pref-width: 200; -fx-pref-height: 35;"/>
                         </VBox>

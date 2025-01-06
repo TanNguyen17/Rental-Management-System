@@ -1,9 +1,9 @@
 package com.yourcompany.rentalmanagement;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
+import com.yourcompany.rentalmanagement.util.UserSession;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,21 +19,25 @@ public class MainApp extends Application {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             if (sessionFactory != null) {
                 System.out.println("Hibernate initialized successfully!");
-                try (Session session = sessionFactory.openSession()) {
-                    System.out.println("Database connection successful!");
-                }
             }
 
+            // Check for stored token
+            UserSession userSession = UserSession.getInstance();
+            if (userSession.getCurrentUser() != null) {
+                System.out.println("Found stored session for user: "
+                        + userSession.getCurrentUser().getUsername());
+                // Navigate to main view directly
+                // TODO: Implement this when you create the main view
+            }
+
+            // If no valid stored session, show login view
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
             Scene scene = new Scene(loader.load());
             primaryStage.setScene(scene);
             primaryStage.setTitle("Rental Management System - Login");
-
-            // Fix the window size
             primaryStage.setWidth(1280);
             primaryStage.setHeight(720);
             primaryStage.setResizable(false);
-
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();
