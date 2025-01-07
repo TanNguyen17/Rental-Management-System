@@ -4,11 +4,9 @@ import com.yourcompany.rentalmanagement.controller.UserController;
 import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.util.CloudinaryService;
 import com.yourcompany.rentalmanagement.util.ProvinceData;
-import com.yourcompany.rentalmanagement.util.TimeFormat;
 
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,7 +17,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.scene.input.KeyEvent;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +26,7 @@ import java.net.URL;
 import java.util.*;
 
 
-public class ProfileViewController implements Initializable {
+public class ProfileView implements Initializable {
     private UserController userController = new UserController();
     private CloudinaryService cloudinaryService = new CloudinaryService();
     private User currentUser;
