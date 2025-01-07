@@ -1,22 +1,64 @@
 package com.yourcompany.rentalmanagement.controller;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
+import com.yourcompany.rentalmanagement.model.User;
+import com.yourcompany.rentalmanagement.model.UserRole;
+import com.yourcompany.rentalmanagement.service.AuthService;
+import com.yourcompany.rentalmanagement.util.UserSession;
+import com.yourcompany.rentalmanagement.view.LoginViewController;
 
 public class LoginController {
 
-    @FXML
-    private TextField usernameField;
+    private final AuthService authService = new AuthService();
+    private final LoginViewController viewController;
 
-    @FXML
-    private TextField passwordField;
+    public LoginController(LoginViewController viewController) {
+        this.viewController = viewController;
+    }
 
-    @FXML
-    private void handleLogin(ActionEvent event) {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
-        // Add login logic here
-        System.out.println("Username: " + username + ", Password: " + password);
+    public void handleLogin(String username, String password) {
+        try {
+            User user = authService.authenticateUser(username, password);
+            if (user != null) {
+                String token = authService.generateToken(user);
+                UserSession.getInstance().setCurrentUser(user, token);
+                String successMessage = String.format(
+                        "Successfully logged in as %s (Role: %s, ID: %d)",
+                        user.getUsername(),
+                        user.getRole(),
+                        user.getId()
+                );
+                System.out.println(successMessage);
+                viewController.showSuccessMessage(successMessage);
+                viewController.navigateToMainView();
+            } else {
+                viewController.showErrorMessage("Invalid credentials");
+            }
+        } catch (Exception e) {
+            viewController.showErrorMessage("Login failed: " + e.getMessage());
+        }
+    }
+
+    public void handleSignup(String username, String password, String email, UserRole role) {
+        try {
+            User user = authService.registerUser(username, password, email, role);
+            String token = authService.generateToken(user);
+            UserSession.getInstance().setCurrentUser(user, token);
+            String successMessage = String.format(
+                    "Successfully registered as %s (Role: %s, ID: %d)",
+                    user.getUsername(),
+                    user.getRole(),
+                    user.getId()
+            );
+            System.out.println(successMessage);
+            viewController.showSuccessMessage(successMessage);
+            viewController.navigateToMainView();
+        } catch (Exception e) {
+            viewController.showErrorMessage("Registration failed: " + e.getMessage());
+        }
+    }
+
+    public void handleVisitor() {
+        System.out.println("Continuing as visitor");
+        viewController.navigateToMainView();
     }
 }

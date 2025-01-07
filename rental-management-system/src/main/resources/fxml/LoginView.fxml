@@ -1,16 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.yourcompany.rentalmanagement.controller.LoginController">
-    <children>
-        <Label text="Login" layoutX="150" layoutY="50" />
-        <TextField fx:id="usernameField" promptText="Username" layoutX="100" layoutY="100" />
-        <PasswordField fx:id="passwordField" promptText="Password" layoutX="100" layoutY="150" />
-        <Button text="Login" layoutX="150" layoutY="200" onAction="#handleLogin" />
-    </children>
+<AnchorPane xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="com.yourcompany.rentalmanagement.view.LoginViewController"
+            prefWidth="1280" prefHeight="720">
+            
+    <HBox>
+        <!-- Left side -->
+        <StackPane style="-fx-background-color: #E0E0E0;" prefWidth="640" prefHeight="720">
+            <Text text="Image Placeholder" style="-fx-font-size: 24;"/>
+        </StackPane>
+        
+        <!-- Right side -->
+        <VBox prefWidth="640" prefHeight="720" alignment="CENTER" spacing="20" style="-fx-padding: 40;">
+            <TabPane style="-fx-pref-width: 400;">
+                <tabs>
+                    <!-- Login Tab -->
+                    <Tab text="Login" closable="false">
+                        <VBox spacing="15" alignment="CENTER">
+                            <padding>
+                                <Insets top="20" right="30" bottom="20" left="30"/>
+                            </padding>
+                            
+                            <Text text="Welcome Back!" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+                            <TextField fx:id="loginUsername" promptText="Username" 
+                                     style="-fx-pref-height: 35;"
+                                     onKeyPressed="#handleLoginKeyPress"/>
+                            <PasswordField fx:id="loginPassword" promptText="Password"
+                                         style="-fx-pref-height: 35;"
+                                         onKeyPressed="#handleLoginKeyPress"/>
+                            <Button text="Login" onAction="#handleLogin"
+                                    style="-fx-pref-width: 200; -fx-pref-height: 35;"/>
+                            <Button text="Continue as Visitor" onAction="#handleVisitor"
+                                    style="-fx-pref-width: 200; -fx-pref-height: 35;"/>
+                        </VBox>
+                    </Tab>
+                    
+                    <!-- Sign Up Tab -->
+                    <Tab text="Sign Up" closable="false">
+                        <VBox spacing="15" alignment="CENTER">
+                            <padding>
+                                <Insets top="20" right="30" bottom="20" left="30"/>
+                            </padding>
+                            
+                            <Text text="Create Account" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+                            <TextField fx:id="signupUsername" promptText="Username"
+                                     style="-fx-pref-height: 35;"
+                                     onKeyPressed="#handleSignupKeyPress"/>
+                            <PasswordField fx:id="signupPassword" promptText="Password"
+                                         style="-fx-pref-height: 35;"
+                                         onKeyPressed="#handleSignupKeyPress"/>
+                            <TextField fx:id="signupEmail" promptText="Email"
+                                     style="-fx-pref-height: 35;"
+                                     onKeyPressed="#handleSignupKeyPress"/>
+                            <ComboBox fx:id="roleComboBox" promptText="Select Role"
+                                    style="-fx-pref-width: 340; -fx-pref-height: 35;"
+                                    onKeyPressed="#handleSignupKeyPress"/>
+                            <Button text="Sign Up" onAction="#handleSignup"
+                                    style="-fx-pref-width: 200; -fx-pref-height: 35;"/>
+                        </VBox>
+                    </Tab>
+                </tabs>
+            </TabPane>
+            
+            <Label fx:id="messageLabel" style="-fx-text-fill: red;"/>
+        </VBox>
+    </HBox>
+    
 </AnchorPane>
