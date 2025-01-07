@@ -15,22 +15,21 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // Test Hibernate connection
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             if (sessionFactory != null) {
                 System.out.println("Hibernate initialized successfully!");
             }
 
-            // Check for stored token
+            // Check stored token
             UserSession userSession = UserSession.getInstance();
             if (userSession.getCurrentUser() != null) {
                 System.out.println("Found stored session for user: "
                         + userSession.getCurrentUser().getUsername());
-                // Navigate to main view directly
-                // TODO: Implement this when you create the main view
+                
+                // Ae co j implement cai nay when ae tao main view nhe
             }
 
-            // If no valid stored session, show login view
+            // If no valid stored session --> show login view
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
             Scene scene = new Scene(loader.load());
             primaryStage.setScene(scene);
