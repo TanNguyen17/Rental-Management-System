@@ -3,10 +3,14 @@ package com.yourcompany.rentalmanagement.view;
 import com.yourcompany.rentalmanagement.controller.UserController;
 import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.util.CloudinaryService;
+import com.yourcompany.rentalmanagement.util.ProvinceData;
 import com.yourcompany.rentalmanagement.util.TimeFormat;
 
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,15 +26,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class ProfileViewController implements Initializable {
     private UserController userController = new UserController();
     private CloudinaryService cloudinaryService = new CloudinaryService();
     private User currentUser;
+    private Map<String, List<String>> provinceCities = new HashMap<>();
 
     @FXML
     private Text username;
@@ -75,6 +78,9 @@ public class ProfileViewController implements Initializable {
     private TextField  streetName;
 
     @FXML
+    private ChoiceBox<String> provinceChoice;
+
+    @FXML
     private ChoiceBox<String> cityChoice;
 
     @FXML
@@ -104,40 +110,54 @@ public class ProfileViewController implements Initializable {
     @FXML
     private Button updateAddressButton;
 
-    private String[] city = {"HCM", "DN", "HN"};
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        currentUser = userController.getUserProfile(5);
+        // 1. Load User Data in Background
+        new Thread(() -> {
+            currentUser = userController.getUserProfile(5); // Load user data
+            provinceCities = ProvinceData.fetchProvinceData(); // Load province data
 
-        if (currentUser != null) {
-            username.setText(currentUser.getUsername());
+            // 2. Update UI on JavaFX Application Thread
+            Platform.runLater(() -> {
+                if (currentUser != null) {
+                    username.setText(currentUser.getUsername());
+                    Image image = new Image(currentUser.getProfileImage());
+                    profileImage.setImage(image);
+                    firstName.setPromptText("First Name");
+                    lastName.setPromptText("Last Name");
+                    email.setText(currentUser.getEmail());
+                    phoneNumber.setText(currentUser.getPhoneNumber());
+                    dateOfBirth.setValue(currentUser.getDob());
+                    streetName.setText(currentUser.getAddress().getStreet());
+                    streetNumber.setText(currentUser.getAddress().getNumber());
 
-            Image image = new Image(currentUser.getProfileImage());
-            profileImage.setImage(image);
+                    //Populate province choice and set its value
+                    provinceChoice.getItems().addAll(provinceCities.keySet());
+                    if (provinceChoice.getItems().contains(currentUser.getAddress().getCity())) {
+                        provinceChoice.setValue(currentUser.getAddress().getCity());
+                        updateStateCombobox(currentUser.getAddress().getCity());
 
-            firstName.setPromptText("First Name");
-            lastName.setPromptText("Last Name");
+                        //Populate city choice and set its value
+                        if (cityChoice.getItems().contains(currentUser.getAddress().getState())) {
+                            cityChoice.setValue(currentUser.getAddress().getState());
+                        } else {
+                            System.err.println("City not found in ComboBox: " + currentUser.getAddress().getState());
+                        }
 
-            email.setText(currentUser.getEmail());
-            phoneNumber.setText(currentUser.getPhoneNumber());
-            dateOfBirth.setPromptText(TimeFormat.dateToString(currentUser.getDob()));
-            streetName.setText(currentUser.getAddress().getStreet());
-            streetNumber.setText(currentUser.getAddress().getNumber());
-            cityChoice.setValue(currentUser.getAddress().getCity());
-            cityChoice.getItems().addAll(city);
-        } else {
-            username.setText("tan");
-            firstName.setPromptText("First Name");
-            firstName.setFocusTraversable(false);
-            lastName.setPromptText("Last Name");
-            email.setPromptText("Email");
-            phoneNumber.setPromptText("Phone Number");
-            phoneNumber.setFocusTraversable(false);
-            dateOfBirth.setPromptText("19/10/2003");
-            cityChoice.setValue("tab");
-            cityChoice.getItems().addAll(city);
-        }
+                    } else {
+                        System.err.println("Province not found in ComboBox: " + currentUser.getAddress().getCity());
+                    }
+                } else {
+                    username.setText("UserName");
+                    firstName.setPromptText("First Name");
+                    // ... set other default values
+                }
+                provinceChoice.setOnAction(event -> {
+                    String selectedProvince = provinceChoice.getValue();
+                    updateStateCombobox(selectedProvince);
+                });
+            });
+        }).start();
     }
 
     @FXML
@@ -157,11 +177,19 @@ public class ProfileViewController implements Initializable {
             Map<String, Object> data = new HashMap<>();
             data.put("firstName", firstNameText);
             data.put("lastName", lastNameText);
+            data.put("username", firstNameText);
             data.put("email", emailText);
             data.put("phoneNumber", phoneNumberText);
-            data.put("date", date);
+            data.put("dob", date);
+
+            System.out.println(data);
 
             userController.updateProfile(5, data);
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Update Profile");
+            alert.setContentText("Your information update success update");
+            alert.showAndWait();
         }
     }
 
@@ -169,6 +197,7 @@ public class ProfileViewController implements Initializable {
     public void updateAddress(ActionEvent event) {
         String streetNameText = streetName.getText();
         String streetNumberText = streetNumber.getText();
+        String province = provinceChoice.getValue();
         String city = cityChoice.getValue();
 
         if (streetNameText == null) {
@@ -178,9 +207,15 @@ public class ProfileViewController implements Initializable {
         Map<String, Object> data = new HashMap<>();
         data.put("streetName", streetNameText);
         data.put("streetNumber", streetNumberText);
+        data.put("province", province);
         data.put("city", city);
 
         userController.updateAddress(5, data);
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Update Profile");
+        alert.setContentText("Your information update success update");
+        alert.showAndWait();
     }
 
     @FXML
@@ -289,5 +324,15 @@ public class ProfileViewController implements Initializable {
     private boolean isValidPhoneNumber(String phoneNumber) {
         String phoneRegex = "^\\d{3}\\d{3}\\d{4}$";  // Matches XXX-XXX-XXXX format
         return phoneNumber.matches(phoneRegex);
+    }
+
+    private void updateStateCombobox(String selectedProvince) {
+        if (selectedProvince != null) {
+            List<String> cities = provinceCities.getOrDefault(selectedProvince, new ArrayList<>());
+            ObservableList<String> cityList = FXCollections.observableArrayList(cities);
+            cityChoice.setItems(cityList);
+        } else {
+            cityChoice.getItems().clear();
+        }
     }
 }

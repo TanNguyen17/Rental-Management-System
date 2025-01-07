@@ -48,9 +48,9 @@ public class OwnerDaoImpl implements UserDao {
             if (owner != null) {
                 owner.setUsername((String) profile.get("username"));
                 owner.setDob(TimeFormat.stringToDate((String) profile.get("dob")));
+                owner.setDob(LocalDate.parse((String) profile.get("dob")));
                 owner.setEmail((String) profile.get("email"));
                 owner.setPhoneNumber(profile.get("phoneNumber").toString());
-                session.persist(owner);
             }
 
             transaction.commit();
@@ -112,10 +112,10 @@ public class OwnerDaoImpl implements UserDao {
 
             if (owner != null) {
                 Address address = owner.getAddress();
-                address.setCity(data.get("city").toString());
-//                address.setState(data.get("state").toString());
-                address.setNumber(data.get("number").toString());
-                address.setStreet(data.get("street").toString());
+                address.setCity(data.get("province").toString());
+                address.setState(data.get("city").toString());
+                address.setNumber(data.get("streetNumber").toString());
+                address.setStreet(data.get("streetName").toString());
             }
 
             transaction.commit();
