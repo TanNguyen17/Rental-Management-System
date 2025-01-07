@@ -1,14 +1,20 @@
 package com.yourcompany.rentalmanagement;
 
-import com.yourcompany.rentalmanagement.model.*;
-import com.yourcompany.rentalmanagement.util.HibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import com.yourcompany.rentalmanagement.model.Address;
+import com.yourcompany.rentalmanagement.model.CommercialProperty;
+import com.yourcompany.rentalmanagement.model.Host;
+import com.yourcompany.rentalmanagement.model.Owner;
+import com.yourcompany.rentalmanagement.model.Property;
+import com.yourcompany.rentalmanagement.model.RentalAgreement;
+import com.yourcompany.rentalmanagement.model.Tenant;
+import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
 public class DataGenerator {
     private static final String[] FIRST_NAMES = {"James", "John", "Robert", "Michael", "William", "David", "Richard", "Charles", "Joseph", "Thomas", "Mary", "Patricia", "Linda", "Barbara", "Elizabeth", "Jennifer", "Maria", "Susan", "Margaret", "Dorothy"};
@@ -35,8 +41,7 @@ public class DataGenerator {
                     tenants.get(i).addRentalAgreement(rentalAgreement);
                     session.persist(rentalAgreement);
                 }
-
-
+                
                 //Commit transaction
                 transaction.commit();
             } catch (Exception e) {
