@@ -1,30 +1,37 @@
 package com.yourcompany.rentalmanagement.controller;
 
-import com.yourcompany.rentalmanagement.dao.OwnerDaoImp;
-import com.yourcompany.rentalmanagement.model.User;
-
 import java.util.Map;
 
+import com.yourcompany.rentalmanagement.dao.impl.OwnerDaoImpl;
+import com.yourcompany.rentalmanagement.model.User;
+
 public class UserController {
-    OwnerDaoImp ownerDaoImp = new OwnerDaoImp();
+
+    private OwnerDaoImpl ownerDao;
     User user = new User();
+
+    public UserController() {
+        ownerDao = new OwnerDaoImpl();
+    }
+
     public User getUserProfile(long id) {
-        user = ownerDaoImp.getUserById(id);
+        user = ownerDao.getUserById(id);
         return user;
     }
+
     public void updateProfile(long userId, Map<String, Object> data) {
-        ownerDaoImp.updateProfile(userId, data);
+        ownerDao.updateProfile(userId, data);
     }
 
     public void updateAddress(long userId, Map<String, Object> data) {
-        ownerDaoImp.updateAddress(userId, data);
+        ownerDao.updateAddress(userId, data);
     }
 
     public void updateImageLink(long userId, String imageLink) {
-        ownerDaoImp.updateUserImage(userId, imageLink);
+        ownerDao.updateUserImage(userId, imageLink);
     }
 
     public void updatePassword(long userId, String password) {
-        ownerDaoImp.updatePassword(userId, password);
+        ownerDao.updatePassword(userId, password);
     }
 }
