@@ -31,6 +31,5 @@
         <mapping class="com.yourcompany.rentalmanagement.model.CommercialProperty"/>
         <mapping class="com.yourcompany.rentalmanagement.model.RentalAgreement"/>
         <mapping class="com.yourcompany.rentalmanagement.model.Payment"/>
-        <mapping class="com.yourcompany.rentalmanagement.model.Address"/>
     </session-factory>
 </hibernate-configuration>

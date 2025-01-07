@@ -15,6 +15,7 @@
 - **Build Tool**: Maven
 - **Testing**: JUnit 5
 - **Version Control**: Git and GitHub
+- **SDK**: Cloudinary 
 
 ## Setup Instructions
 
