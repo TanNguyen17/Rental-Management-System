@@ -1,17 +1,30 @@
 package com.yourcompany.rentalmanagement.model;
 
+import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.OneToOne;
 
 @MappedSuperclass
 public class Property {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true ,updatable = false, nullable = false, length = 10)
+    @Column(name = "id", unique = true, updatable = false, nullable = false, length = 10)
     private long id;
 
     @OneToOne(targetEntity = Address.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id", nullable = false ,referencedColumnName = "id")
+    @JoinColumn(name = "address_id", nullable = false, referencedColumnName = "id")
     private Address address;
 
     @Column(name = "price", nullable = false)
@@ -21,7 +34,7 @@ public class Property {
     @Column(name = "status", nullable = false)
     private propertyStatus status;
 
-    @Column(name = "imageLink")
+    @Column(name = "imageLink", nullable = false)
     private String imageLink;
 
     @ManyToOne(targetEntity = Owner.class, cascade = {CascadeType.ALL})
@@ -31,6 +44,18 @@ public class Property {
     @OneToOne(targetEntity = RentalAgreement.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "rental_agreement_id", referencedColumnName = "id", unique = true)
     private RentalAgreement rentalAgreement;
+
+    @Column(name = "title", nullable = false)
+    private String title;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "last_updated")
+    private LocalDateTime lastUpdated;
 
     public long getId() {
         return id;
@@ -78,6 +103,46 @@ public class Property {
 
     public void setRentalAgreement(RentalAgreement rentalAgreement) {
         this.rentalAgreement = rentalAgreement;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
     }
 
     public enum propertyStatus {
