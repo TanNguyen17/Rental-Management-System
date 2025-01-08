@@ -1,5 +1,6 @@
-package com.yourcompany.rentalmanagement.dao;
+package com.yourcompany.rentalmanagement.dao.impl;
 
+import com.yourcompany.rentalmanagement.dao.PaymentDao;
 import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
@@ -11,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PaymentDaoImp implements PaymentDao {
+public class PaymentDaoImpl implements PaymentDao {
     private Transaction transaction;
     private List<Payment> payments;
     private Payment payment;
     private Query<Payment> query;
     public static final int PAGE_SIZE = 10;
 
-    public PaymentDaoImp() {
+    public PaymentDaoImpl() {
         transaction = null;
         payments = new ArrayList<Payment>();
     }

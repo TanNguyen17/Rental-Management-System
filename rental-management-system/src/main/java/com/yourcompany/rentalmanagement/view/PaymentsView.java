@@ -1,7 +1,7 @@
 package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.PaymentController;
-import com.yourcompany.rentalmanagement.dao.PaymentDaoImp;
+import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
 import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.util.EmailUtil;

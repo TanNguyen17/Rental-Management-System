@@ -25,21 +25,23 @@ public class DataGenerator {
             Random random = new Random();
             try (Session session = HibernateUtil.getSessionFactory().openSession()) {
                 transaction = session.beginTransaction();
-                List<Owner> owners = session.createQuery("from Owner", Owner.class).list();
-                List<CommercialProperty> properties = session.createQuery("from CommercialProperty", CommercialProperty.class).list();
-                List<Tenant> tenants = session.createQuery("from Tenant", Tenant.class).list();
-                List<Host> hosts = session.createQuery("from Host", Host.class).list();
+//                List<Owner> owners = session.createQuery("from Owner", Owner.class).list();
+//                List<CommercialProperty> properties = session.createQuery("from CommercialProperty", CommercialProperty.class).list();
+//                List<Tenant> tenants = session.createQuery("from Tenant", Tenant.class).list();
+//                List<Host> hosts = session.createQuery("from Host", Host.class).list();
 
                 for (int i = 0; i < 20; i++) {
-                    RentalAgreement rentalAgreement = new RentalAgreement();
-                    rentalAgreement.setHost(hosts.get(i));
-                    rentalAgreement.setOwner(owners.get(i));
-                    rentalAgreement.setStatus(RentalAgreement.rentalAgreementStatus.NEW);
-                    rentalAgreement.setContractDate(generateRandomDate(random));
-                    rentalAgreement.setRentingFee(generateRandomPrice(random));
-                    properties.get(i).setRentalAgreement(rentalAgreement);
-                    tenants.get(i).addRentalAgreement(rentalAgreement);
-                    session.persist(rentalAgreement);
+//                    RentalAgreement rentalAgreement = new RentalAgreement();
+//                    rentalAgreement.setHost(hosts.get(i));
+//                    rentalAgreement.setOwner(owners.get(i));
+//                    rentalAgreement.setStatus(RentalAgreement.rentalAgreementStatus.NEW);
+//                    rentalAgreement.setContractDate(generateRandomDate(random));
+//                    rentalAgreement.setRentingFee(generateRandomPrice(random));
+//                    properties.get(i).setRentalAgreement(rentalAgreement);
+//                    tenants.get(i).addRentalAgreement(rentalAgreement);
+//                    session.persist(rentalAgreement);
+                    Owner owner = new Owner();
+
                 }
                 
                 //Commit transaction
