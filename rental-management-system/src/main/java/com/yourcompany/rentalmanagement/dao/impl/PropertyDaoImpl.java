@@ -3,6 +3,7 @@ package com.yourcompany.rentalmanagement.dao.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -16,6 +17,20 @@ import com.yourcompany.rentalmanagement.model.ResidentialProperty;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
 public class PropertyDaoImpl implements PropertyDao {
+    private Transaction transaction = null;
+    private List<Property> properties = new ArrayList<>();
+    private List<Long> propertyIds = new ArrayList<>();
+
+    public List<Long> getIDs() {
+        // Fetch the list of Property objects
+        List<Property> properties = getAllProperties();
+
+        // Extract the IDs from the Property objects
+        List<Long> propertyIds = properties.stream()
+                .map(Property::getId)
+                .collect(Collectors.toList());
+        return propertyIds;
+    }
 
     @Override
     public void createProperty(Property property) {
@@ -112,7 +127,7 @@ public class PropertyDaoImpl implements PropertyDao {
     @Override
     public List<Property> getAllProperties() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            List<Property> properties = new ArrayList<>();
+
 
             // Get residential properties
             Query<ResidentialProperty> residentialQuery = session.createQuery(

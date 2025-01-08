@@ -1,6 +1,6 @@
-package com.yourcompany.rentalmanagement.dao;
+package com.yourcompany.rentalmanagement.dao.impl;
 
-import com.yourcompany.rentalmanagement.model.Owner;
+import com.yourcompany.rentalmanagement.dao.RentalAgreementDao;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import org.hibernate.Session;

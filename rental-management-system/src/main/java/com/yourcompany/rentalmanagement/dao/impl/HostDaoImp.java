@@ -1,5 +1,6 @@
-package com.yourcompany.rentalmanagement.dao;
+package com.yourcompany.rentalmanagement.dao.impl;
 
+import com.yourcompany.rentalmanagement.dao.UserDao;
 import com.yourcompany.rentalmanagement.model.Address;
 import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
@@ -13,10 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class HostDaoImp implements UserDao{
+public class HostDaoImp implements UserDao {
     private List<Host> hosts = new ArrayList<Host>();
+    private List<String> hostNames = new ArrayList<>();
     private Host host;
-    private Transaction transaction;
+    private Transaction transaction = null;
 
     public HostDaoImp() {
         transaction = null;
@@ -34,6 +36,23 @@ public class HostDaoImp implements UserDao{
             }
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<String> getAllUserName() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Query<String> query = session.createQuery("select username from Host", String.class);
+            hostNames = query.getResultList();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return hostNames;
     }
 
     @Override

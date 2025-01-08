@@ -17,8 +17,8 @@ import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.TimeFormat;
 
 public class OwnerDaoImpl implements UserDao {
-
     private List<Owner> owners = new ArrayList<>();
+    private List<String> ownerNames = new ArrayList<>();
     private Owner owner;
     private Transaction transaction;
 
@@ -30,7 +30,7 @@ public class OwnerDaoImpl implements UserDao {
     public void loadData() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             owners = session.createQuery("from Owner", Owner.class).list();
-            owners.forEach(System.out::println);
+            // owners.forEach(System.out::println);
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -39,6 +39,22 @@ public class OwnerDaoImpl implements UserDao {
         }
     }
 
+    @Override
+    public List<String> getAllUserName() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Query<String> query = session.createQuery("select username from Owner ", String.class);
+            ownerNames = query.getResultList();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return ownerNames;
+    }
     @Override
     public void updateProfile(long id, Map<String, Object> profile) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {

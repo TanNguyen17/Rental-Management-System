@@ -4,16 +4,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
+import com.yourcompany.rentalmanagement.model.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.yourcompany.rentalmanagement.model.Address;
-import com.yourcompany.rentalmanagement.model.CommercialProperty;
-import com.yourcompany.rentalmanagement.model.Host;
-import com.yourcompany.rentalmanagement.model.Owner;
-import com.yourcompany.rentalmanagement.model.Property;
-import com.yourcompany.rentalmanagement.model.RentalAgreement;
-import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
 public class DataGenerator {
@@ -25,22 +19,32 @@ public class DataGenerator {
             Random random = new Random();
             try (Session session = HibernateUtil.getSessionFactory().openSession()) {
                 transaction = session.beginTransaction();
-                List<Owner> owners = session.createQuery("from Owner", Owner.class).list();
-                List<CommercialProperty> properties = session.createQuery("from CommercialProperty", CommercialProperty.class).list();
-                List<Tenant> tenants = session.createQuery("from Tenant", Tenant.class).list();
-                List<Host> hosts = session.createQuery("from Host", Host.class).list();
-
                 for (int i = 0; i < 20; i++) {
-                    RentalAgreement rentalAgreement = new RentalAgreement();
-                    rentalAgreement.setHost(hosts.get(i));
-                    rentalAgreement.setOwner(owners.get(i));
-                    rentalAgreement.setStatus(RentalAgreement.rentalAgreementStatus.NEW);
-                    rentalAgreement.setContractDate(generateRandomDate(random));
-                    rentalAgreement.setRentingFee(generateRandomPrice(random));
-                    properties.get(i).setRentalAgreement(rentalAgreement);
-                    tenants.get(i).addRentalAgreement(rentalAgreement);
-                    session.persist(rentalAgreement);
+                    Tenant tenant = new Tenant();
+                    tenant.setUsername(FIRST_NAMES[i] + " " + LAST_NAMES[i]);
+                    tenant.setPassword(FIRST_NAMES[i] + 1);
+                    tenant.setDob(generateRandomDate(random));
+                    tenant.setEmail(FIRST_NAMES[i] + "@gmail.com");
+                    tenant.setPhoneNumber(generateRandomPhoneNumber(random));
+                    tenant.setRole(UserRole.TENANT);
+                    tenant.setAddress(generateRandomAddress(random));
+                    session.persist(tenant);
                 }
+//                List<Owner> owners = session.createQuery("from Owner", Owner.class).list();
+//                List<CommercialProperty> properties = session.createQuery("from CommercialProperty", CommercialProperty.class).list();
+//                List<Host> hosts = session.createQuery("from Host", Host.class).list();
+//
+//                for (int i = 0; i < 20; i++) {
+//                    RentalAgreement rentalAgreement = new RentalAgreement();
+//                    rentalAgreement.setHost(hosts.get(i));
+//                    rentalAgreement.setOwner(owners.get(i));
+//                    rentalAgreement.setStatus(RentalAgreement.rentalAgreementStatus.NEW);
+//                    rentalAgreement.setContractDate(generateRandomDate(random));
+//                    rentalAgreement.setRentingFee(generateRandomPrice(random));
+//                    properties.get(i).setRentalAgreement(rentalAgreement);
+//                    tenants.get(i).addRentalAgreement(rentalAgreement);
+//                    session.persist(rentalAgreement);
+//                }
                 
                 //Commit transaction
                 transaction.commit();
@@ -50,6 +54,18 @@ public class DataGenerator {
                 }
                 e.printStackTrace();
             }
+    }
+    private static Tenant createRandomTenant(Session session, Random random) {
+        Tenant tenant = new Tenant();
+        tenant.setUsername(FIRST_NAMES[random.nextInt(FIRST_NAMES.length)] + " " + LAST_NAMES[random.nextInt(LAST_NAMES.length)]);
+        tenant.setPassword(FIRST_NAMES[random.nextInt(FIRST_NAMES.length)] + 1);
+        tenant.setDob(generateRandomDate(random));
+        tenant.setEmail(FIRST_NAMES[random.nextInt(FIRST_NAMES.length)] + "@gmail.com");
+        tenant.setPhoneNumber( generateRandomPhoneNumber(random));
+        tenant.setRole(UserRole.TENANT);
+//TENANT        tenant.setAddress(generateRandomAddress(random));
+        session.persist(tenant);
+        return tenant;
     }
 
     private static String generateUsername(String firstName, String lastName, Random random) {
