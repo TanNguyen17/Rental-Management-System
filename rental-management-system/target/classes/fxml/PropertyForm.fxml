@@ -22,6 +22,15 @@
     <!-- Property Status -->
     <ComboBox fx:id="statusCombo" promptText="Property Status *"/>
     
+    <!-- Host Selection -->
+    <VBox spacing="5">
+        <Text text="Property Host" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="hostComboBox" promptText="Select Host (Optional)"
+                  style="-fx-pref-width: 340;"/>
+        <Label text="Note: Without a host, tenants can only view the property" 
+               style="-fx-text-fill: #666666; -fx-font-style: italic;"/>
+    </VBox>
+    
     <!-- Price -->
     <TextField fx:id="priceField" promptText="Renting Fee ($ per month) *"/>
     
