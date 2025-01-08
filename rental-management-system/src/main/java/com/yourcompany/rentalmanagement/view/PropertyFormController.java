@@ -3,11 +3,14 @@ package com.yourcompany.rentalmanagement.view;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 import org.hibernate.Session;
 
 import com.yourcompany.rentalmanagement.dao.PropertyDao;
 import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
+import com.yourcompany.rentalmanagement.dao.impl.HostDaoImpl;
+import com.yourcompany.rentalmanagement.dao.HostDao;
 import com.yourcompany.rentalmanagement.model.Address;
 import com.yourcompany.rentalmanagement.model.CommercialProperty;
 import com.yourcompany.rentalmanagement.model.Owner;
@@ -16,6 +19,7 @@ import com.yourcompany.rentalmanagement.model.ResidentialProperty;
 import com.yourcompany.rentalmanagement.util.CloudinaryService;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.UserSession;
+import com.yourcompany.rentalmanagement.model.Host;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -28,6 +32,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.scene.control.ListCell;
+import javafx.util.StringConverter;
 
 public class PropertyFormController {
 
@@ -80,10 +86,14 @@ public class PropertyFormController {
     private File selectedImage;
     private final CloudinaryService cloudinaryService;
     private final PropertyDao propertyDao;
+    @FXML
+    private ComboBox<Host> hostComboBox;
+    private final HostDao hostDao;
 
     public PropertyFormController() {
         cloudinaryService = new CloudinaryService();
         propertyDao = new PropertyDaoImpl();
+        hostDao = new HostDaoImpl();
     }
 
     @FXML
@@ -102,6 +112,16 @@ public class PropertyFormController {
         priceField.textProperty().addListener((obs, old, newValue) -> {
             if (!newValue.matches("\\d*\\.?\\d*")) {
                 priceField.setText(old);
+            }
+        });
+
+        // Initialize host combo box
+        loadHosts();
+
+        // Add listener to status combo to handle host dependency
+        statusCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal == Property.propertyStatus.AVAILABLE && hostComboBox.getValue() == null) {
+                showWarning("Warning: Without a host, tenants can only view the property");
             }
         });
     }
@@ -213,6 +233,16 @@ public class PropertyFormController {
             Owner owner = session.get(Owner.class, ownerId);
             property.setOwner(owner);
         }
+
+        // Set host if selected
+        Host selectedHost = hostComboBox.getValue();
+        if (selectedHost != null) {
+            if (property instanceof ResidentialProperty) {
+                selectedHost.addResidentialProperty((ResidentialProperty) property);
+            } else if (property instanceof CommercialProperty) {
+                selectedHost.addCommercialProperty((CommercialProperty) property);
+            }
+        }
     }
 
     private boolean validateForm() {
@@ -275,6 +305,48 @@ public class PropertyFormController {
         selectedImage = null;
         propertyImageView.setImage(null);
         messageLabel.setText("");
+        hostComboBox.setValue(null);
+    }
+
+    private void loadHosts() {
+        try {
+            List<Host> hosts = hostDao.getAllHosts();
+            hostComboBox.getItems().addAll(hosts);
+
+            // Set cell factory to display host username
+            hostComboBox.setCellFactory(param -> new ListCell<Host>() {
+                @Override
+                protected void updateItem(Host host, boolean empty) {
+                    super.updateItem(host, empty);
+                    if (empty || host == null) {
+                        setText(null);
+                    } else {
+                        setText(host.getUsername());
+                    }
+                }
+            });
+
+            // Set converter for the selected value display
+            hostComboBox.setConverter(new StringConverter<Host>() {
+                @Override
+                public String toString(Host host) {
+                    return host == null ? null : host.getUsername();
+                }
+
+                @Override
+                public Host fromString(String string) {
+                    return null; // Not needed for this use case
+                }
+            });
+        } catch (Exception e) {
+            System.err.println("Error loading hosts: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void showWarning(String message) {
+        messageLabel.setStyle("-fx-text-fill: orange;");
+        messageLabel.setText(message);
     }
 
     // ... validation and helper methods ...
