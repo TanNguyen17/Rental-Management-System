@@ -11,6 +11,7 @@ com\yourcompany\rentalmanagement\util\UserSession.class
 com\yourcompany\rentalmanagement\model\Property$propertyStatus.class
 com\yourcompany\rentalmanagement\dao\ManagerDao.class
 com\yourcompany\rentalmanagement\dao\impl\OwnerDaoImpl.class
+com\yourcompany\rentalmanagement\view\PropertyFormController$2.class
 com\yourcompany\rentalmanagement\util\ProvinceData.class
 com\yourcompany\rentalmanagement\model\Manager.class
 com\yourcompany\rentalmanagement\dao\PaymentDao.class
@@ -18,6 +19,7 @@ com\yourcompany\rentalmanagement\dao\impl\PaymentDaoImpl.class
 com\yourcompany\rentalmanagement\controller\PaymentController.class
 com\yourcompany\rentalmanagement\dao\UserDao.class
 com\yourcompany\rentalmanagement\view\LoginViewController.class
+com\yourcompany\rentalmanagement\view\PropertyFormController$1.class
 com\yourcompany\rentalmanagement\model\CommercialProperty.class
 com\yourcompany\rentalmanagement\controller\UserController.class
 com\yourcompany\rentalmanagement\util\HibernateUtil.class
@@ -33,6 +35,8 @@ com\yourcompany\rentalmanagement\view\PropertyFormController.class
 com\yourcompany\rentalmanagement\controller\LoginController.class
 com\yourcompany\rentalmanagement\model\RentalAgreement.class
 com\yourcompany\rentalmanagement\model\Address.class
+com\yourcompany\rentalmanagement\dao\impl\HostDaoImpl.class
+com\yourcompany\rentalmanagement\dao\HostDao.class
 com\yourcompany\rentalmanagement\model\Property.class
 com\yourcompany\rentalmanagement\service\AuthService$1.class
 com\yourcompany\rentalmanagement\util\CloudinaryService.class
