@@ -1,0 +1,5 @@
+com\yourcompany\rentalmanagement\data\PropertyDataGenerator.class
+com\yourcompany\rentalmanagement\data\DataGeneratorTest.class
+com\yourcompany\rentalmanagement\HibernateTest.class
+com\yourcompany\rentalmanagement\AppTest.class
+com\yourcompany\rentalmanagement\data\PaymentDataGenerator.class
