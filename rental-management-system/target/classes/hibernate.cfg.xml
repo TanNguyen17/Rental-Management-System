@@ -25,7 +25,7 @@
         <!-- Set the current session context -->
         <property name="current_session_context_class">thread</property>
 
-        <!-- Drop and re-create the database schema on startup , im doing this for testing purposes only, change later in production (update or validate)-->
+        <!-- -->
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <!-- Mapping with model class containing annotations -->
@@ -37,5 +37,6 @@
         <mapping class="com.yourcompany.rentalmanagement.model.CommercialProperty"/>
         <mapping class="com.yourcompany.rentalmanagement.model.RentalAgreement"/>
         <mapping class="com.yourcompany.rentalmanagement.model.Payment"/>
+        <mapping class="com.yourcompany.rentalmanagement.model.Address"/>
     </session-factory>
 </hibernate-configuration> 

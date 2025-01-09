@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+
+<TableView fx:id="rentalAgreementTable" prefHeight="423.0" prefWidth="880.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <columns>
+        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" text="AGREEMENT ID" />
+        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" text="STATUS" />
+        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" text="CONTRACT DATE" />
+        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="147.79190063476562" text="PROPERTY" />
+        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="139.89605712890625" text="RENTING FEE" />
+        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="111.1038818359375" text="OWNER" />
+        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.2728271484375" text="TENANT" />
+    </columns>
+</TableView>

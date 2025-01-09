@@ -1,41 +1,50 @@
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\view\PaymentView.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\model\CommercialProperty.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\model\Tenant.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\dao\impl\OwnerDaoImpl.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\model\User.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\view\TenantView.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\model\Host.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\view\ViewRentalPropertiesController.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\model\Address.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\model\Owner.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\util\TokenStorage.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\util\EmailUtil.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\util\ProvinceData.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\view\PropertyDetailsController.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\dao\PropertyDao.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\dao\HostDao.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\util\UserSession.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\model\ResidentialProperty.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\model\Payment.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\controller\LoginController.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\dao\PaymentDao.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\dao\ManagerDao.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\model\RentalAgreement.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\model\UserRole.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\dao\impl\PaymentDaoImpl.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\controller\UserController.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\util\CloudinaryService.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\controller\PaymentController.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\dao\impl\ManagerDaoImpl.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\view\LoginViewController.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\dao\impl\HostDaoImpl.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\dao\UserDao.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\model\Property.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\service\AuthService.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\dao\impl\PropertyDaoImpl.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\util\TimeFormat.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\model\Manager.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\view\ProfileViewController.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\MainApp.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\view\PropertyFormController.java
-D:\RMIT\PROJECTS\FURTHER\Build a Backend\further-programming-assignment-2-build-a-backend-FTECH\rental-management-system\src\main\java\com\yourcompany\rentalmanagement\util\HibernateUtil.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/LoginViewController.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/TenantView.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/controller/RentalAgreementController.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/PaymentView.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/Property.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/service/AuthService.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/controller/PaymentController.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/SideMenuView.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/impl/ManagerDaoImpl.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/Owner.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/controller/ManagerController.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/impl/PropertyDaoImpl.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/PropertyFormController.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/RentalAgreement.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/impl/HostDaoImpl.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/UserRole.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/PropertyDao.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/Tenant.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/util/EmailUtil.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/impl/RentalAgreementDaoImpl.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/util/UserSession.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/PaymentDao.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/Address.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/util/ProvinceData.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/HostDao.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/PropertyDetailsController.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/impl/OwnerDaoImpl.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/Payment.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/util/TimeFormat.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/ResidentialProperty.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/PaymentsView.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/Host.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/util/CloudinaryService.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/controller/SideMenuController.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/UserDao.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/impl/TenantDaoImpl.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/util/HibernateUtil.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/RentalManagementDao.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/MainApp.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/Manager.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/CommercialProperty.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/util/TokenStorage.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/impl/PaymentDaoImpl.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/ProfileView.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/controller/LoginController.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/User.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/RentalAgreementListView.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/ViewRentalPropertiesController.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/ManagerDao.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/controller/UserController.java
