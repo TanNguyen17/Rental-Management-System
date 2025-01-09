@@ -16,6 +16,7 @@ com\yourcompany\rentalmanagement\util\ProvinceData.class
 com\yourcompany\rentalmanagement\model\Manager.class
 com\yourcompany\rentalmanagement\dao\PaymentDao.class
 com\yourcompany\rentalmanagement\dao\impl\PaymentDaoImpl.class
+com\yourcompany\rentalmanagement\view\components\LoadingSpinner.class
 com\yourcompany\rentalmanagement\controller\PaymentController.class
 com\yourcompany\rentalmanagement\dao\UserDao.class
 com\yourcompany\rentalmanagement\view\LoginViewController.class

@@ -3,35 +3,38 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
-<?import javafx.geometry.Insets?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" 
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
       fx:controller="com.yourcompany.rentalmanagement.view.PropertyDetailsController"
-      spacing="15" style="-fx-padding: 20;">
+      styleClass="details-container" spacing="20" prefWidth="600" prefHeight="800">
     
-    <ImageView fx:id="propertyImage" fitHeight="300" fitWidth="400" preserveRatio="true"/>
+    <ImageView fx:id="propertyImage" fitWidth="600" fitHeight="300" preserveRatio="true"/>
     
-    <GridPane hgap="10" vgap="10">
-        <Label text="Title:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <Label fx:id="titleLabel" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <VBox fx:id="contentContainer" styleClass="content-container" spacing="15">
+        <Label fx:id="titleLabel" styleClass="details-title"/>
+        <!-- Type label will be inserted here programmatically -->
+        <Label fx:id="priceLabel" styleClass="details-price"/>
+        <Label fx:id="descriptionLabel" styleClass="details-description"/>
         
-        <Label text="Price:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <Label fx:id="priceLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <VBox styleClass="details-section" spacing="10">
+            <Label text="Property Details" styleClass="section-title"/>
+            <FlowPane fx:id="featuresContainer" styleClass="features-container"/>
+        </VBox>
         
-        <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <Label fx:id="statusLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <VBox styleClass="details-section" spacing="10">
+            <Label text="Location" styleClass="section-title"/>
+            <GridPane fx:id="addressGrid" vgap="5" hgap="10">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="100"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+            </GridPane>
+        </VBox>
         
-        <Label text="Host:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-        <Label fx:id="hostLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-        
-        <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-        <TextArea fx:id="descriptionArea" editable="false" wrapText="true" 
-                  GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-        
-        <Label text="Address:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-        <VBox fx:id="addressBox" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-        
-        <!-- Property specific details will be added dynamically -->
-        <VBox fx:id="specificDetailsBox" GridPane.columnSpan="2" GridPane.rowIndex="6"/>
-    </GridPane> 
+        <VBox styleClass="details-section" spacing="10">
+            <Label text="Hosting Information" styleClass="section-title"/>
+            <VBox fx:id="hostContainer" spacing="5"/>
+        </VBox>
+    </VBox>
+    
 </VBox> 

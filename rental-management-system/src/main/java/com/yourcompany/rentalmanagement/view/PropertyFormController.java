@@ -7,24 +7,29 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import com.yourcompany.rentalmanagement.dao.PropertyDao;
-import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
-import com.yourcompany.rentalmanagement.dao.impl.HostDaoImpl;
 import com.yourcompany.rentalmanagement.dao.HostDao;
+import com.yourcompany.rentalmanagement.dao.PropertyDao;
+import com.yourcompany.rentalmanagement.dao.impl.HostDaoImpl;
+import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
 import com.yourcompany.rentalmanagement.model.Address;
 import com.yourcompany.rentalmanagement.model.CommercialProperty;
+import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.ResidentialProperty;
 import com.yourcompany.rentalmanagement.util.CloudinaryService;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.UserSession;
-import com.yourcompany.rentalmanagement.model.Host;
+import com.yourcompany.rentalmanagement.view.components.LoadingSpinner;
 
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -32,7 +37,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.scene.control.ListCell;
 import javafx.util.StringConverter;
 
 public class PropertyFormController {
@@ -48,7 +52,6 @@ public class PropertyFormController {
     @FXML
     private TextField priceField;
 
-    // Address fields
     @FXML
     private TextField streetField;
     @FXML
@@ -58,7 +61,6 @@ public class PropertyFormController {
     @FXML
     private TextField stateField;
 
-    // Commercial fields
     @FXML
     private VBox commercialFields;
     @FXML
@@ -68,7 +70,6 @@ public class PropertyFormController {
     @FXML
     private TextField squareFootageField;
 
-    // Residential fields
     @FXML
     private VBox residentialFields;
     @FXML
@@ -90,6 +91,14 @@ public class PropertyFormController {
     private ComboBox<Host> hostComboBox;
     private final HostDao hostDao;
 
+    private LoadingSpinner loadingSpinner;
+
+    private boolean isEditMode = false;
+    private Property propertyToEdit;
+
+    @FXML
+    private Button submitButton;
+
     public PropertyFormController() {
         cloudinaryService = new CloudinaryService();
         propertyDao = new PropertyDaoImpl();
@@ -98,32 +107,64 @@ public class PropertyFormController {
 
     @FXML
     public void initialize() {
-        // Initialize property type combo
-        propertyTypeCombo.getItems().addAll("Residential", "Commercial");
+
+        propertyTypeCombo.setItems(FXCollections.observableArrayList("Residential", "Commercial"));
+        propertyTypeCombo.setPromptText("Select Property Type *");
         propertyTypeCombo.setOnAction(e -> handlePropertyTypeChange());
 
-        // Initialize status combo
-        statusCombo.getItems().addAll(
+        statusCombo.setItems(FXCollections.observableArrayList(
                 Property.propertyStatus.AVAILABLE,
                 Property.propertyStatus.UNDER_MAINTENANCE
-        );
+        ));
+        statusCombo.setPromptText("Select Status *");
 
-        // Add number-only validation to price field
         priceField.textProperty().addListener((obs, old, newValue) -> {
             if (!newValue.matches("\\d*\\.?\\d*")) {
                 priceField.setText(old);
             }
         });
 
-        // Initialize host combo box
+        // host combo box
         loadHosts();
 
-        // Add listener to status combo to handle host dependency
         statusCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal == Property.propertyStatus.AVAILABLE && hostComboBox.getValue() == null) {
                 showWarning("Warning: Without a host, tenants can only view the property");
             }
         });
+
+        // loading spinner
+        loadingSpinner = new LoadingSpinner();
+
+        titleField.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.getStylesheets().addAll(
+                        getClass().getResource("/css/common.css").toExternalForm(),
+                        getClass().getResource("/css/property-form.css").toExternalForm(),
+                        getClass().getResource("/css/components/loading-spinner.css").toExternalForm()
+                );
+
+                VBox root = (VBox) titleField.getScene().getRoot();
+
+                if (!root.getChildren().contains(loadingSpinner)) {
+                    root.getChildren().add(loadingSpinner);
+
+                    loadingSpinner.setManaged(false);
+                    loadingSpinner.setMouseTransparent(false);
+
+                    loadingSpinner.toFront();
+                }
+            }
+        });
+
+        propertyTypeCombo.getItems().addAll("Residential", "Commercial");
+        propertyTypeCombo.setValue("Residential"); // Set default value
+
+        propertyTypeCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
+            updateFieldVisibility(newVal);
+        });
+        
+        updateFieldVisibility(propertyTypeCombo.getValue());
     }
 
     private void handlePropertyTypeChange() {
@@ -154,44 +195,56 @@ public class PropertyFormController {
     @FXML
     private void handleSubmit() {
         if (!validateForm()) {
-            System.out.println("Form validation failed");
             return;
         }
 
         try {
-            System.out.println("Attempting to create property...");
-            // Upload image first
-            String imageUrl = cloudinaryService.uploadImage(selectedImage);
-            System.out.println("Image uploaded successfully: " + imageUrl);
+            VBox root = (VBox) titleField.getScene().getRoot();
+            Platform.runLater(() -> {
+                loadingSpinner.show(root);
+                root.setDisable(true);
+            });
 
-            // Create property based on type
-            if ("Commercial".equals(propertyTypeCombo.getValue())) {
-                System.out.println("Creating commercial property...");
-                createCommercialProperty(imageUrl);
+            String imageUrl;
+            if (selectedImage != null) {
+                imageUrl = cloudinaryService.uploadImage(selectedImage);
+            } else if (isEditMode) {
+                imageUrl = propertyToEdit.getImageLink();
             } else {
-                System.out.println("Creating residential property...");
-                createResidentialProperty(imageUrl);
+                showError("Please select an image");
+                return;
             }
 
-            showSuccess("Property created successfully!");
-            System.out.println("Property created successfully");
+            if (isEditMode) {
+                updateProperty(imageUrl);
+            } else {
+                createNewProperty(imageUrl);
+            }
+
+            showSuccess(isEditMode ? "Property updated successfully!" : "Property created successfully!");
             clearForm();
 
-            // Close the form window after successful creation
-            ((Stage) titleField.getScene().getWindow()).close();
+            Platform.runLater(() -> {
+                ((Stage) titleField.getScene().getWindow()).close();
+            });
+
         } catch (Exception e) {
-            System.err.println("Error creating property: " + e.getMessage());
-            e.printStackTrace();
-            showError("Error creating property: " + e.getMessage());
+            Platform.runLater(() -> {
+                showError("Error " + (isEditMode ? "updating" : "creating") + " property: " + e.getMessage());
+            });
+        } finally {
+            VBox root = (VBox) titleField.getScene().getRoot();
+            Platform.runLater(() -> {
+                loadingSpinner.hide(root);
+                root.setDisable(false);
+            });
         }
     }
 
     private void createCommercialProperty(String imageUrl) {
         CommercialProperty property = new CommercialProperty();
-        // Set common properties
         setCommonProperties(property, imageUrl);
 
-        // Set commercial-specific properties
         property.setBusinessType(businessTypeField.getText());
         property.setParkingSpace(parkingSpaceCheck.isSelected());
         property.setSquareFootage(Double.parseDouble(squareFootageField.getText()));
@@ -201,10 +254,8 @@ public class PropertyFormController {
 
     private void createResidentialProperty(String imageUrl) {
         ResidentialProperty property = new ResidentialProperty();
-        // Set common properties
         setCommonProperties(property, imageUrl);
 
-        // Set residential-specific properties
         property.setNumberOfBedrooms(Integer.parseInt(bedroomsField.getText()));
         property.setGardenAvailability(gardenCheck.isSelected());
         property.setPetFriendliness(petFriendlyCheck.isSelected());
@@ -219,7 +270,6 @@ public class PropertyFormController {
         property.setStatus(statusCombo.getValue());
         property.setImageLink(imageUrl);
 
-        // Set address
         Address address = new Address();
         address.setStreet(streetField.getText());
         address.setNumber(numberField.getText());
@@ -227,26 +277,23 @@ public class PropertyFormController {
         address.setState(stateField.getText());
         property.setAddress(address);
 
-        // Set owner from current user session
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            long ownerId = UserSession.getInstance().getCurrentUser().getId();
-            Owner owner = session.get(Owner.class, ownerId);
-            property.setOwner(owner);
+        if (isEditMode) {
+            property.setOwner(propertyToEdit.getOwner());
+        } else {
+            try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+                Owner owner = session.get(Owner.class, UserSession.getInstance().getCurrentUser().getId());
+                property.setOwner(owner);
+            }
         }
 
-        // Set host if selected
+        // Store selected host ID for DAO to handle
         Host selectedHost = hostComboBox.getValue();
         if (selectedHost != null) {
-            if (property instanceof ResidentialProperty) {
-                selectedHost.addResidentialProperty((ResidentialProperty) property);
-            } else if (property instanceof CommercialProperty) {
-                selectedHost.addCommercialProperty((CommercialProperty) property);
-            }
+            property.setHostId(selectedHost.getId());
         }
     }
 
     private boolean validateForm() {
-        // Basic validation
         if (titleField.getText().isEmpty()
                 || priceField.getText().isEmpty()
                 || propertyTypeCombo.getValue() == null
@@ -255,12 +302,11 @@ public class PropertyFormController {
                 || numberField.getText().isEmpty()
                 || cityField.getText().isEmpty()
                 || stateField.getText().isEmpty()
-                || selectedImage == null) {
+                || (!isEditMode && selectedImage == null)) {
             showError("Please fill in all required fields (marked with *)");
             return false;
         }
 
-        // Validate property type specific fields
         if ("Commercial".equals(propertyTypeCombo.getValue())) {
             if (businessTypeField.getText().isEmpty() || squareFootageField.getText().isEmpty()) {
                 showError("Please fill in all commercial property fields");
@@ -312,8 +358,6 @@ public class PropertyFormController {
         try {
             List<Host> hosts = hostDao.getAllHosts();
             hostComboBox.getItems().addAll(hosts);
-
-            // Set cell factory to display host username
             hostComboBox.setCellFactory(param -> new ListCell<Host>() {
                 @Override
                 protected void updateItem(Host host, boolean empty) {
@@ -326,7 +370,6 @@ public class PropertyFormController {
                 }
             });
 
-            // Set converter for the selected value display
             hostComboBox.setConverter(new StringConverter<Host>() {
                 @Override
                 public String toString(Host host) {
@@ -347,6 +390,98 @@ public class PropertyFormController {
     private void showWarning(String message) {
         messageLabel.setStyle("-fx-text-fill: orange;");
         messageLabel.setText(message);
+    }
+
+    public void setEditMode(Property property) {
+        isEditMode = true;
+        propertyToEdit = property;
+
+        // Set property type and trigger visibility update
+        if (property instanceof ResidentialProperty) {
+            propertyTypeCombo.setValue("Residential");
+            ResidentialProperty rp = (ResidentialProperty) property;
+            // ... set residential fields ...
+        } else if (property instanceof CommercialProperty) {
+            propertyTypeCombo.setValue("Commercial");
+            CommercialProperty cp = (CommercialProperty) property;
+            // ... set commercial fields ...
+        }
+
+        // Force update field visibility
+        updateFieldVisibility(propertyTypeCombo.getValue());
+
+        // Populate form fields
+        titleField.setText(property.getTitle());
+        descriptionField.setText(property.getDescription());
+        priceField.setText(String.valueOf(property.getPrice()));
+        statusCombo.setValue(property.getStatus());
+
+        // Set address fields
+        Address address = property.getAddress();
+        if (address != null) {
+            streetField.setText(address.getStreet());
+            numberField.setText(address.getNumber());
+            cityField.setText(address.getCity());
+            stateField.setText(address.getState());
+        }
+
+        if (!property.getHosts().isEmpty()) {
+            hostComboBox.setValue(property.getHosts().get(0));
+        }
+
+        try {
+            propertyImageView.setImage(new Image(property.getImageLink()));
+        } catch (Exception e) {
+            showError("Error loading property image");
+        }
+
+        submitButton.setText("Update Property");
+    }
+
+    private void updateProperty(String imageUrl) {
+        if (propertyToEdit instanceof ResidentialProperty) {
+            ResidentialProperty property = (ResidentialProperty) propertyToEdit;
+            setCommonProperties(property, imageUrl);
+            property.setNumberOfBedrooms(Integer.parseInt(bedroomsField.getText()));
+            property.setGardenAvailability(gardenCheck.isSelected());
+            property.setPetFriendliness(petFriendlyCheck.isSelected());
+            propertyDao.updateProperty(property);
+        } else if (propertyToEdit instanceof CommercialProperty) {
+            CommercialProperty property = (CommercialProperty) propertyToEdit;
+            setCommonProperties(property, imageUrl);
+            property.setBusinessType(businessTypeField.getText());
+            property.setParkingSpace(parkingSpaceCheck.isSelected());
+            property.setSquareFootage(Double.parseDouble(squareFootageField.getText()));
+            propertyDao.updateProperty(property);
+        }
+    }
+
+    private void createNewProperty(String imageUrl) {
+        if ("Commercial".equals(propertyTypeCombo.getValue())) {
+            createCommercialProperty(imageUrl);
+        } else {
+            createResidentialProperty(imageUrl);
+        }
+    }
+
+    private void updateFieldVisibility(String propertyType) {
+        boolean isResidential = "Residential".equals(propertyType);
+
+        // Residential fields
+        bedroomsField.setVisible(isResidential);
+        bedroomsField.setManaged(isResidential);
+        gardenCheck.setVisible(isResidential);
+        gardenCheck.setManaged(isResidential);
+        petFriendlyCheck.setVisible(isResidential);
+        petFriendlyCheck.setManaged(isResidential);
+
+        // Commercial fields
+        businessTypeField.setVisible(!isResidential);
+        businessTypeField.setManaged(!isResidential);
+        parkingSpaceCheck.setVisible(!isResidential);
+        parkingSpaceCheck.setManaged(!isResidential);
+        squareFootageField.setVisible(!isResidential);
+        squareFootageField.setManaged(!isResidential);
     }
 
     // ... validation and helper methods ...

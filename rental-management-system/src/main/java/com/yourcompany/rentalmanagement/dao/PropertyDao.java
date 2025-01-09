@@ -32,4 +32,8 @@ public interface PropertyDao {
     List<CommercialProperty> getAllCommercialProperties();
 
     List<ResidentialProperty> getAllResidentialProperties();
+
+    List<Property> getAllPropertiesPaginated(int page, int pageSize);
+
+    List<Property> getAllPropertiesAfterPage(int page, int pageSize);
 }

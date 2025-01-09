@@ -2,14 +2,16 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.model.Address;
 import com.yourcompany.rentalmanagement.model.CommercialProperty;
+import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.ResidentialProperty;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 public class PropertyDetailsController {
@@ -21,68 +23,83 @@ public class PropertyDetailsController {
     @FXML
     private Label priceLabel;
     @FXML
-    private Label statusLabel;
+    private Label descriptionLabel;
     @FXML
-    private Label hostLabel;
+    private FlowPane featuresContainer;
     @FXML
-    private TextArea descriptionArea;
+    private GridPane addressGrid;
     @FXML
-    private VBox addressBox;
+    private VBox hostContainer;
     @FXML
-    private VBox specificDetailsBox;
+    private VBox contentContainer;
 
     public void setProperty(Property property) {
-        // Set basic property details
         propertyImage.setImage(new Image(property.getImageLink()));
         titleLabel.setText(property.getTitle());
+
+        String propertyType = property instanceof ResidentialProperty ? "Residential Property" : "Commercial Property";
+        Label typeLabel = new Label(propertyType);
+        typeLabel.getStyleClass().add("property-type-label");
+
         priceLabel.setText(String.format("$%.2f", property.getPrice()));
-        statusLabel.setText(property.getStatus().toString());
+        descriptionLabel.setText(property.getDescription());
 
-        // Set address
-        Address address = property.getAddress();
-        addressBox.getChildren().addAll(
-                new Label(address.getNumber() + " " + address.getStreet()),
-                new Label(address.getCity() + ", " + address.getState())
-        );
+        contentContainer.getChildren().add(1, typeLabel); // Add after title
 
-        // Set specific details based on property type
-        if (property instanceof CommercialProperty) {
-            setCommercialDetails((CommercialProperty) property);
-        } else if (property instanceof ResidentialProperty) {
-            setResidentialDetails((ResidentialProperty) property);
-        }
-
-        // Set host info
         if (property instanceof ResidentialProperty) {
-            ResidentialProperty rp = (ResidentialProperty) property;
-            if (!rp.getHosts().isEmpty()) {
-                hostLabel.setText(rp.getHosts().get(0).getUsername());
-            } else {
-                hostLabel.setText("No host assigned");
-            }
+            setupResidentialFeatures((ResidentialProperty) property);
         } else if (property instanceof CommercialProperty) {
-            CommercialProperty cp = (CommercialProperty) property;
-            if (!cp.getHosts().isEmpty()) {
-                hostLabel.setText(cp.getHosts().get(0).getUsername());
-            } else {
-                hostLabel.setText("No host assigned");
+            setupCommercialFeatures((CommercialProperty) property);
+        }
+
+        setupAddress(property.getAddress());
+
+        setupHostInfo(property);
+    }
+
+    private void setupResidentialFeatures(ResidentialProperty property) {
+        addFeature(featuresContainer, property.getNumberOfBedrooms() + " Bedrooms");
+        if (property.isGardenAvailability()) {
+            addFeature(featuresContainer, "Garden Available");
+        }
+        if (property.isPetFriendliness()) {
+            addFeature(featuresContainer, "Pet Friendly");
+        }
+    }
+
+    private void setupCommercialFeatures(CommercialProperty property) {
+        addFeature(featuresContainer, "Business Type: " + property.getBusinessType());
+        addFeature(featuresContainer, String.format("%.0f sq ft", property.getSquareFootage()));
+        if (property.isParkingSpace()) {
+            addFeature(featuresContainer, "Parking Available");
+        }
+    }
+
+    private void setupAddress(Address address) {
+        addAddressField("Street", address.getStreet());
+        addAddressField("City", address.getCity());
+        addAddressField("State", address.getState());
+    }
+
+    private void setupHostInfo(Property property) {
+        if (property.getHosts() != null && !property.getHosts().isEmpty()) {
+            for (Host host : property.getHosts()) {
+                Label hostLabel = new Label("Hosted by: " + host.getUsername());
+                hostLabel.getStyleClass().add("host-info");
+                hostContainer.getChildren().add(hostLabel);
             }
         }
     }
 
-    private void setCommercialDetails(CommercialProperty property) {
-        specificDetailsBox.getChildren().addAll(
-                new Label("Business Type: " + property.getBusinessType()),
-                new Label("Square Footage: " + property.getSquareFootage()),
-                new Label("Parking Space: " + (property.isParkingSpace() ? "Yes" : "No"))
-        );
+    private void addFeature(FlowPane container, String text) {
+        Label label = new Label(text);
+        label.getStyleClass().add("feature-label");
+        container.getChildren().add(label);
     }
 
-    private void setResidentialDetails(ResidentialProperty property) {
-        specificDetailsBox.getChildren().addAll(
-                new Label("Bedrooms: " + property.getNumberOfBedrooms()),
-                new Label("Garden: " + (property.isGardenAvailability() ? "Yes" : "No")),
-                new Label("Pet Friendly: " + (property.isPetFriendliness() ? "Yes" : "No"))
-        );
+    private void addAddressField(String label, String value) {
+        int row = addressGrid.getRowCount();
+        addressGrid.add(new Label(label + ":"), 0, row);
+        addressGrid.add(new Label(value), 1, row);
     }
 }
