@@ -11,6 +11,7 @@ com/yourcompany/rentalmanagement/model/UserRole.class
 com/yourcompany/rentalmanagement/dao/PropertyDao.class
 com/yourcompany/rentalmanagement/dao/impl/ManagerDaoImpl.class
 com/yourcompany/rentalmanagement/controller/PaymentController.class
+com/yourcompany/rentalmanagement/view/RentalAgreementListView$2.class
 com/yourcompany/rentalmanagement/view/PropertyView.class
 com/yourcompany/rentalmanagement/view/PaymentsView$1.class
 com/yourcompany/rentalmanagement/view/PropertyFormController$1.class

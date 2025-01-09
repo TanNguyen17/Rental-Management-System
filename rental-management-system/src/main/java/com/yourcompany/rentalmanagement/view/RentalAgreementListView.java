@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -42,7 +43,10 @@ public class RentalAgreementListView implements Initializable {
     TableColumn<RentalAgreement, String> host = new TableColumn<>();
 
     @FXML
-    private TableColumn<RentalAgreement, String> actions;
+    private TableColumn<RentalAgreement, Button> view = new TableColumn<>();
+
+    @FXML
+    private TableColumn<RentalAgreement, Button> delete = new TableColumn<>();
 
     @FXML
     TableColumn<RentalAgreement, Double> rentingFee = new TableColumn<>();
@@ -50,10 +54,12 @@ public class RentalAgreementListView implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle bundle){
         initializeColumn();
+        initializeViewMoreColumn();
+        initializeDeleteColumn();
         rentalAgreementTableView.setItems(rentalAgreements);
     }
 
-    public void initializeColumn(){
+    private void initializeColumn(){
         agreementId.setCellValueFactory(new PropertyValueFactory<>("id"));
         status.setCellValueFactory(new PropertyValueFactory<>("status"));
         contractedDate.setCellValueFactory(new PropertyValueFactory<>("contractDate"));
@@ -63,43 +69,42 @@ public class RentalAgreementListView implements Initializable {
 //        tenants.setCellValueFactory(new PropertyValueFactory<>("tenantsName"));
     }
 
-    private void initializeActionColumn() {
-        Callback<TableColumn<RentalAgreement, String>, TableCell<RentalAgreement, String>> cellFactory =
-                (TableColumn<RentalAgreement, String> param) -> {
-            final TableCell<RentalAgreement, String> cell = new TableCell<RentalAgreement, String>() {
-                @Override
-                public void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setText(null);
-                        setGraphic(null);
-                    } else {
-                        FontAwesomeIconView viewIcon = new FontAwesomeIconView(FontAwesomeIcon.DOT_CIRCLE_ALT);
-                        FontAwesomeIconView sendEmail = new FontAwesomeIconView(FontAwesomeIcon.MAIL_FORWARD);
-
-                        viewIcon.setStyle(
-                                "-fx-cursor: hand ;"
-                                        + "-glyph-size:28px;"
-                        );
-
-                        viewIcon.setOnMouseClicked(event -> {
-                            System.out.println("You want to view!");
-                        });
-
-                        sendEmail.setOnMouseClicked(event -> {
-                            System.out.println("You want to send email!");
-                        });
-
-                        HBox viewButton = new HBox(viewIcon, sendEmail);
-                        viewButton.setStyle("-fx-alignment:center");
-                        setGraphic(viewButton);
-                        setText(null);
-                    }
+    private void initializeViewMoreColumn() {
+        view.setCellFactory(col -> new TableCell<>(){
+            @Override
+            public void updateItem(Button item, boolean empty){
+                super.updateItem(item, empty);
+                setText(null);
+                setGraphic(null);
+                if (!empty){
+                    Button button = new Button("View More");
+                    button.setOnAction(e -> {
+                        System.out.println(this.getTableRow().getIndex());
+                    });
+                    setText(null);
+                    setGraphic(button);
                 }
-            };
-            return cell;
-        };
-        actions.setCellFactory(cellFactory);
+            }
+        });
+    }
+
+    private void initializeDeleteColumn() {
+        delete.setCellFactory(col -> new TableCell<>(){
+            @Override
+            public void updateItem(Button item, boolean empty){
+                super.updateItem(item, empty);
+                setText(null);
+                setGraphic(null);
+                if (!empty){
+                    Button button = new Button("Delete");
+                    button.setOnAction(e -> {
+                        System.out.println(this.getTableRow().getIndex());
+                    });
+                    setText(null);
+                    setGraphic(button);
+                }
+            }
+        });
     }
 
 }

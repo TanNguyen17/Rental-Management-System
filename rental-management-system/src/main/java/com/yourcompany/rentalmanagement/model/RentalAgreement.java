@@ -62,14 +62,6 @@ public class RentalAgreement {
         this.tenants.add(tenant);
     }
 
-    public String getTenantsName(){
-        String tenantNameList = "";
-        for (Tenant tenant: tenants){
-            tenantNameList += tenant.getUsername();
-        }
-        return tenantNameList;
-    }
-
     public Owner getOwner() {
         return owner;
     }
