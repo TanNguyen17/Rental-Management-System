@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import org.controlsfx.control.CheckComboBox;
 import javafx.scene.text.Text;
 import org.controlsfx.control.CheckComboBox;
 
@@ -25,6 +26,7 @@ public class RentalAgreementCreationView implements Initializable {
     private RentalAgreementController rentalAgreementController = new RentalAgreementController();
     private UserController userController = new UserController();
 
+    private List<Integer> contractTime = new ArrayList<>();
     private List<Host> hostInfo;
     private List<String> hostNames = new ArrayList<>();
     private List<Tenant> tenants = new ArrayList<>();
@@ -58,11 +60,8 @@ public class RentalAgreementCreationView implements Initializable {
     @FXML
     private Label propertyDetail;
 
-    // Initial data
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        chooseHostError.setVisible(false);
-        contractPeriodError.setVisible(false);
         initiateTenantData();
         initiateContractPeriod();
     }
@@ -91,12 +90,14 @@ public class RentalAgreementCreationView implements Initializable {
     }
 
     private void initiateContractPeriod() {
-        ObservableList<Integer> contractTime = FXCollections.observableArrayList(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12));
+        ObservableList<Integer> contractTime = FXCollections.observableArrayList(List.of(6, 7, 8, 9, 10, 11, 12));
         this.contractPeriod.setItems(contractTime);
     }
 
     @FXML
     void createRentalAgreement(ActionEvent event) {
+        System.out.println("Creating Rental Agreement ...");
+        System.out.println(contractPeriod.getValue());
         RentalAgreement newRentalAgreement = new RentalAgreement();
         Host selectHost = null;
 

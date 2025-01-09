@@ -1,45 +1,64 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
-import com.yourcompany.rentalmanagement.dao.RentalAgreementDao;
+import com.yourcompany.rentalmanagement.dao.RentalManagementDao;
 import com.yourcompany.rentalmanagement.model.*;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-public class RentalAgreementDaoImpl implements RentalAgreementDao {
-    Transaction transaction = null;
+public class RentalAgreementDaoImpl implements RentalManagementDao {
+    private List<RentalAgreement> rentalAgreements;
+    private Query<RentalAgreement> query;
+    private Transaction transaction;
     Map<String, Object> data = new HashMap<>();
+
+    public RentalAgreementDaoImpl() {
+        transaction = null;
+        rentalAgreements = new ArrayList<>();
+    }
+
     @Override
     public List<RentalAgreement> getAllRentalAgreements() {
-        return List.of();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            query = session.createQuery("from RentalAgreement", RentalAgreement.class);
+            return query.list();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return rentalAgreements;
     }
 
     @Override
     public Map<String, Object> createRentalAgreement(RentalAgreement rentalAgreement, long tenantId, Property property, long ownerId, long hostId, List<Long> subTenantIds) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+            List<Tenant> subTenants = new ArrayList<>();
 
-            // Get entity involve
+            for (Long id : subTenantIds) {
+                subTenants.add(session.get(Tenant.class, id));
+            }
+
             Tenant tenant = session.get(Tenant.class, tenantId);
             Owner owner = session.get(Owner.class, ownerId);
             Host host = session.get(Host.class, hostId);
 
-            // add to the rental agreement
             rentalAgreement.setOwner(owner);
             rentalAgreement.setHost(host);
 
-            // add all tenant
             tenant.addRentalAgreement(rentalAgreement);
-            for (Long subTenantId : subTenantIds) {
-                Tenant subTenant = session.get(Tenant.class, subTenantId);
+            for (Tenant subTenant : subTenants) {
                 subTenant.addRentalAgreement(rentalAgreement);
             }
+
             property.setRentalAgreement(rentalAgreement);
             property.setStatus(Property.propertyStatus.RENTED);
 
@@ -50,10 +69,16 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
             data.put("status", "success");
         } catch (Exception e) {
             e.printStackTrace();
-            transaction.rollback();
-            data.put("message", "Cannot create rental agreement");
-            data.put("status", "failed");
         }
         return data;
     }
+
+//    public static void main(String[] args) {
+//        RentalManagementDao test = new RentalAgreementDaoImpl();
+//        List<RentalAgreement> db = test.getAllRentalAgreements();
+//        System.out.println("======================");
+//        for (RentalAgreement rentalAgreement : db){
+//            System.out.println(rentalAgreement.getTenants());
+//        }
+//    }
 }
