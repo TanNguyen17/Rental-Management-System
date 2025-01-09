@@ -126,7 +126,7 @@ public class RentalAgreementCreationView implements Initializable {
         newRentalAgreement.setStatus(RentalAgreement.rentalAgreementStatus.NEW);
         newRentalAgreement.setRentingFee(propertyInfo.getPrice());
 
-        rentalAgreementController.createRentalAgreement(newRentalAgreement, userSession.getCurrentUser().getId(), propertyInfo, ownerInfo.getId(), selectHost.getId(), selectedTenants);
+//        rentalAgreementController.createRentalAgreement(newRentalAgreement, userSession.getCurrentUser().getId(), propertyInfo, ownerInfo.getId(), selectHost.getId(), selectedTenants);
     }
 
     public void showSuccessAlert(String title, String content) {
