@@ -6,7 +6,7 @@
     <session-factory>
         <!-- Database connection properties -->
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://ep-curly-queen-a169votk.ap-southeast-1.aws.neon.tech/rental-management?sslmode=require</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://ep-curly-queen-a169votk.ap-southeast-1.aws.neon.tech/rental-management?sslmode=require</property> <!-- "test data (neon) for now" -->
         <property name="hibernate.connection.username">rental-management_owner</property>
         <property name="hibernate.connection.password">zGQwlbHi8y2o</property>
 

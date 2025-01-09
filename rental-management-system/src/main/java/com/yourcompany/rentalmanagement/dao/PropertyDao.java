@@ -2,6 +2,8 @@ package com.yourcompany.rentalmanagement.dao;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletionException;
+import java.util.function.Consumer;
 
 import com.yourcompany.rentalmanagement.model.CommercialProperty;
 import com.yourcompany.rentalmanagement.model.Property;
@@ -34,5 +36,17 @@ public interface PropertyDao {
 
     public List<CommercialProperty> getAllCommercialProperties();
 
-    public List<ResidentialProperty> getAllResidentialProperties();
+    List<ResidentialProperty> getAllResidentialProperties();
+
+    List<Property> getAllPropertiesPaginated(int page, int pageSize);
+
+    List<Property> getAllPropertiesAfterPage(int page, int pageSize);
+
+    List<Property> getPropertiesPage(int page, int pageSize, long ownerId);
+
+    long getTotalPropertyCount(long ownerId);
+
+    void loadPropertiesAsync(int page, int pageSize, long ownerId,
+            Consumer<List<Property>> onSuccess,
+            Consumer<Throwable> onError) throws CompletionException;
 }
