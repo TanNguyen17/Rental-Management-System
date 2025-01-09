@@ -2,6 +2,7 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.UserController;
 import com.yourcompany.rentalmanagement.model.User;
+import com.yourcompany.rentalmanagement.util.AlertUtils;
 import com.yourcompany.rentalmanagement.util.CloudinaryService;
 import com.yourcompany.rentalmanagement.util.ProvinceData;
 import com.yourcompany.rentalmanagement.util.UserSession;
@@ -116,7 +117,7 @@ public class ProfileView implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        userController = new UserController(this);
+        userController = new UserController();
         // 1. Load User Data in Background
         new Thread(() -> {
             currentUser = userController.getUserProfile(currentUser.getId(), currentUser.getRole()); // Load user data
@@ -154,6 +155,9 @@ public class ProfileView implements Initializable {
     private void initialAddress() {
         provinceChoice.getItems().addAll(provinceCities.keySet());
         if (currentUser.getAddress() != null) {
+            streetName.setText(currentUser.getAddress().getStreet());
+            streetNumber.setText(currentUser.getAddress().getNumber());
+
             if (provinceChoice.getItems().contains(currentUser.getAddress().getCity())) {
                 provinceChoice.setValue(currentUser.getAddress().getCity());
                 updateStateCombobox(currentUser.getAddress().getCity());
@@ -196,22 +200,15 @@ public class ProfileView implements Initializable {
             data.put("phoneNumber", phoneNumberText);
             data.put("dob", date);
             userController.updateProfile(currentUser.getId(), data, currentUser.getRole());
-
         }
     }
 
     public void showSuccessAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(title);
-        alert.setContentText(content);
-        alert.showAndWait();
+        AlertUtils.showSuccessAlert(title, content);
     }
 
     public void showErrorAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setContentText(content);
-        alert.showAndWait();
+        AlertUtils.showErrorAlert(title, content);
     }
 
     @FXML
@@ -229,13 +226,15 @@ public class ProfileView implements Initializable {
             errorStreetNumber.setText("Please enter street number");
         }
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("streetName", streetNameText);
-        data.put("streetNumber", streetNumberText);
-        data.put("province", province);
-        data.put("city", city);
+        if (streetNameText != null && streetNumberText != null) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("streetName", streetNameText);
+            data.put("streetNumber", streetNumberText);
+            data.put("province", province);
+            data.put("city", city);
+            userController.updateAddress(currentUser.getId(), data, currentUser.getRole());
+        }
 
-        userController.updateAddress(currentUser.getId(), data, currentUser.getRole());
     }
 
     @FXML

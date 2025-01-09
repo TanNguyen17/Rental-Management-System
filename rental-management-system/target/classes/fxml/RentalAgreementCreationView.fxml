@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import org.controlsfx.control.CheckComboBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementCreationView">
+   <children>
+      <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="400.0">
+         <children>
+            <Label text="Rental Agreement Creation">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER" prefHeight="31.0" prefWidth="400.0">
+               <children>
+                  <Label fx:id="propertyDetail" text="Property " />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="31.0" prefWidth="400.0">
+               <children>
+                  <Label fx:id="ownerDetail" text="Owner" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="31.0" prefWidth="400.0">
+               <children>
+                  <Label text="Choose Host:">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin></Label>
+                  <ComboBox fx:id="hostSelection" prefHeight="25.0" prefWidth="105.0">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </ComboBox>
+                  <Text fx:id="chooseHostError" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="31.0" prefWidth="400.0">
+               <children>
+                  <Label text="Choose Sub Tenant">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
+                  </Label>
+                  <CheckComboBox fx:id="tenantSelection" prefHeight="25.0" prefWidth="103.0" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="31.0" prefWidth="400.0">
+               <children>
+                  <Label text="Choose contract period (months)">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
+                  </Label>
+                  <ComboBox fx:id="contractPeriod" prefHeight="25.0" prefWidth="93.0">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin></ComboBox>
+                  <Text fx:id="contractPeriodError" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="31.0" prefWidth="400.0">
+               <children>
+                  <Button fx:id="createBtn" mnemonicParsing="false" onAction="#createRentalAgreement" text="Create" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <CheckBox mnemonicParsing="false" text="CheckBox" />
+   </children>
+</AnchorPane>

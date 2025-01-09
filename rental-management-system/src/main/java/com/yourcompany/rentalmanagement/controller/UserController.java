@@ -1,9 +1,10 @@
 package com.yourcompany.rentalmanagement.controller;
 
-import java.util.Map;
+import java.util.*;
 
 import com.yourcompany.rentalmanagement.dao.impl.OwnerDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.TenantDaoImpl;
+import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.view.ProfileView;
@@ -14,13 +15,14 @@ public class UserController {
     private TenantDaoImpl tenantDao;
     private ProfileView profileView;
     private Map<String, Object> result;
+    private List<User> users;
 
     User user = new User();
 
-    public UserController(ProfileView profileView) {
+    public UserController() {
         this.ownerDao = new OwnerDaoImpl();
         this.tenantDao = new TenantDaoImpl();
-        this.profileView = profileView;
+        this.users = new ArrayList<>();
     }
 
     public User getUserProfile(long id, UserRole role) {
@@ -30,7 +32,13 @@ public class UserController {
         return user;
     }
 
+    public List<Tenant> getTenants() {
+        return tenantDao.loadAll();
+    }
+
     public void updateProfile(long userId, Map<String, Object> data, UserRole role) {
+        profileView = new ProfileView();
+
         if (role == UserRole.TENANT) {
             result = tenantDao.updateProfile(userId, data);
         }
@@ -43,6 +51,8 @@ public class UserController {
     }
 
     public void updateAddress(long userId, Map<String, Object> data, UserRole role) {
+        profileView = new ProfileView();
+
         if (role == UserRole.TENANT) {
             result = tenantDao.updateAddress(userId, data);
         }
@@ -55,6 +65,8 @@ public class UserController {
     }
 
     public void updateImageLink(long userId, String imageLink, UserRole role) {
+        profileView = new ProfileView();
+
         if (role == UserRole.TENANT) {
             result = tenantDao.updateUserImage(userId, imageLink);
         }
@@ -67,6 +79,8 @@ public class UserController {
     }
 
     public void updatePassword(long userId, String oldPassword, String newPassword, UserRole role) {
+        profileView = new ProfileView();
+
         if (role == UserRole.TENANT) {
             result = tenantDao.updatePassword(userId, oldPassword, newPassword);
         }

@@ -28,16 +28,16 @@ public class OwnerDaoImpl implements UserDao {
     }
 
     @Override
-    public void loadData() {
+    public List<Owner> loadAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             owners = session.createQuery("from Owner", Owner.class).list();
-            owners.forEach(System.out::println);
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
         }
+        return owners;
     }
 
     @Override

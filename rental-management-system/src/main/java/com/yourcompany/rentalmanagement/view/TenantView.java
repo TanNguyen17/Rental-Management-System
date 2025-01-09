@@ -33,8 +33,9 @@ public class TenantView implements Initializable {
     private Label user;
 
     @FXML
-    void btnHome(ActionEvent event) {
-
+    void btnHome(ActionEvent event) throws IOException {
+        AnchorPane homeView = FXMLLoader.load(getClass().getResource("/fxml/PropertiesView.fxml"));
+        borderPane.setCenter(homeView);
     }
 
     @FXML
@@ -51,7 +52,6 @@ public class TenantView implements Initializable {
 
     @FXML
     void btnRentalAgreement(ActionEvent event) {
-
     }
 
     @Override
