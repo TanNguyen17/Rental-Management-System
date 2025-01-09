@@ -3,14 +3,14 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 
-<TableView fx:id="rentalAgreementTable" prefHeight="423.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<TableView fx:id="rentalAgreementTableView" prefHeight="718.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementListView">
     <columns>
-        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="128.33761382102966" text="AGREEMENT ID" />
-        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="111.66239166259766" text="STATUS" />
-        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="189.47991943359375" text="CONTRACT DATE" />
-        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="229.02008056640625" text="PROPERTY" />
-        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="119.42333984375" text="RENTING FEE" />
-        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="154.76727294921875" text="OWNER" />
-        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="147.1898193359375" text="TENANT" />
+        <TableColumn fx:id="agreementId" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="135" text="AGREEMENT ID" />
+        <TableColumn fx:id="status" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="135" text="STATUS" />
+        <TableColumn fx:id="contractedDate" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="135" text="CONTRACT DATE" />
+        <TableColumn fx:id="rentingFee" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="135" text="RENTING FEE" />
+        <TableColumn fx:id="host" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="135" text="HOST" />
+        <TableColumn fx:id="owner" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="135" text="OWNER" />
+        <TableColumn fx:id="actions" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="135" text="VIEW" />
     </columns>
 </TableView>

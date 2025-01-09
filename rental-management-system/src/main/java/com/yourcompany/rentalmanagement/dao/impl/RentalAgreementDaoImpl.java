@@ -1,8 +1,6 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
-import com.yourcompany.rentalmanagement.dao.PaymentDao;
 import com.yourcompany.rentalmanagement.dao.RentalManagementDao;
-import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import org.hibernate.Session;
@@ -41,7 +39,7 @@ public class RentalAgreementDaoImpl implements RentalManagementDao {
         List<RentalAgreement> db = test.getAllRentalAgreements();
         System.out.println("======================");
         for (RentalAgreement rentalAgreement : db){
-            System.out.println(rentalAgreement.getStatus().toString());
+            System.out.println(rentalAgreement.getTenants());
         }
     }
 }

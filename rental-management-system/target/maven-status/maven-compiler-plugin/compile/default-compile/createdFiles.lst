@@ -3,6 +3,7 @@ com/yourcompany/rentalmanagement/view/ProfileView.class
 com/yourcompany/rentalmanagement/model/Manager.class
 com/yourcompany/rentalmanagement/MainApp.class
 com/yourcompany/rentalmanagement/view/PaymentView.class
+com/yourcompany/rentalmanagement/view/RentalAgreementListView$1.class
 com/yourcompany/rentalmanagement/controller/RentalAgreementController.class
 com/yourcompany/rentalmanagement/view/PropertyFormController.class
 com/yourcompany/rentalmanagement/view/LoginViewController.class

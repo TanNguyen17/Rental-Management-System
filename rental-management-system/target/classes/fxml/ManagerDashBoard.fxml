@@ -9,15 +9,15 @@
     <center>
         <VBox fx:id="mainContent" prefHeight="720.0" prefWidth="1080.0" BorderPane.alignment="CENTER">
             <children>
-                <TabPane fx:id="dashboardPanel" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                <TabPane fx:id="dashboardPanel" prefHeight="720.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
                         <Tab fx:id="tenantTab" text="Tenant" />
                         <Tab fx:id="hostTab" text="Host" />
                         <Tab fx:id="ownerTab" text="Owner" />
                         <Tab fx:id="paymentTab" text="Payment" />
-                        <Tab fx:id="rentalAgreementTab" text="Rental Agreement">
+                        <Tab fx:id="rentalAgreementTab" style="height: 720;" text="Rental Agreement">
                             <content>
-                                <fx:include source="RentalAgreementView.fxml" />
+                                <fx:include maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="718.0" source="RentalAgreementView.fxml" />
                             </content>
                         </Tab>
                     </tabs>
