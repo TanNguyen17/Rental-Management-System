@@ -30,6 +30,7 @@ public class CommercialProperty extends Property {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Host> hosts = new ArrayList<>();
 
+
     public CommercialProperty() {
         this.hosts = new ArrayList<>();
     }

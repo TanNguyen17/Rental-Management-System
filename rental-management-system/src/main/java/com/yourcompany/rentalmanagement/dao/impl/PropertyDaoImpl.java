@@ -2,11 +2,15 @@ package com.yourcompany.rentalmanagement.dao.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.function.Consumer;
+import java.util.Map;
 
+import com.yourcompany.rentalmanagement.model.*;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -22,6 +26,11 @@ import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import javafx.application.Platform;
 
 public class PropertyDaoImpl implements PropertyDao {
+
+    private List<Property> properties = new ArrayList<>();
+    private Property property = null;
+    private Map<String, Object> data = new HashMap<>();
+    private List<Host> hosts = new ArrayList<>();
 
     @Override
     public void createProperty(Property property) {
@@ -40,10 +49,53 @@ public class PropertyDaoImpl implements PropertyDao {
     }
 
     @Override
-    public Property getPropertyById(long id) {
+    public Map<String, Object> getResidentialPropertyById(long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.get(Property.class, id);
+            property = session.get(ResidentialProperty.class, id);
+            if (property != null) {
+                Query<Host> hostQuery = session.createQuery(
+                        "SELECT h FROM Host h JOIN h.residentialProperties rp WHERE rp.id = :id", Host.class);
+
+//                ResidentialProperty property = session.createQuery(
+//                                "FROM ResidentialProperty p LEFT JOIN FETCH p.hosts WHERE p.id = :id", ResidentialProperty.class)
+//                        .setParameter("id", id) -> single result
+
+                hostQuery.setParameter("id", id);
+                hosts = hostQuery.getResultList();
+
+                data.put("hosts", hosts);
+                data.put("property", property);
+                data.put("owner", property.getOwner());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return data;
+    }
+
+    @Override
+    public Map<String, Object> getCommercialPropertyById(long id) {
+        CommercialProperty commercialProperty = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            commercialProperty = session.get(CommercialProperty.class, id);
+            if (property != null) {
+                Hibernate.initialize(commercialProperty.getOwner());
+                commercialProperty.getHosts();
+                Hibernate.initialize(commercialProperty.getHosts());
+
+                Query<Host> hostQuery = session.createQuery(
+                        "SELECT h FROM Host h JOIN h.commercialProperties rp WHERE rp.id = :id", Host.class);
+                hostQuery.setParameter("id", id);
+                hosts = hostQuery.getResultList();
+
+                data.put("hosts", hosts);
+                data.put("property", property);
+                data.put("owner", property.getOwner());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 
     @Override
@@ -221,12 +273,20 @@ public class PropertyDaoImpl implements PropertyDao {
     }
 
     @Override
-    public List<Property> getPropertiesByStatus(Property.propertyStatus status) {
+    public List<Property> getPropertiesAvailableForRenting(Property.propertyStatus status) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Property> query = session.createQuery(
-                    "FROM Property WHERE status = :status", Property.class);
-            query.setParameter("status", status);
-            return query.list();
+
+            Query<ResidentialProperty> residentialPropertyQuery = session.createQuery(
+                    "SELECT rp FROM ResidentialProperty rp JOIN rp.hosts h WHERE status = :status", ResidentialProperty.class);
+            residentialPropertyQuery.setParameter("status", status);
+
+            Query<CommercialProperty> commercialPropertyQuery = session.createQuery(
+                    "SELECT cp FROM CommercialProperty cp JOIN cp.hosts h WHERE status = :status", CommercialProperty.class);
+            commercialPropertyQuery.setParameter("status", status);
+
+            properties.addAll(residentialPropertyQuery.list());
+            properties.addAll(commercialPropertyQuery.list());
+            return properties;
         }
     }
 
