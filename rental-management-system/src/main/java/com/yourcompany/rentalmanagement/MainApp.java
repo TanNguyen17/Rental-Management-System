@@ -31,6 +31,8 @@ public class MainApp extends Application {
                 // Ae co j implement cai nay when ae tao main view nhe
                 if (userSession.getCurrentUser().getRole() == UserRole.TENANT) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/TenantView.fxml"));
+                } else if (userSession.getCurrentUser().getRole() == UserRole.OWNER) {
+                    loader = new FXMLLoader(getClass().getResource("/fxml/ViewRentalProperties.fxml"));
                 }
             } else {
                 loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));

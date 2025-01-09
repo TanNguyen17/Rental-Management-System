@@ -1,6 +1,7 @@
 package com.yourcompany.rentalmanagement.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.yourcompany.rentalmanagement.model.CommercialProperty;
 import com.yourcompany.rentalmanagement.model.Property;
@@ -9,27 +10,29 @@ import com.yourcompany.rentalmanagement.model.ResidentialProperty;
 public interface PropertyDao {
 
     // Basic CRUD operations
-    void createProperty(Property property);
+    public void createProperty(Property property);
 
-    Property getPropertyById(long id);
+    public Map<String, Object> getResidentialPropertyById(long id);
 
-    void updateProperty(Property property);
+    public Map<String, Object> getCommercialPropertyById(long id);
 
-    void deleteProperty(Property property);
+    public void updateProperty(Property property);
+
+    public void deleteProperty(Property property);
 
     // Specific property type operations
-    void createCommercialProperty(CommercialProperty property);
+    public void createCommercialProperty(CommercialProperty property);
 
-    void createResidentialProperty(ResidentialProperty property);
+    public void createResidentialProperty(ResidentialProperty property);
 
     // Query operations
-    List<Property> getAllProperties();
+    public List<Property> getAllProperties();
 
-    List<Property> getPropertiesByOwner(long ownerId);
+    public List<Property> getPropertiesByOwner(long ownerId);
 
-    List<Property> getPropertiesByStatus(Property.propertyStatus status);
+    public List<Property> getPropertiesAvailableForRenting(Property.propertyStatus status);
 
-    List<CommercialProperty> getAllCommercialProperties();
+    public List<CommercialProperty> getAllCommercialProperties();
 
-    List<ResidentialProperty> getAllResidentialProperties();
+    public List<ResidentialProperty> getAllResidentialProperties();
 }

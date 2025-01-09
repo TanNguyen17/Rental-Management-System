@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class TenantDaoImpl implements UserDao {
 
-    private List<Tenant> tenants = new ArrayList<>();
+    private List<Tenant> tenants;
     private Tenant tenant;
     private Transaction transaction;
     private Map<String, Object> result;
@@ -27,11 +27,20 @@ public class TenantDaoImpl implements UserDao {
     public TenantDaoImpl() {
         transaction = null;
         result = new HashMap<>();
+        tenants = new ArrayList<>();
     }
 
     @Override
-    public void loadData() {
-
+    public List<Tenant> loadAll() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            tenants = session.createQuery("from Tenant", Tenant.class).list();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return tenants;
     }
 
     @Override
