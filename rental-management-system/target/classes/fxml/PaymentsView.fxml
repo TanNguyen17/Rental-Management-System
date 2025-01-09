@@ -30,7 +30,7 @@
                         <MFXButton fx:id="findButton" buttonType="RAISED" onAction="#filterPayment" text="Find" HBox.hgrow="NEVER" />
                     </children>
                 </HBox>
-                <TableView fx:id="paymentTable" VBox.vgrow="ALWAYS">
+                <TableView fx:id="paymentTable" VBox.vgrow="ALWAYS" stylesheets="@style.css">
                     <columns>
                         <TableColumn fx:id="receipt" prefWidth="75.0" text="RECEIPT" />
                         <TableColumn fx:id="method" prefWidth="75.0" text="METHOD" />
