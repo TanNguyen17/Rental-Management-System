@@ -1,11 +1,14 @@
 package com.yourcompany.rentalmanagement.service;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -20,10 +23,16 @@ import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AuthService {
-
-    private static final SecretKey JWT_SECRET = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static Dotenv dotenv = Dotenv.load();
+    private static final String secret = dotenv.get("JWT_SECRET");
+    private static byte[] decodedKey = Base64.getDecoder().decode(secret);
+//    private static final SecretKey JWT_SECRET = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static final SecretKey JWT_SECRET = Keys.hmacShaKeyFor(decodedKey);
+    private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
     public User authenticateUser(String username, String password) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -52,7 +61,7 @@ public class AuthService {
 
     private <T extends User> T findUserByUsername(Session session, Class<T> userClass, String username) {
         Query<T> query = session.createQuery(
-                "FROM " + userClass.getSimpleName() + " WHERE username = :username",
+                "FROM " + userClass.getSimpleName() + " WHERE username = :username ",
                 userClass
         );
         query.setParameter("username", username);
@@ -60,6 +69,7 @@ public class AuthService {
     }
 
     public String generateToken(User user) {
+        System.out.println(JWT_SECRET);
         Instant now = Instant.now();
         return Jwts.builder()
                 .setSubject(String.valueOf(user.getId()))
@@ -124,6 +134,7 @@ public class AuthService {
     }
 
     public boolean validateToken(String token) {
+        System.out.println("Attempting to validate token: " + JWT_SECRET);
         try {
             Jwts.parserBuilder()
                     .setSigningKey(JWT_SECRET)

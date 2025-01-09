@@ -21,26 +21,27 @@ public class OwnerDaoImpl implements UserDao {
     private List<Owner> owners = new ArrayList<>();
     private Owner owner;
     private Transaction transaction;
+    private Map<String, Object> result;
 
     public OwnerDaoImpl() {
         transaction = null;
     }
 
     @Override
-    public void loadData() {
+    public List<Owner> loadAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             owners = session.createQuery("from Owner", Owner.class).list();
-            owners.forEach(System.out::println);
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
         }
+        return owners;
     }
 
     @Override
-    public void updateProfile(long id, Map<String, Object> profile) {
+    public Map<String, Object> updateProfile(long id, Map<String, Object> profile) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
@@ -61,6 +62,7 @@ public class OwnerDaoImpl implements UserDao {
             }
             e.printStackTrace();
         }
+        return result;
     }
 
     @Override
@@ -84,7 +86,7 @@ public class OwnerDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateUserImage(long id, String imageLink) {
+    public Map<String, Object> updateUserImage(long id, String imageLink) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
@@ -102,10 +104,11 @@ public class OwnerDaoImpl implements UserDao {
             }
             e.printStackTrace();
         }
+        return result;
     }
 
     @Override
-    public void updateAddress(long id, Map<String, Object> data) {
+    public Map<String, Object> updateAddress(long id, Map<String, Object> data) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
@@ -126,17 +129,18 @@ public class OwnerDaoImpl implements UserDao {
             }
             e.printStackTrace();
         }
+        return result;
     }
 
     @Override
-    public void updatePassword(long id, String password) {
+    public Map<String, Object> updatePassword(long id, String oldPassword, String newPassword) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
             owner = session.get(Owner.class, id);
 
             if (owner != null) {
-                owner.setPassword(password);
+                owner.setPassword(newPassword);
                 session.persist(owner);
             }
 
@@ -147,5 +151,6 @@ public class OwnerDaoImpl implements UserDao {
             }
             e.printStackTrace();
         }
+        return result;
     }
 }

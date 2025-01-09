@@ -26,6 +26,7 @@ public class CommercialProperty extends Property {
     @ManyToMany(mappedBy = "commercialProperties")
     private List<Host> hosts;
 
+
     public CommercialProperty() {
         this.hosts = new ArrayList<>();
     }
