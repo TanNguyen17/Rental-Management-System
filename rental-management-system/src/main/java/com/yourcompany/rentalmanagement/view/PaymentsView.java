@@ -97,6 +97,14 @@ public class PaymentsView implements Initializable {
         });
     }
 
+    public void refreshData() {
+        pageCache.clear();
+        currentPageIndex = 1;
+        payments.clear();
+        loadPayments(currentPageIndex);
+        System.out.println("tan");
+    }
+
     private void initializeCombobox() {
         methodOption.setItems(FXCollections.observableArrayList("Debit Card", "Credit Card", "Bank Transfer"));
         statusOption.setItems(FXCollections.observableArrayList("Failed", "Completed", "Pending"));
@@ -163,7 +171,7 @@ public class PaymentsView implements Initializable {
 
         paymentView = loader.getController();
         paymentView.setText("tan", payment.getReceipt(),
-                payment.getAmount(), "17-04-2005", payment.getStatus());
+                payment.getAmount(), "17-04-2005", payment.getStatus(), payment.getMethod());
         Parent parent = loader.getRoot();
         Stage stage = new Stage();
         stage.setScene(new Scene(parent));
@@ -213,7 +221,6 @@ public class PaymentsView implements Initializable {
         currentPageIndex += 1;
         loadPayments(currentPageIndex);
     }
-
 
     private void loadPayments(int page) {
         if (isLoading) {

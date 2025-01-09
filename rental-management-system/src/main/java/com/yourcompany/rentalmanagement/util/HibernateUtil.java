@@ -1,15 +1,21 @@
 package com.yourcompany.rentalmanagement.util;
 
+import com.yourcompany.rentalmanagement.service.PaymentEventListener;
+import com.yourcompany.rentalmanagement.view.PaymentsView;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.event.service.spi.EventListenerRegistry;
+import org.hibernate.event.spi.EventType;
+import org.hibernate.internal.SessionFactoryImpl;
 
 public class HibernateUtil {
 
     private static StandardServiceRegistry registry;
     private static SessionFactory sessionFactory;
+    private static PaymentsView paymentsView;
 
     public static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
@@ -27,9 +33,9 @@ public class HibernateUtil {
 
                 // Create SessionFactory
                 sessionFactory = metadata.getSessionFactoryBuilder().build();
-
                 System.out.println("Hibernate SessionFactory initialized successfully");
-
+                paymentsView = new PaymentsView();
+                registerEventListeners(sessionFactory);
             } catch (Exception e) {
                 e.printStackTrace();
                 System.err.println("SessionFactory creation failed: " + e.getMessage());
@@ -40,6 +46,17 @@ public class HibernateUtil {
         }
         return sessionFactory;
     }
+
+    private static void registerEventListeners(SessionFactory sessionFactory) {
+        EventListenerRegistry eventListenerRegistry = ((SessionFactoryImpl) sessionFactory).getServiceRegistry().getService(EventListenerRegistry.class);
+
+        PaymentEventListener paymentEventListener = new PaymentEventListener(paymentsView);
+        assert eventListenerRegistry != null;
+        eventListenerRegistry.appendListeners(EventType.POST_INSERT, paymentEventListener);
+        eventListenerRegistry.appendListeners(EventType.POST_UPDATE, paymentEventListener);
+        eventListenerRegistry.appendListeners(EventType.POST_DELETE, paymentEventListener);
+    }
+
 
     public static void shutdown() {
         if (registry != null) {

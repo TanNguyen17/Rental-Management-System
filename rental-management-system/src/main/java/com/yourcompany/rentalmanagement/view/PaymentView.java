@@ -17,12 +17,16 @@ public class PaymentView {
     private Text paymentDue;
 
     @FXML
+    private Text paymentMethod;
+
+    @FXML
     private Text paymentStatus;
 
     @FXML
-    void setText(String tenantName, String paymentTitle, double paymentAmount, String paymentDue, String paymentStatus) {
+    void setText(String tenantName, String paymentTitle, double paymentAmount, String paymentDue, String paymentStatus, String paymentMethod) {
         this.paymentTitle.setText(paymentTitle);
         this.paymentAmount.setText(String.valueOf(paymentAmount));
+        this.paymentMethod.setText(paymentMethod);
         this.paymentDue.setText(paymentDue);
         this.paymentStatus.setText(paymentStatus);
         this.tenantName.setText(tenantName);

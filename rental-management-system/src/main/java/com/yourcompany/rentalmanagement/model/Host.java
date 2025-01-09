@@ -26,7 +26,8 @@ public class Host extends User {
             joinColumns = {
                 @JoinColumn(name = "host_id")},
             inverseJoinColumns = {
-                @JoinColumn(name = "residential_property_id")}
+                @JoinColumn(name = "residential_property_id")},
+            uniqueConstraints = { @UniqueConstraint(columnNames = {"host_id", "residential_property_id"}) }
     )
     private List<ResidentialProperty> residentialProperties = new ArrayList<>();
 
@@ -36,7 +37,8 @@ public class Host extends User {
             joinColumns = {
                 @JoinColumn(name = "host_id")},
             inverseJoinColumns = {
-                @JoinColumn(name = "commercial_property_id")}
+                @JoinColumn(name = "commercial_property_id")},
+            uniqueConstraints = { @UniqueConstraint(columnNames = {"host_id", "commercial_property_id"}) }
     )
     private List<CommercialProperty> commercialProperties = new ArrayList<>();
 

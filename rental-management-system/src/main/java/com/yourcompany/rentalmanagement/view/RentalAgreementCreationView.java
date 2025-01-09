@@ -13,8 +13,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import org.controlsfx.control.CheckComboBox;
 import javafx.scene.text.Text;
+import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -95,7 +95,10 @@ public class RentalAgreementCreationView implements Initializable {
     @FXML
     void createRentalAgreement(ActionEvent event) {
         System.out.println("Creating Rental Agreement ...");
-        System.out.println(contractPeriod.getValue());
+
+        contractPeriodError.setText("");
+        chooseHostError.setText("");
+
         RentalAgreement newRentalAgreement = new RentalAgreement();
         Host selectHost = null;
 
