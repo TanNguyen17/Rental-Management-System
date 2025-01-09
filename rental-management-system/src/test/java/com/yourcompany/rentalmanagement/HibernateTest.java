@@ -1,17 +1,18 @@
 package com.yourcompany.rentalmanagement;
 
-import com.yourcompany.rentalmanagement.model.*;
-import org.hibernate.Session;
-import com.yourcompany.rentalmanagement.util.HibernateUtil;
-import org.hibernate.Transaction;
-import java.util.UUID;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import com.yourcompany.rentalmanagement.model.Host;
+import com.yourcompany.rentalmanagement.model.Owner;
+import com.yourcompany.rentalmanagement.model.Payment;
+import com.yourcompany.rentalmanagement.model.RentalAgreement;
+import com.yourcompany.rentalmanagement.model.Tenant;
+import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
 public class HibernateTest {
 //    private static final String[] STREET_NAMES = {"Main St", "Elm St", "Maple Ave", "Oak St", "Pine St"};
@@ -27,41 +28,42 @@ public class HibernateTest {
         Transaction transaction = null;
         Random random = new Random();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            List<Owner> owners = session.createQuery("from Owner", Owner.class).list();
-            List<Host> hosts = session.createQuery("from Host", Host.class).list();
-            List<Tenant> tenants = session.createQuery("from Tenant", Tenant.class).list();
+//            transaction = session.beginTransaction();
+//            List<Owner> owners = session.createQuery("from Owner", Owner.class).list();
+//            List<Host> hosts = session.createQuery("from Host", Host.class).list();
+//            List<Tenant> tenants = session.createQuery("from Tenant", Tenant.class).list();
             List<RentalAgreement> rentalAgreements = session.createQuery("from RentalAgreement", RentalAgreement.class).list();
+            System.out.println(rentalAgreements.size());
+
+//            for (int i = 0; i < 20; i++) {
+//                Payment payment = new Payment();
+//
+//                String receipt = UUID.randomUUID().toString().substring(0, 10); // Generate unique receipt
+//                String method = PAYMENT_METHODS[random.nextInt(PAYMENT_METHODS.length)];
+//                double amount = 500 + random.nextInt(2000); // Random amount between 500 and 2500
+//                String status = PAYMENT_STATUSES[random.nextInt(PAYMENT_STATUSES.length)];
+//
+//                payment.setReceipt(receipt);
+//                payment.setMethod(method);
+//                payment.setAmount(amount);
+//                payment.setStatus(status);
+//
+//                payment.setTenant(tenants.get(i));
+//                payment.setRentalAgreement(rentalAgreements.get(i));
+//
+//                session.persist(payment);
+//            }
 
 
-            for (int i = 0; i < 20; i++) {
-                Payment payment = new Payment();
-
-                String receipt = UUID.randomUUID().toString().substring(0, 10); // Generate unique receipt
-                String method = PAYMENT_METHODS[random.nextInt(PAYMENT_METHODS.length)];
-                double amount = 500 + random.nextInt(2000); // Random amount between 500 and 2500
-                String status = PAYMENT_STATUSES[random.nextInt(PAYMENT_STATUSES.length)];
-
-                payment.setReceipt(receipt);
-                payment.setMethod(method);
-                payment.setAmount(amount);
-                payment.setStatus(status);
-
-                payment.setTenant(tenants.get(i));
-                payment.setRentalAgreement(rentalAgreements.get(i));
-
-                session.persist(payment);
-            }
-
-
-            //Commit transaction
-            transaction.commit();
+//            //Commit transaction
+//            transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
         }
+
 //        List<Tenant> tenants = new ArrayList<>();
 //        Random random = new Random();
 //        Transaction transaction = null;
@@ -122,5 +124,7 @@ public class HibernateTest {
 //            e.printStackTrace();
 //        }
 //    }
+
+// The relationship between Owner and Host is Many to Many, so we need to create a new table to store the relationship between them. In this case, we create a new table called owner_host. The owner_host table has two columns: owner_id and host_id. When we add a new owner to a host, we need to add a new record to the owner_host table with the owner_id and host_id. The same thing happens when we add a new host to an owner. We need to add a new record to the owner_host table with the owner_id and host_id. This is how we create a Many to Many relationship in Hibernate.
     }
 }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="com.yourcompany.rentalmanagement.view.PropertyFormController"
+      spacing="15" alignment="CENTER" style="-fx-padding: 20;">
+    
+    <Text text="Add New Property" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+    
+    <!-- Basic Property Info -->
+    <TextField fx:id="titleField" promptText="Property Title *"/>
+    <TextArea fx:id="descriptionField" promptText="Property Description" prefRowCount="3"/>
+    
+    <!-- Property Type Selection -->
+    <ComboBox fx:id="propertyTypeCombo" promptText="Select Property Type *"/>
+    
+    <!-- Property Status -->
+    <ComboBox fx:id="statusCombo" promptText="Property Status *"/>
+    
+    <!-- Host Selection -->
+    <VBox spacing="5">
+        <Text text="Property Host" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="hostComboBox" promptText="Select Host (Optional)"
+                  style="-fx-pref-width: 340;"/>
+        <Label text="Note: Without a host, tenants can only view the property" 
+               style="-fx-text-fill: #666666; -fx-font-style: italic;"/>
+    </VBox>
+    
+    <!-- Price -->
+    <TextField fx:id="priceField" promptText="Renting Fee ($ per month) *"/>
+    
+    <!-- Address Fields -->
+    <VBox spacing="10">
+        <Text text="Property Address" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="streetField" promptText="Street *"/>
+        <TextField fx:id="numberField" promptText="Number *"/>
+        <TextField fx:id="cityField" promptText="City *"/>
+        <TextField fx:id="stateField" promptText="State *"/>
+    </VBox>
+    
+    <!-- Commercial Property Fields (initially hidden) -->
+    <VBox fx:id="commercialFields" spacing="10" visible="false" managed="false">
+        <Text text="Commercial Property Details" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="businessTypeField" promptText="Business Type *"/>
+        <CheckBox fx:id="parkingSpaceCheck" text="Parking Space Available"/>
+        <TextField fx:id="squareFootageField" promptText="Square Footage *"/>
+    </VBox>
+    
+    <!-- Residential Property Fields (initially hidden) -->
+    <VBox fx:id="residentialFields" spacing="10" visible="false" managed="false">
+        <Text text="Residential Property Details" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="bedroomsField" promptText="Number of Bedrooms *"/>
+        <CheckBox fx:id="gardenCheck" text="Garden Available"/>
+        <CheckBox fx:id="petFriendlyCheck" text="Pet Friendly"/>
+    </VBox>
+    
+    <!-- Image Upload -->
+    <VBox spacing="5">
+        <Button text="Upload Property Image *" onAction="#handleImageUpload"/>
+        <ImageView fx:id="propertyImageView" fitHeight="150" fitWidth="200" preserveRatio="true"/>
+    </VBox>
+    
+    <!-- Submit Button -->
+    <Button text="Create Property" onAction="#handleSubmit" 
+            style="-fx-pref-width: 200;"/>
+    
+    <!-- Error/Success Message -->
+    <Label fx:id="messageLabel"/>
+</VBox> 

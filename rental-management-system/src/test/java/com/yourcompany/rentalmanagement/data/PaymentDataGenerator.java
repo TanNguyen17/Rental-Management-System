@@ -1,50 +1,57 @@
-package com.yourcompany.rentalmanagement;
-
-import com.yourcompany.rentalmanagement.model.*;
-import com.yourcompany.rentalmanagement.util.HibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+package com.yourcompany.rentalmanagement.data;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
-public class DataGenerator {
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import com.yourcompany.rentalmanagement.model.Address;
+import com.yourcompany.rentalmanagement.model.CommercialProperty;
+import com.yourcompany.rentalmanagement.model.Host;
+import com.yourcompany.rentalmanagement.model.Owner;
+import com.yourcompany.rentalmanagement.model.Property;
+import com.yourcompany.rentalmanagement.model.RentalAgreement;
+import com.yourcompany.rentalmanagement.model.Tenant;
+import com.yourcompany.rentalmanagement.util.HibernateUtil;
+
+public class PaymentDataGenerator {
+
     private static final String[] FIRST_NAMES = {"James", "John", "Robert", "Michael", "William", "David", "Richard", "Charles", "Joseph", "Thomas", "Mary", "Patricia", "Linda", "Barbara", "Elizabeth", "Jennifer", "Maria", "Susan", "Margaret", "Dorothy"};
     private static final String[] LAST_NAMES = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez", "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin"};
     private static final String[] BUSINESS_TYPES = {"Office", "Retail", "Restaurant", "Warehouse", "Industrial"};
-    public static void main(String[] args) {
-            Transaction transaction = null;
-            Random random = new Random();
-            try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-                transaction = session.beginTransaction();
-                List<Owner> owners = session.createQuery("from Owner", Owner.class).list();
-                List<CommercialProperty> properties = session.createQuery("from CommercialProperty", CommercialProperty.class).list();
-                List<Tenant> tenants = session.createQuery("from Tenant", Tenant.class).list();
-                List<Host> hosts = session.createQuery("from Host", Host.class).list();
 
-                for (int i = 0; i < 20; i++) {
-                    RentalAgreement rentalAgreement = new RentalAgreement();
-                    rentalAgreement.setHost(hosts.get(i));
-                    rentalAgreement.setOwner(owners.get(i));
-                    rentalAgreement.setStatus(RentalAgreement.rentalAgreementStatus.NEW);
-                    rentalAgreement.setContractDate(generateRandomDate(random));
-                    rentalAgreement.setRentingFee(generateRandomPrice(random));
-                    properties.get(i).setRentalAgreement(rentalAgreement);
-                    tenants.get(i).addRentalAgreement(rentalAgreement);
-                    session.persist(rentalAgreement);
-                }
+    public static void generateTestData() {
+        Transaction transaction = null;
+        Random random = new Random();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            List<Owner> owners = session.createQuery("from Owner", Owner.class).list();
+            List<CommercialProperty> properties = session.createQuery("from CommercialProperty", CommercialProperty.class).list();
+            List<Tenant> tenants = session.createQuery("from Tenant", Tenant.class).list();
+            List<Host> hosts = session.createQuery("from Host", Host.class).list();
 
-
-                //Commit transaction
-                transaction.commit();
-            } catch (Exception e) {
-                if (transaction != null) {
-                    transaction.rollback();
-                }
-                e.printStackTrace();
+            for (int i = 0; i < 20; i++) {
+                RentalAgreement rentalAgreement = new RentalAgreement();
+                rentalAgreement.setHost(hosts.get(i));
+                rentalAgreement.setOwner(owners.get(i));
+                rentalAgreement.setStatus(RentalAgreement.rentalAgreementStatus.NEW);
+                rentalAgreement.setContractDate(generateRandomDate(random));
+                rentalAgreement.setRentingFee(generateRandomPrice(random));
+                properties.get(i).setRentalAgreement(rentalAgreement);
+                tenants.get(i).addRentalAgreement(rentalAgreement);
+                session.persist(rentalAgreement);
             }
+
+            //Commit transaction
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
     }
 
     private static String generateUsername(String firstName, String lastName, Random random) {
@@ -85,7 +92,7 @@ public class DataGenerator {
     private static LocalDate generateRandomDate(Random random) {
         long minDay = LocalDate.of(1950, 1, 1).toEpochDay();
         long maxDay = LocalDate.of(2005, 1, 1).toEpochDay();
-        long randomDay = minDay + random.nextInt((int)(maxDay - minDay));
+        long randomDay = minDay + random.nextInt((int) (maxDay - minDay));
         return LocalDate.ofEpochDay(randomDay);
     }
 

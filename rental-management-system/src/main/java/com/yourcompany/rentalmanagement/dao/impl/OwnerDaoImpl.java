@@ -1,25 +1,29 @@
-package com.yourcompany.rentalmanagement.dao;
-
-import com.yourcompany.rentalmanagement.model.Address;
-import com.yourcompany.rentalmanagement.model.Owner;
-import com.yourcompany.rentalmanagement.util.HibernateUtil;
-import com.yourcompany.rentalmanagement.util.TimeFormat;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
+package com.yourcompany.rentalmanagement.dao.impl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class OwnerDaoImp implements UserDao {
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
+import com.yourcompany.rentalmanagement.dao.UserDao;
+import com.yourcompany.rentalmanagement.model.Address;
+import com.yourcompany.rentalmanagement.model.Owner;
+import com.yourcompany.rentalmanagement.util.HibernateUtil;
+import com.yourcompany.rentalmanagement.util.TimeFormat;
+
+public class OwnerDaoImpl implements UserDao {
+
     private List<Owner> owners = new ArrayList<>();
     private Owner owner;
     private Transaction transaction;
+    private Map<String, Object> result;
 
-    public OwnerDaoImp() {
+    public OwnerDaoImpl() {
         transaction = null;
     }
 
@@ -37,7 +41,7 @@ public class OwnerDaoImp implements UserDao {
     }
 
     @Override
-    public void updateProfile(long id, Map<String, Object> profile) {
+    public Map<String, Object> updateProfile(long id, Map<String, Object> profile) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
@@ -46,9 +50,9 @@ public class OwnerDaoImp implements UserDao {
             if (owner != null) {
                 owner.setUsername((String) profile.get("username"));
                 owner.setDob(TimeFormat.stringToDate((String) profile.get("dob")));
+                owner.setDob(LocalDate.parse((String) profile.get("dob")));
                 owner.setEmail((String) profile.get("email"));
                 owner.setPhoneNumber(profile.get("phoneNumber").toString());
-                session.persist(owner);
             }
 
             transaction.commit();
@@ -58,6 +62,7 @@ public class OwnerDaoImp implements UserDao {
             }
             e.printStackTrace();
         }
+        return result;
     }
 
     @Override
@@ -81,7 +86,7 @@ public class OwnerDaoImp implements UserDao {
     }
 
     @Override
-    public void updateUserImage(long id, String imageLink) {
+    public Map<String, Object> updateUserImage(long id, String imageLink) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
@@ -99,10 +104,11 @@ public class OwnerDaoImp implements UserDao {
             }
             e.printStackTrace();
         }
+        return result;
     }
 
     @Override
-    public void updateAddress(long id, Map<String, Object> data) {
+    public Map<String, Object> updateAddress(long id, Map<String, Object> data) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
@@ -110,10 +116,10 @@ public class OwnerDaoImp implements UserDao {
 
             if (owner != null) {
                 Address address = owner.getAddress();
-                address.setCity(data.get("city").toString());
-//                address.setState(data.get("state").toString());
-                address.setNumber(data.get("number").toString());
-                address.setStreet(data.get("street").toString());
+                address.setCity(data.get("province").toString());
+                address.setState(data.get("city").toString());
+                address.setNumber(data.get("streetNumber").toString());
+                address.setStreet(data.get("streetName").toString());
             }
 
             transaction.commit();
@@ -123,17 +129,18 @@ public class OwnerDaoImp implements UserDao {
             }
             e.printStackTrace();
         }
+        return result;
     }
 
     @Override
-    public void updatePassword(long id, String password) {
+    public Map<String, Object> updatePassword(long id, String oldPassword, String newPassword) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
             owner = session.get(Owner.class, id);
 
             if (owner != null) {
-                owner.setPassword(password);
+                owner.setPassword(newPassword);
                 session.persist(owner);
             }
 
@@ -144,5 +151,6 @@ public class OwnerDaoImp implements UserDao {
             }
             e.printStackTrace();
         }
+        return result;
     }
 }
