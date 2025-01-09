@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 import org.hibernate.Session;
 
@@ -21,19 +23,22 @@ import com.yourcompany.rentalmanagement.util.CloudinaryService;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.UserSession;
 import com.yourcompany.rentalmanagement.view.components.LoadingSpinner;
+import com.yourcompany.rentalmanagement.view.components.Toast;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -107,16 +112,16 @@ public class PropertyFormController {
 
     @FXML
     public void initialize() {
+        Platform.runLater(() -> {
+            if (titleField.getScene() != null) {
+                titleField.getScene().getStylesheets().add(
+                        getClass().getResource("/css/property-form.css").toExternalForm()
+                );
+            }
+        });
 
-        propertyTypeCombo.setItems(FXCollections.observableArrayList("Residential", "Commercial"));
-        propertyTypeCombo.setPromptText("Select Property Type *");
-        propertyTypeCombo.setOnAction(e -> handlePropertyTypeChange());
-
-        statusCombo.setItems(FXCollections.observableArrayList(
-                Property.propertyStatus.AVAILABLE,
-                Property.propertyStatus.UNDER_MAINTENANCE
-        ));
-        statusCombo.setPromptText("Select Status *");
+        setupFilters();
+        setupLoadingSpinner();
 
         priceField.textProperty().addListener((obs, old, newValue) -> {
             if (!newValue.matches("\\d*\\.?\\d*")) {
@@ -134,45 +139,80 @@ public class PropertyFormController {
         });
 
         // loading spinner
-        loadingSpinner = new LoadingSpinner();
-
-        titleField.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-                newScene.getStylesheets().addAll(
-                        getClass().getResource("/css/common.css").toExternalForm(),
-                        getClass().getResource("/css/property-form.css").toExternalForm(),
-                        getClass().getResource("/css/components/loading-spinner.css").toExternalForm()
-                );
-
-                VBox root = (VBox) titleField.getScene().getRoot();
-
-                if (!root.getChildren().contains(loadingSpinner)) {
-                    root.getChildren().add(loadingSpinner);
-
-                    loadingSpinner.setManaged(false);
-                    loadingSpinner.setMouseTransparent(false);
-
-                    loadingSpinner.toFront();
-                }
-            }
-        });
-
-        propertyTypeCombo.getItems().addAll("Residential", "Commercial");
-        propertyTypeCombo.setValue("Residential"); // Set default value
+        setupLoadingSpinner();
 
         propertyTypeCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
             updateFieldVisibility(newVal);
         });
-        
+
         updateFieldVisibility(propertyTypeCombo.getValue());
+        bedroomsField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                bedroomsField.setText(oldValue);
+            }
+        });
+
+        // Set window size
+        Platform.runLater(() -> {
+            Stage stage = (Stage) titleField.getScene().getWindow();
+            stage.setWidth(1280);
+            stage.setHeight(720);
+            stage.setMinWidth(800);
+            stage.setMinHeight(600);
+        });
+    }
+
+    private void setupFilters() {
+        // Clear and set property types
+        propertyTypeCombo.getItems().clear();
+        propertyTypeCombo.getItems().addAll("Residential", "Commercial");
+        propertyTypeCombo.setValue("Residential");
+        propertyTypeCombo.setOnAction(e -> handlePropertyTypeChange());
+
+        // Status setup
+        statusCombo.getItems().clear();
+        statusCombo.getItems().addAll(
+                Property.propertyStatus.AVAILABLE,
+                Property.propertyStatus.UNDER_MAINTENANCE
+        );
+        statusCombo.setValue(Property.propertyStatus.AVAILABLE);
+
+        if (isEditMode && propertyToEdit != null) {
+            String propertyType = propertyToEdit instanceof ResidentialProperty ? "Residential" : "Commercial";
+            propertyTypeCombo.setValue(propertyType);
+
+            if (propertyToEdit.getStatus() == Property.propertyStatus.RENTED) {
+                statusCombo.setDisable(true);
+                statusCombo.setValue(Property.propertyStatus.RENTED);
+            } else {
+                statusCombo.setValue(propertyToEdit.getStatus());
+            }
+        }
+
+        handlePropertyTypeChange();
     }
 
     private void handlePropertyTypeChange() {
         String type = propertyTypeCombo.getValue();
-        commercialFields.setVisible("Commercial".equals(type));
-        commercialFields.setManaged("Commercial".equals(type));
-        residentialFields.setVisible("Residential".equals(type));
-        residentialFields.setManaged("Residential".equals(type));
+
+        commercialFields.setVisible(false);
+        commercialFields.setManaged(false);
+        residentialFields.setVisible(false);
+        residentialFields.setManaged(false);
+
+        if ("Commercial".equals(type)) {
+            commercialFields.setVisible(true);
+            commercialFields.setManaged(true);
+            bedroomsField.clear();
+            gardenCheck.setSelected(false);
+            petFriendlyCheck.setSelected(false);
+        } else if ("Residential".equals(type)) {
+            residentialFields.setVisible(true);
+            residentialFields.setManaged(true);
+            businessTypeField.clear();
+            parkingSpaceCheck.setSelected(false);
+            squareFootageField.clear();
+        }
     }
 
     @FXML
@@ -198,47 +238,44 @@ public class PropertyFormController {
             return;
         }
 
-        try {
-            VBox root = (VBox) titleField.getScene().getRoot();
-            Platform.runLater(() -> {
-                loadingSpinner.show(root);
-                root.setDisable(true);
-            });
+        loadingSpinner.show();
 
-            String imageUrl;
-            if (selectedImage != null) {
-                imageUrl = cloudinaryService.uploadImage(selectedImage);
-            } else if (isEditMode) {
-                imageUrl = propertyToEdit.getImageLink();
-            } else {
-                showError("Please select an image");
-                return;
+        // Upload image in background
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                if (selectedImage != null) {
+                    return cloudinaryService.uploadImage(selectedImage);
+                } else if (isEditMode) {
+                    return propertyToEdit.getImageLink();
+                }
+                throw new IllegalStateException("Please select an image");
+            } catch (Exception e) {
+                throw new CompletionException(e);
             }
+        }).thenAcceptAsync(imageUrl -> {
+            try {
+                if (isEditMode) {
+                    updateProperty(imageUrl);
+                } else {
+                    createNewProperty(imageUrl);
+                }
 
-            if (isEditMode) {
-                updateProperty(imageUrl);
-            } else {
-                createNewProperty(imageUrl);
+                Platform.runLater(() -> {
+                    showSuccess(isEditMode ? "Property updated successfully!" : "Property created successfully!");
+                    ((Stage) titleField.getScene().getWindow()).close();
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> showError("Error: " + e.getMessage()));
+            } finally {
+                Platform.runLater(() -> loadingSpinner.hide());
             }
-
-            showSuccess(isEditMode ? "Property updated successfully!" : "Property created successfully!");
-            clearForm();
-
+        }, Platform::runLater).exceptionally(throwable -> {
             Platform.runLater(() -> {
-                ((Stage) titleField.getScene().getWindow()).close();
+                showError(throwable.getMessage());
+                loadingSpinner.hide();
             });
-
-        } catch (Exception e) {
-            Platform.runLater(() -> {
-                showError("Error " + (isEditMode ? "updating" : "creating") + " property: " + e.getMessage());
-            });
-        } finally {
-            VBox root = (VBox) titleField.getScene().getRoot();
-            Platform.runLater(() -> {
-                loadingSpinner.hide(root);
-                root.setDisable(false);
-            });
-        }
+            return null;
+        });
     }
 
     private void createCommercialProperty(String imageUrl) {
@@ -323,13 +360,11 @@ public class PropertyFormController {
     }
 
     private void showSuccess(String message) {
-        messageLabel.setStyle("-fx-text-fill: green;");
-        messageLabel.setText(message);
+        Toast.showSuccess((Stage) titleField.getScene().getWindow(), message);
     }
 
     private void showError(String message) {
-        messageLabel.setStyle("-fx-text-fill: red;");
-        messageLabel.setText(message);
+        Toast.showError((Stage) titleField.getScene().getWindow(), message);
     }
 
     private void clearForm() {
@@ -395,26 +430,12 @@ public class PropertyFormController {
     public void setEditMode(Property property) {
         isEditMode = true;
         propertyToEdit = property;
+        submitButton.setText("Update Property");
 
-        // Set property type and trigger visibility update
-        if (property instanceof ResidentialProperty) {
-            propertyTypeCombo.setValue("Residential");
-            ResidentialProperty rp = (ResidentialProperty) property;
-            // ... set residential fields ...
-        } else if (property instanceof CommercialProperty) {
-            propertyTypeCombo.setValue("Commercial");
-            CommercialProperty cp = (CommercialProperty) property;
-            // ... set commercial fields ...
-        }
-
-        // Force update field visibility
-        updateFieldVisibility(propertyTypeCombo.getValue());
-
-        // Populate form fields
+        // Set common fields
         titleField.setText(property.getTitle());
         descriptionField.setText(property.getDescription());
         priceField.setText(String.valueOf(property.getPrice()));
-        statusCombo.setValue(property.getStatus());
 
         // Set address fields
         Address address = property.getAddress();
@@ -425,17 +446,34 @@ public class PropertyFormController {
             stateField.setText(address.getState());
         }
 
+        // Set host if exists
         if (!property.getHosts().isEmpty()) {
             hostComboBox.setValue(property.getHosts().get(0));
         }
 
+        // Load image
         try {
             propertyImageView.setImage(new Image(property.getImageLink()));
         } catch (Exception e) {
             showError("Error loading property image");
         }
 
-        submitButton.setText("Update Property");
+        // Set type-specific fields
+        if (property instanceof ResidentialProperty) {
+            ResidentialProperty rp = (ResidentialProperty) property;
+            propertyTypeCombo.setValue("Residential");
+            bedroomsField.setText(String.valueOf(rp.getNumberOfBedrooms()));
+            gardenCheck.setSelected(rp.isGardenAvailability());
+            petFriendlyCheck.setSelected(rp.isPetFriendliness());
+        } else if (property instanceof CommercialProperty) {
+            CommercialProperty cp = (CommercialProperty) property;
+            propertyTypeCombo.setValue("Commercial");
+            businessTypeField.setText(cp.getBusinessType());
+            parkingSpaceCheck.setSelected(cp.isParkingSpace());
+            squareFootageField.setText(String.valueOf(cp.getSquareFootage()));
+        }
+
+        setupFilters(); // This will handle the status combo setup
     }
 
     private void updateProperty(String imageUrl) {
@@ -482,6 +520,50 @@ public class PropertyFormController {
         parkingSpaceCheck.setManaged(!isResidential);
         squareFootageField.setVisible(!isResidential);
         squareFootageField.setManaged(!isResidential);
+    }
+
+    private void setupLoadingSpinner() {
+        loadingSpinner = new LoadingSpinner();
+
+        Platform.runLater(() -> {
+            if (titleField.getScene() != null) {
+                // Get the root ScrollPane
+                ScrollPane scrollPane = (ScrollPane) titleField.getScene().getRoot();
+                Node originalContent = scrollPane.getContent();
+
+                // Create a container for the spinner and content
+                StackPane container = new StackPane();
+                container.getStyleClass().add("form-container");
+
+                // Add the original content and spinner to the container
+                container.getChildren().addAll(originalContent, loadingSpinner);
+
+                // Configure spinner
+                loadingSpinner.setVisible(false);
+                loadingSpinner.setMouseTransparent(true);
+                loadingSpinner.toFront();
+
+                // Set size bindings
+                loadingSpinner.prefWidthProperty().bind(container.widthProperty());
+                loadingSpinner.prefHeightProperty().bind(container.heightProperty());
+
+                // Set the container as the ScrollPane's content
+                scrollPane.setContent(container);
+
+                // Add method to show/hide spinner
+                loadingSpinner.show = () -> {
+                    loadingSpinner.setVisible(true);
+                    loadingSpinner.setMouseTransparent(false);
+                    originalContent.setDisable(true);
+                };
+
+                loadingSpinner.hide = () -> {
+                    loadingSpinner.setVisible(false);
+                    loadingSpinner.setMouseTransparent(true);
+                    originalContent.setDisable(false);
+                };
+            }
+        });
     }
 
     // ... validation and helper methods ...

@@ -2,7 +2,6 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.model.Address;
 import com.yourcompany.rentalmanagement.model.CommercialProperty;
-import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.ResidentialProperty;
 
@@ -25,81 +24,102 @@ public class PropertyDetailsController {
     @FXML
     private Label descriptionLabel;
     @FXML
+    private Label statusLabel;
+    @FXML
     private FlowPane featuresContainer;
     @FXML
     private GridPane addressGrid;
     @FXML
     private VBox hostContainer;
-    @FXML
-    private VBox contentContainer;
 
     public void setProperty(Property property) {
-        propertyImage.setImage(new Image(property.getImageLink()));
-        titleLabel.setText(property.getTitle());
+        try {
+            // Set basic info
+            titleLabel.setText(property.getTitle());
+            priceLabel.setText(String.format("$%.2f per month", property.getPrice()));
+            descriptionLabel.setText(property.getDescription());
+            statusLabel.setText(property.getStatus().toString());
+            statusLabel.getStyleClass().add(property.getStatus().toString().toLowerCase());
 
-        String propertyType = property instanceof ResidentialProperty ? "Residential Property" : "Commercial Property";
-        Label typeLabel = new Label(propertyType);
-        typeLabel.getStyleClass().add("property-type-label");
+            // Load image
+            propertyImage.setImage(new Image(property.getImageLink()));
 
-        priceLabel.setText(String.format("$%.2f", property.getPrice()));
-        descriptionLabel.setText(property.getDescription());
+            // Setup features
+            featuresContainer.getChildren().clear();
+            if (property instanceof ResidentialProperty) {
+                setupResidentialFeatures((ResidentialProperty) property);
+            } else if (property instanceof CommercialProperty) {
+                setupCommercialFeatures((CommercialProperty) property);
+            }
 
-        contentContainer.getChildren().add(1, typeLabel); // Add after title
+            // Setup address
+            setupAddress(property.getAddress());
 
-        if (property instanceof ResidentialProperty) {
-            setupResidentialFeatures((ResidentialProperty) property);
-        } else if (property instanceof CommercialProperty) {
-            setupCommercialFeatures((CommercialProperty) property);
+            // Setup host info
+            setupHostInfo(property);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        setupAddress(property.getAddress());
-
-        setupHostInfo(property);
     }
 
     private void setupResidentialFeatures(ResidentialProperty property) {
-        addFeature(featuresContainer, property.getNumberOfBedrooms() + " Bedrooms");
+        addFeature(String.format("%d Bedrooms", property.getNumberOfBedrooms()));
         if (property.isGardenAvailability()) {
-            addFeature(featuresContainer, "Garden Available");
+            addFeature("Garden Available");
         }
         if (property.isPetFriendliness()) {
-            addFeature(featuresContainer, "Pet Friendly");
+            addFeature("Pet Friendly");
         }
     }
 
     private void setupCommercialFeatures(CommercialProperty property) {
-        addFeature(featuresContainer, "Business Type: " + property.getBusinessType());
-        addFeature(featuresContainer, String.format("%.0f sq ft", property.getSquareFootage()));
+        addFeature("Business Type: " + property.getBusinessType());
+        addFeature(String.format("%.0f m²", property.getSquareFootage()));
         if (property.isParkingSpace()) {
-            addFeature(featuresContainer, "Parking Available");
+            addFeature("Parking Available");
         }
+    }
+
+    private void addFeature(String text) {
+        Label feature = new Label(text);
+        feature.getStyleClass().add("feature-label");
+        featuresContainer.getChildren().add(feature);
     }
 
     private void setupAddress(Address address) {
-        addAddressField("Street", address.getStreet());
-        addAddressField("City", address.getCity());
-        addAddressField("State", address.getState());
+        addressGrid.getChildren().clear();
+
+        addAddressField(0, "Street", address.getStreet());
+        addAddressField(1, "Number", address.getNumber());
+        addAddressField(2, "City", address.getCity());
+        addAddressField(3, "State", address.getState());
+    }
+
+    private void addAddressField(int row, String label, String value) {
+        Label labelNode = new Label(label + ":");
+        Label valueNode = new Label(value);
+
+        labelNode.getStyleClass().add("address-info");
+        valueNode.getStyleClass().add("address-info");
+
+        addressGrid.add(labelNode, 0, row);
+        addressGrid.add(valueNode, 1, row);
     }
 
     private void setupHostInfo(Property property) {
-        if (property.getHosts() != null && !property.getHosts().isEmpty()) {
-            for (Host host : property.getHosts()) {
+        hostContainer.getChildren().clear();
+
+        if (property.getHosts().isEmpty()) {
+            Label noHostLabel = new Label("No host assigned");
+            noHostLabel.getStyleClass().add("host-info");
+            hostContainer.getChildren().add(noHostLabel);
+        } else {
+            property.getHosts().forEach(host -> {
                 Label hostLabel = new Label("Hosted by: " + host.getUsername());
                 hostLabel.getStyleClass().add("host-info");
                 hostContainer.getChildren().add(hostLabel);
-            }
+            });
         }
-    }
-
-    private void addFeature(FlowPane container, String text) {
-        Label label = new Label(text);
-        label.getStyleClass().add("feature-label");
-        container.getChildren().add(label);
-    }
-
-    private void addAddressField(String label, String value) {
-        int row = addressGrid.getRowCount();
-        addressGrid.add(new Label(label + ":"), 0, row);
-        addressGrid.add(new Label(value), 1, row);
     }
 }

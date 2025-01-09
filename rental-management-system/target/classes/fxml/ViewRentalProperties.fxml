@@ -4,14 +4,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.text.Text?>
 
 <VBox xmlns:fx="http://javafx.com/fxml" 
       fx:controller="com.yourcompany.rentalmanagement.view.ViewRentalPropertiesController"
-      styleClass="main-container">
+      styleClass="main-container"
+      prefWidth="1280" prefHeight="720">
     
     <!-- Header -->
     <HBox alignment="CENTER" spacing="20" styleClass="header-container">
-        <Label text="My Properties" styleClass="header-text"/>
+        <padding>
+            <Insets top="10" right="20" bottom="10" left="20"/>
+        </padding>
+        <Text text="My Properties" styleClass="header-text"/>
         <Region HBox.hgrow="ALWAYS"/>
         <MFXButton fx:id="addPropertyButton" 
                    text="+ Add New Property" 
@@ -21,16 +26,28 @@
     </HBox>
     
     <!-- Filters -->
-    <HBox spacing="10" styleClass="filter-container">
-        <ComboBox fx:id="ownerFilterCombo" promptText="Filter by Owner" />
-        <ComboBox fx:id="propertyTypeFilterCombo" promptText="Filter by Type" />
+    <HBox spacing="10" styleClass="filter-container" fillHeight="true">
+        <padding>
+            <Insets top="10" right="20" bottom="10" left="20"/>
+        </padding>
+        <ComboBox fx:id="ownerFilterCombo" promptText="Filter by Owner" HBox.hgrow="ALWAYS"/>
+        <ComboBox fx:id="propertyTypeFilterCombo" promptText="Filter by Type" HBox.hgrow="ALWAYS"/>
+        <ComboBox fx:id="secondaryFilter1" promptText="Select Filter" />
+        <ComboBox fx:id="secondaryFilter2" promptText="Select Filter" />
+        <ComboBox fx:id="secondaryFilter3" promptText="Select Filter" />
     </HBox>
     
-    <!-- Property List -->
-    <ListView fx:id="propertyList" VBox.vgrow="ALWAYS" styleClass="property-list"/>
+    <!-- Property List in ScrollPane -->
+    <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true" styleClass="property-scroll">
+        <ListView fx:id="propertyList" styleClass="property-list"/>
+    </ScrollPane>
     
     <!-- Pagination -->
-    <HBox alignment="CENTER" spacing="10" styleClass="pagination-container">
+    <HBox alignment="CENTER" spacing="10" styleClass="pagination-container"
+          minHeight="60">
+        <padding>
+            <Insets top="10" right="20" bottom="10" left="20"/>
+        </padding>
         <MFXButton fx:id="prevButton" text="Previous" onAction="#handlePrevPage"/>
         <Label fx:id="pageLabel" text="Page 1"/>
         <MFXButton fx:id="nextButton" text="Next" onAction="#handleNextPage"/>

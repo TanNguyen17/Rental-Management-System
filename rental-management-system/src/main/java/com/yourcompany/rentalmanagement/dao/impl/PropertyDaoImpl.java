@@ -3,6 +3,9 @@ package com.yourcompany.rentalmanagement.dao.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.function.Consumer;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -15,6 +18,8 @@ import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.ResidentialProperty;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
+
+import javafx.application.Platform;
 
 public class PropertyDaoImpl implements PropertyDao {
 
@@ -281,5 +286,44 @@ public class PropertyDaoImpl implements PropertyDao {
             properties.addAll(commercialQuery.list());
         }
         return properties;
+    }
+
+    @Override
+    public List<Property> getPropertiesPage(int page, int pageSize, long ownerId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Property p WHERE p.owner.id = :ownerId ORDER BY p.createdAt DESC";
+            return session.createQuery(hql, Property.class)
+                    .setParameter("ownerId", ownerId)
+                    .setFirstResult(page * pageSize)
+                    .setMaxResults(pageSize)
+                    .list();
+        }
+    }
+
+    @Override
+    public void loadPropertiesAsync(int page, int pageSize, long ownerId,
+            Consumer<List<Property>> onSuccess,
+            Consumer<Throwable> onError) {
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                return getPropertiesPage(page, pageSize, ownerId);
+            } catch (Exception e) {
+                throw new CompletionException(e);
+            }
+        }).thenAcceptAsync(onSuccess, Platform::runLater)
+                .exceptionally(throwable -> {
+                    Platform.runLater(() -> onError.accept(throwable));
+                    return null;
+                });
+    }
+
+    @Override
+    public long getTotalPropertyCount(long ownerId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT COUNT(p) FROM Property p WHERE p.owner.id = :ownerId";
+            return session.createQuery(hql, Long.class)
+                    .setParameter("ownerId", ownerId)
+                    .uniqueResult();
+        }
     }
 }

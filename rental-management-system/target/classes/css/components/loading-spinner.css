@@ -1,23 +1,11 @@
 .loading-spinner {
-    -fx-alignment: center;
     -fx-background-color: rgba(255, 255, 255, 0.8);
 }
 
-.spinner-circle {
-    -fx-fill: #2196f3;
-    -fx-opacity: 0.3;
+.loading-spinner .progress-indicator {
+    -fx-progress-color: #1E3058;
 }
 
-.loading-spinner .spinner-circle:nth-child(1) {
-    -fx-translate-x: -20;
-    -fx-translate-y: 0;
-    -fx-opacity: 1;
+.loading-spinner .progress-indicator .spinner {
+    -fx-background-color: transparent;
 }
-
-.loading-spinner .spinner-circle:nth-child(2) {
-    -fx-translate-x: -14.14;
-    -fx-translate-y: -14.14;
-    -fx-opacity: 0.875;
-}
-
-/* Add similar styles for circles 3-8 with appropriate translations and opacity */

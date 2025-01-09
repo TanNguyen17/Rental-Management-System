@@ -25,18 +25,24 @@ public class MainApp extends Application {
             if (userSession.getCurrentUser() != null) {
                 System.out.println("Found stored session for user: "
                         + userSession.getCurrentUser().getUsername());
-                
-                // Ae co j implement cai nay when ae tao main view nhe
             }
 
             // If no valid stored session --> show login view
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
+            if (loader.getLocation() == null) {
+                System.err.println("Could not find LoginView.fxml");
+                return;
+            }
             Scene scene = new Scene(loader.load());
+            scene.getStylesheets().add(getClass().getResource("/css/property-list.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.setTitle("Rental Management System - Login");
             primaryStage.setWidth(1280);
             primaryStage.setHeight(720);
-            primaryStage.setResizable(false);
+            primaryStage.setMinWidth(800);
+            primaryStage.setMinHeight(600);
+            primaryStage.setResizable(true);
+            primaryStage.setMaximized(false);
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();
