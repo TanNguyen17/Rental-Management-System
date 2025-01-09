@@ -7,6 +7,7 @@ com/yourcompany/rentalmanagement/view/PaymentViewController.class
 com/yourcompany/rentalmanagement/controller/UserController.class
 com/yourcompany/rentalmanagement/model/ResidentialProperty.class
 com/yourcompany/rentalmanagement/model/User.class
+com/yourcompany/rentalmanagement/controller/SideMenuController.class
 com/yourcompany/rentalmanagement/MainApp.class
 com/yourcompany/rentalmanagement/model/Tenant.class
 com/yourcompany/rentalmanagement/model/CommercialProperty.class

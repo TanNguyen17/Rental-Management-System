@@ -11,6 +11,7 @@
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/util/CloudinaryService.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/CommercialProperty.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/PaymentDao.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/controller/SideMenuController.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/Owner.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/controller/ManagerController.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/controller/LoginController.java

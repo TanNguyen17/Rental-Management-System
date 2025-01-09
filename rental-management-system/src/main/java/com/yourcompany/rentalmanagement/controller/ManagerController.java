@@ -11,4 +11,6 @@ public class ManagerController {
     protected void onHelloButtonClick() {
         welcomeText.setText("Welcome to JavaFX Application!");
     }
+
+
 }
