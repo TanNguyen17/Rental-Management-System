@@ -20,14 +20,19 @@
         <Label fx:id="messageLabel"/>
     </HBox>
     
-    <!-- Add this before the propertyListContainer -->
+    <!-- Filters -->
     <HBox spacing="10" styleClass="filter-container">
         <ComboBox fx:id="ownerFilterCombo" promptText="Filter by Owner" />
         <ComboBox fx:id="propertyTypeFilterCombo" promptText="Filter by Type" />
     </HBox>
     
-    <!-- Scrollable Property List -->
-    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="property-scroll">
-        <VBox fx:id="propertyListContainer" styleClass="property-container"/>
-    </ScrollPane>
+    <!-- Property List -->
+    <ListView fx:id="propertyList" VBox.vgrow="ALWAYS" styleClass="property-list"/>
+    
+    <!-- Pagination -->
+    <HBox alignment="CENTER" spacing="10" styleClass="pagination-container">
+        <MFXButton fx:id="prevButton" text="Previous" onAction="#handlePrevPage"/>
+        <Label fx:id="pageLabel" text="Page 1"/>
+        <MFXButton fx:id="nextButton" text="Next" onAction="#handleNextPage"/>
+    </HBox>
 </VBox> 

@@ -12,6 +12,7 @@ com\yourcompany\rentalmanagement\model\Property$propertyStatus.class
 com\yourcompany\rentalmanagement\dao\ManagerDao.class
 com\yourcompany\rentalmanagement\dao\impl\OwnerDaoImpl.class
 com\yourcompany\rentalmanagement\view\PropertyFormController$2.class
+com\yourcompany\rentalmanagement\view\ViewRentalPropertiesController$1.class
 com\yourcompany\rentalmanagement\util\ProvinceData.class
 com\yourcompany\rentalmanagement\model\Manager.class
 com\yourcompany\rentalmanagement\dao\PaymentDao.class
