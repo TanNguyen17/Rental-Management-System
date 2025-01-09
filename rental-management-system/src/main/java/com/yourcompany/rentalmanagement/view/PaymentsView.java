@@ -224,7 +224,7 @@ public class PaymentsView implements Initializable {
         if (payment == null) return;
 
         if (payment.getStatus().toString().toLowerCase().equals("paid")) {
-            AlertUtils.showSuccessAlert("Payment is paid", "Your transaction has been paid successfully");
+            AlertUtils.showSuccessAlert("Payment is paid", "Your transaction has been paid");
         } else {
             AlertUtils.showSuccessAlert("Payment is completed", "Your transaction has been completed successfully");
             payment.setStatus(Payment.paymentStatus.PAID);
