@@ -80,7 +80,8 @@ public class HostDashboardViewController implements Initializable {
         actualRevenueSeries.setName("Actual Revenue");
 
         // Fetch total income
-        List<Double> expectedRevenue = paymentDaoImpl.getMonthlyPayment(userSession.getCurrentUser().getId(), "expected");
+//        List<Double> expectedRevenue = paymentDaoImpl.getMonthlyPayment(userSession.getCurrentUser().getId(), "expected");
+        List<Double> expectedRevenue = paymentDaoImpl.getMonthlyPayment(1, "expected");
         List<Double> actualRevenue = paymentDaoImpl.getMonthlyPayment(1, "actual");
 
         // Populate the series with data
