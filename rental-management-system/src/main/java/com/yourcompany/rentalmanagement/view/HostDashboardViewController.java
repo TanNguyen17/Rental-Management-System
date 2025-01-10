@@ -2,9 +2,8 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
-import com.yourcompany.rentalmanagement.model.Host;
-import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.Property;
+import com.yourcompany.rentalmanagement.util.UserSession;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,9 +21,7 @@ public class HostDashboardViewController implements Initializable {
     private PropertyDaoImpl propertyDaoImpl = new PropertyDaoImpl();
     private PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
     private ObservableList<Property> properties;
-    private ObservableList<Payment> payments;
-    private static final Random random = new Random();
-    private Host currentHost;
+    private UserSession userSession = UserSession.getInstance();
 
     @FXML
     private LineChart<String, Double> lineChart;
@@ -73,37 +70,32 @@ public class HostDashboardViewController implements Initializable {
         yAxis.setLabel("Income ($)");
 
         // Create the LineChart
-        lineChart.setTitle("Monthly Income Overview");
+        lineChart.setTitle("Monthly Revenue Overview");
 
         // Create data series
-        XYChart.Series<String, Double> incomeSeries = new XYChart.Series<>();
-        incomeSeries.setName("Monthly Income");
+        XYChart.Series<String, Double> expectedRevenueSeries = new XYChart.Series<>();
+        expectedRevenueSeries.setName("Expected Revenue");
+
+        XYChart.Series<String, Double> actualRevenueSeries = new XYChart.Series<>();
+        actualRevenueSeries.setName("Actual Revenue");
 
         // Fetch total income
-        List<Double> monthlyIncome = paymentDaoImpl.getMonthlyPayment(1);
-
-//        monthlyIncome.put("January", 617.9);
-//        monthlyIncome.put("February", 771.13);
-//        monthlyIncome.put("March", 809.64);
-//        monthlyIncome.put("April", 190.41);
-//        monthlyIncome.put("May", 956.14);
-//        monthlyIncome.put("June", 640.38);
-//        monthlyIncome.put("July", 968.2);
-//        monthlyIncome.put("August", 276.3);
-//        monthlyIncome.put("September", 463.96);
-//        monthlyIncome.put("October", 907.36);
-//        monthlyIncome.put("November", 276.3);
-//        monthlyIncome.put("December", 635.45);
-
+        List<Double> expectedRevenue = paymentDaoImpl.getMonthlyPayment(userSession.getCurrentUser().getId(), "expected");
+        List<Double> actualRevenue = paymentDaoImpl.getMonthlyPayment(1, "actual");
 
         // Populate the series with data
         for (int i = 0; i < months.length; i++) {
-            double income = (i < monthlyIncome.size()) ? monthlyIncome.get(i) : 0.0;
-            incomeSeries.getData().add(new XYChart.Data<>(months[i], income));
+            double income = (i < expectedRevenue.size()) ? expectedRevenue.get(i) : 0.0;
+            expectedRevenueSeries.getData().add(new XYChart.Data<>(months[i], income));
+        }
+
+        for (int i = 0; i < months.length; i++) {
+            double income = (i < actualRevenue.size()) ? actualRevenue.get(i) : 0.0;
+            actualRevenueSeries.getData().add(new XYChart.Data<>(months[i], income));
         }
 
         // Add series to the chart
-        lineChart.getData().add(incomeSeries);
+        lineChart.getData().addAll(actualRevenueSeries, expectedRevenueSeries);
     }
 
     private void initializePieChart() {

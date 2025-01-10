@@ -25,20 +25,20 @@ public class MainApp extends Application {
                 System.out.println("Hibernate initialized successfully!");
             }
             // Check stored token
-//            UserSession userSession = UserSession.getInstance();
-//            if (userSession.getCurrentUser() != null) {
-//                System.out.println("Found stored session for user: "
-//                        + userSession.getCurrentUser().getUsername());
-//
-//                // Ae co j implement cai nay when ae tao main view nhe
-//                if (userSession.getCurrentUser().getRole() == UserRole.TENANT) {
-//                    loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
-//                } else if (userSession.getCurrentUser().getRole() == UserRole.OWNER) {
-//                    loader = new FXMLLoader(getClass().getResource("/fxml/ViewRentalProperties.fxml"));
-//                }
-//            } else {
-//                loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
-//            }
+            UserSession userSession = UserSession.getInstance();
+            if (userSession.getCurrentUser() != null) {
+                System.out.println("Found stored session for user: "
+                        + userSession.getCurrentUser().getUsername());
+
+                // Ae co j implement cai nay when ae tao main view nhe
+                if (userSession.getCurrentUser().getRole() == UserRole.TENANT) {
+                    loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
+                } else if (userSession.getCurrentUser().getRole() == UserRole.OWNER) {
+                    loader = new FXMLLoader(getClass().getResource("/fxml/ViewRentalProperties.fxml"));
+                }
+            } else {
+                loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
+            }
             loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
             // If no valid stored session --> show login view
             Scene scene = new Scene(loader.load());
@@ -59,11 +59,5 @@ public class MainApp extends Application {
 
     public static void main(String[] args) {
         launch(args);
-//        PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
-//        Map<String, Double> monthlyPayments = new LinkedHashMap<>();
-//        monthlyPayments= paymentDaoImpl.getMonthlyPayment(1);
-//        for (Map.Entry<String, Double> entry : monthlyPayments.entrySet()) {
-//            System.out.println(entry.getKey() + ": " + entry.getValue());
-//        }
     }
 }

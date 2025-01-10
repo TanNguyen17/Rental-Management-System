@@ -167,19 +167,33 @@ public class PaymentDaoImpl implements PaymentDao {
         return count;
     }
 
-    public List<Double> getMonthlyPayment(int id) {
+    public List<Double> getMonthlyPayment(long id, String type) {
         List<Double> monthlyPayments = new ArrayList<>(Collections.nCopies(12, 0.0)); // Initialize with 12 zeros
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            Query query = session.createQuery(
-                    "SELECT MONTH(p.dueDate) AS month, SUM(p.amount) AS totalPayment " +
-                            "FROM Payment p " +
-                            "JOIN p.rentalAgreement ra " +
-                            "WHERE ra.host.id = :hostId " +
-                            "GROUP BY MONTH(p.dueDate) " +
-                            "ORDER BY MONTH(p.dueDate)"
-            );
+            String hql;
+
+            // Modify the HQL query based on the type
+            if ("expected".equalsIgnoreCase(type)) {
+                hql = "SELECT MONTH(p.dueDate) AS month, SUM(p.amount) AS totalPayment " +
+                        "FROM Payment p " +
+                        "JOIN p.rentalAgreement ra " +
+                        "WHERE ra.host.id = :hostId " +
+                        "GROUP BY MONTH(p.dueDate) " +
+                        "ORDER BY MONTH(p.dueDate)";
+            } else if ("actual".equalsIgnoreCase(type)) {
+                hql = "SELECT MONTH(p.dueDate) AS month, SUM(p.amount) AS totalPayment " +
+                        "FROM Payment p " +
+                        "JOIN p.rentalAgreement ra " +
+                        "WHERE ra.host.id = :hostId AND p.status = 'PAID' " +
+                        "GROUP BY MONTH(p.dueDate) " +
+                        "ORDER BY MONTH(p.dueDate)";
+            } else {
+                throw new IllegalArgumentException("Invalid payment type. Must be 'expected' or 'actual'.");
+            }
+
+            Query query = session.createQuery(hql);
             query.setParameter("hostId", id);
             List<Object[]> results = query.getResultList();
 
@@ -201,5 +215,4 @@ public class PaymentDaoImpl implements PaymentDao {
 
         return monthlyPayments;
     }
-
 }
