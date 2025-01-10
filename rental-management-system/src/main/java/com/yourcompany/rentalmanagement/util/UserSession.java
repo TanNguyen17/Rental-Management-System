@@ -32,6 +32,7 @@ public class UserSession {
 
     private void loadStoredSession() {
         String storedToken = TokenStorage.loadToken();
+        System.out.println("Stored token: " + storedToken);
         if (storedToken != null) {
             // Validate token and load user
             AuthService authService = new AuthService();

@@ -2,13 +2,12 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.UserController;
 import com.yourcompany.rentalmanagement.model.User;
+import com.yourcompany.rentalmanagement.util.AlertUtils;
 import com.yourcompany.rentalmanagement.util.CloudinaryService;
-import com.yourcompany.rentalmanagement.util.ProvinceData;
-import com.yourcompany.rentalmanagement.util.TimeFormat;
-
+import com.yourcompany.rentalmanagement.util.AddressData;
+import com.yourcompany.rentalmanagement.util.UserSession;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,22 +18,23 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.scene.input.KeyEvent;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.*;
 
 
-public class ProfileViewController implements Initializable {
-    private UserController userController = new UserController();
+public class ProfileView implements Initializable {
+    private UserController userController;
     private CloudinaryService cloudinaryService = new CloudinaryService();
-    private User currentUser;
     private Map<String, List<String>> provinceCities = new HashMap<>();
-    private final ProvinceData provinceData = new ProvinceData();
+    private Map<String, List<String>> cityWards = new HashMap<>();
+    private User currentUser = UserSession.getInstance().getCurrentUser();
+
     @FXML
     private Text username;
 
@@ -75,13 +75,22 @@ public class ProfileViewController implements Initializable {
     private TextField streetNumber;
 
     @FXML
-    private TextField  streetName;
+    private Text errorStreetNumber;
+
+    @FXML
+    private TextField streetName;
+
+    @FXML
+    private Text errorStreetName;
 
     @FXML
     private ChoiceBox<String> provinceChoice;
 
     @FXML
     private ChoiceBox<String> cityChoice;
+
+    @FXML
+    private ChoiceBox<String> wardChoice;
 
     @FXML
     private MFXPasswordField currentPassword;
@@ -112,56 +121,92 @@ public class ProfileViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // 1. Load User Data in Background
+        userController = new UserController();
+        // Load User Data in Background
         new Thread(() -> {
-            currentUser = userController.getUserProfile(5); // Load user data
-            provinceCities = ProvinceData.fetchProvinceData(); // Load province data
+            // Load user data
+            currentUser = userController.getUserProfile(currentUser.getId(), currentUser.getRole());
 
-            // 2. Update UI on JavaFX Application Thread
+            // Update UI on JavaFX Application Thread
             Platform.runLater(() -> {
                 if (currentUser != null) {
-                    username.setText(currentUser.getUsername());
-                    Image image = new Image(currentUser.getProfileImage());
-                    profileImage.setImage(image);
-                    firstName.setPromptText("First Name");
-                    lastName.setPromptText("Last Name");
-                    email.setText(currentUser.getEmail());
-                    phoneNumber.setText(currentUser.getPhoneNumber());
-                    dateOfBirth.setValue(currentUser.getDob());
-                    streetName.setText(currentUser.getAddress().getStreet());
-                    streetNumber.setText(currentUser.getAddress().getNumber());
-
-                    //Populate province choice and set its value
-                    provinceChoice.getItems().addAll(provinceCities.keySet());
-                    if (provinceChoice.getItems().contains(currentUser.getAddress().getCity())) {
-                        provinceChoice.setValue(currentUser.getAddress().getCity());
-                        updateStateCombobox(currentUser.getAddress().getCity());
-
-                        //Populate city choice and set its value
-                        if (cityChoice.getItems().contains(currentUser.getAddress().getState())) {
-                            cityChoice.setValue(currentUser.getAddress().getState());
-                        } else {
-                            System.err.println("City not found in ComboBox: " + currentUser.getAddress().getState());
-                        }
-
-                    } else {
-                        System.err.println("Province not found in ComboBox: " + currentUser.getAddress().getCity());
-                    }
-                } else {
-                    username.setText("UserName");
-                    firstName.setPromptText("First Name");
-                    // ... set other default values
+                    initialProfile();
                 }
+            });
+        }).start();
+
+        // Load address data in the background
+        new Thread(() -> {
+            // Load address data
+            provinceCities = AddressData.fetchProvinceData();
+            System.out.println("provinceCities: " + provinceCities.size());
+            cityWards = AddressData.cityWards;
+
+            Platform.runLater(() -> {
+                initialAddress();
                 provinceChoice.setOnAction(event -> {
                     String selectedProvince = provinceChoice.getValue();
-                    updateStateCombobox(selectedProvince);
+                    updateCityCombobox(selectedProvince);
+                });
+
+                cityChoice.setOnAction(event -> {
+                    String selectedCity = cityChoice.getValue();
+                    updateWardCombobox(selectedCity);
                 });
             });
         }).start();
     }
 
+    private void initialProfile() {
+        username.setText(currentUser.getUsername());
+
+        Image image = new Image(currentUser.getProfileImage() != null ? currentUser.getProfileImage() : "https://res.cloudinary.com/dqydgahsj/image/upload/v1735456851/q7ldgrgk68q8fnwqadkw.jpg");
+        profileImage.setImage(image);
+
+        firstName.setPromptText(currentUser.getUsername() != null ? currentUser.getUsername() : "First Name");
+        lastName.setPromptText(currentUser.getUsername() != null ? currentUser.getUsername() : "Last Name");
+        email.setText(currentUser.getEmail() != null ? currentUser.getEmail() : "Email");
+
+        phoneNumber.setText(currentUser.getPhoneNumber() != null ? currentUser.getPhoneNumber() : "Phone Number");
+        dateOfBirth.setValue(currentUser.getDob() != null ? currentUser.getDob() : LocalDate.of(2025, 1, 1));
+    }
+
+    // handle add current user address
+    private void initialAddress() {
+        provinceChoice.getItems().addAll(provinceCities.keySet());
+        if (currentUser.getAddress() != null) {
+            streetName.setText(currentUser.getAddress().getStreet());
+            streetNumber.setText(currentUser.getAddress().getNumber());
+
+            if (provinceChoice.getItems().contains(currentUser.getAddress().getCity())) {
+                provinceChoice.setValue(currentUser.getAddress().getCity());
+                updateCityCombobox(currentUser.getAddress().getCity());
+
+                //Populate city choice and set its value
+                if (cityChoice.getItems().contains(currentUser.getAddress().getCity())) {
+                    cityChoice.setValue(currentUser.getAddress().getCity());
+                    updateCityCombobox(currentUser.getAddress().getCity());
+
+                    if (wardChoice.getItems().contains(currentUser.getAddress().getWard())) {
+                        wardChoice.setValue(currentUser.getAddress().getWard());
+                        updateWardCombobox(currentUser.getAddress().getWard());
+                    }
+
+                } else {
+                    System.err.println("City not found in ComboBox: " + currentUser.getAddress().getCity());
+                }
+
+            } else {
+                System.err.println("Province not found in ComboBox: " + currentUser.getAddress().getProvince());
+            }
+        } else {
+            streetName.setText("Street");
+            streetNumber.setText("Street Number");
+        }
+    }
+
     @FXML
-    public void updateProfile(ActionEvent event) {
+    private void updateProfile(ActionEvent event) {
         errorFirstName.setText("");
         errorLastName.setText("");
         errorEmail.setText("");
@@ -181,15 +226,7 @@ public class ProfileViewController implements Initializable {
             data.put("email", emailText);
             data.put("phoneNumber", phoneNumberText);
             data.put("dob", date);
-
-            System.out.println(data);
-
-            userController.updateProfile(5, data);
-
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Update Profile");
-            alert.setContentText("Your information update success update");
-            alert.showAndWait();
+            userController.updateProfile(currentUser.getId(), data, currentUser.getRole());
         }
     }
 
@@ -201,21 +238,22 @@ public class ProfileViewController implements Initializable {
         String city = cityChoice.getValue();
 
         if (streetNameText == null) {
-
+            errorStreetName.setText("Please enter street name");
         }
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("streetName", streetNameText);
-        data.put("streetNumber", streetNumberText);
-        data.put("province", province);
-        data.put("city", city);
+        if (streetNumberText == null) {
+            errorStreetNumber.setText("Please enter street number");
+        }
 
-        userController.updateAddress(5, data);
+        if (streetNameText != null && streetNumberText != null) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("streetName", streetNameText);
+            data.put("streetNumber", streetNumberText);
+            data.put("province", province);
+            data.put("city", city);
+            userController.updateAddress(currentUser.getId(), data, currentUser.getRole());
+        }
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Update Profile");
-        alert.setContentText("Your information update success update");
-        alert.showAndWait();
     }
 
     @FXML
@@ -230,7 +268,7 @@ public class ProfileViewController implements Initializable {
             try {
                 Image image = new Image(new FileInputStream(selectedFile));
                 String imageUrl = cloudinaryService.uploadImage(selectedFile);
-                userController.updateImageLink(5, imageUrl);
+                userController.updateImageLink(currentUser.getId(), imageUrl, currentUser.getRole());
                 profileImage.setImage(image);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -241,7 +279,7 @@ public class ProfileViewController implements Initializable {
     }
 
     @FXML
-    void updatePassword(ActionEvent event) {
+    private void updatePassword(ActionEvent event) {
         errorCurrentPassword.setText("");
         errorNewPassword.setText("");
         errorConfirmPassword.setText("");
@@ -251,10 +289,11 @@ public class ProfileViewController implements Initializable {
         String confirmPasswordText = confirmPassword.getText();
 
         if (validatePassword(currentPasswordText, newPasswordText, confirmPasswordText)) {
-            userController.updatePassword(5, confirmPasswordText);
+            userController.updatePassword(currentUser.getId(), currentPasswordText, confirmPasswordText, currentUser.getRole());
         }
     }
 
+    // Validate profile info
     private boolean validateProfile(String firstName, String lastName, String email, String phoneNumber) {
         boolean valid = true;
         if (firstName.isEmpty()) {
@@ -286,13 +325,11 @@ public class ProfileViewController implements Initializable {
         return valid;
     }
 
+    // Validate password
     private boolean validatePassword(String currentPassword, String newPassword, String confirmPassword) {
         boolean valid = true;
         if (currentPassword.isEmpty()) {
             errorCurrentPassword.setText("Current Password cannot be empty");
-            valid = false;
-        } else if (!currentPassword.equals(currentUser.getPassword())) {
-            errorCurrentPassword.setText("Current Password does not match");
             valid = false;
         }
 
@@ -308,7 +345,7 @@ public class ProfileViewController implements Initializable {
         } else if (confirmPassword.length() < 8) {
             errorNewPassword.setText("New Password should be at least 8 characters");
             valid = false;
-        } else if (confirmPassword.matches(".*[!@#$%^&*()].*")) {
+        } else if (!confirmPassword.matches(".*[!@#$%^&*()].*")) {
             errorNewPassword.setText("New Password must contain at least one special character");
             valid = false;
         }
@@ -316,17 +353,20 @@ public class ProfileViewController implements Initializable {
         return valid;
     }
 
+    // Validate email
     private boolean isValidEmail(String email) {
         String emailRegex = "^[\\w!#$%&'*+/=?^`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^`{|}~-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
         return email.matches(emailRegex);
     }
 
+    // Validate phone number
     private boolean isValidPhoneNumber(String phoneNumber) {
         String phoneRegex = "^\\d{3}\\d{3}\\d{4}$";  // Matches XXX-XXX-XXXX format
         return phoneNumber.matches(phoneRegex);
     }
 
-    private void updateStateCombobox(String selectedProvince) {
+    // Update cities data into combobox when province is selected
+    private void updateCityCombobox(String selectedProvince) {
         if (selectedProvince != null) {
             List<String> cities = provinceCities.getOrDefault(selectedProvince, new ArrayList<>());
             ObservableList<String> cityList = FXCollections.observableArrayList(cities);
@@ -334,5 +374,24 @@ public class ProfileViewController implements Initializable {
         } else {
             cityChoice.getItems().clear();
         }
+    }
+
+    // Update wards data into combobox when city is selected
+    private void updateWardCombobox(String selectedCity) {
+        if (selectedCity != null) {
+            List<String> wards = cityWards.getOrDefault(selectedCity, new ArrayList<>());
+            ObservableList<String> wardList = FXCollections.observableArrayList(wards);
+            wardChoice.setItems(wardList);
+        } else {
+            wardChoice.getItems().clear();
+        }
+    }
+
+    public void showSuccessAlert(String title, String content) {
+        AlertUtils.showSuccessAlert(title, content);
+    }
+
+    public void showErrorAlert(String title, String content) {
+        AlertUtils.showErrorAlert(title, content);
     }
 }

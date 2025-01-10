@@ -1,6 +1,7 @@
 package com.yourcompany.rentalmanagement.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,17 +15,19 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Transient;
 
 @MappedSuperclass
-public class Property {
+public abstract class Property {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, updatable = false, nullable = false, length = 10)
     private long id;
 
-    @OneToOne(targetEntity = Address.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id", nullable = false, referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "address_id")
     private Address address;
 
     @Column(name = "price", nullable = false)
@@ -37,7 +40,7 @@ public class Property {
     @Column(name = "imageLink", nullable = false)
     private String imageLink;
 
-    @ManyToOne(targetEntity = Owner.class, cascade = {CascadeType.ALL})
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id", nullable = false)
     private Owner owner;
 
@@ -52,10 +55,13 @@ public class Property {
     private String description;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "last_updated")
-    private LocalDate lastUpdated;
+    private LocalDateTime lastUpdated;
+
+    @Transient
+    private Long hostId;
 
     public long getId() {
         return id;
@@ -121,19 +127,19 @@ public class Property {
         this.description = description;
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getLastUpdated() {
+    public LocalDateTime getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(LocalDate lastUpdated) {
+    public void setLastUpdated(LocalDateTime lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 
@@ -145,9 +151,24 @@ public class Property {
         this.imageLink = imageLink;
     }
 
+    public Long getHostId() {
+        return hostId;
+    }
+
+    public void setHostId(Long hostId) {
+        this.hostId = hostId;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
     public enum propertyStatus {
         AVAILABLE,
         RENTED,
         UNDER_MAINTENANCE
     }
+
+    public abstract List<Host> getHosts();
 }

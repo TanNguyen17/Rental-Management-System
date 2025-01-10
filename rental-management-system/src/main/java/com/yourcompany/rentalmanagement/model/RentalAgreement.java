@@ -33,13 +33,13 @@ public class RentalAgreement {
     @JoinColumn(name = "host_id", nullable = false)
     private Host host;
 
-    @ManyToMany(mappedBy = "rentalAgreements", cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "rentalAgreements")
     private List<Tenant> tenants = new ArrayList<>();
 
-    @OneToOne(mappedBy = "rentalAgreement", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "rentalAgreement")
     private CommercialProperty commercialProperty;
 
-    @OneToOne(mappedBy = "rentalAgreement", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "rentalAgreement")
     private ResidentialProperty residentialProperty;
 
     public long getId() {
@@ -70,8 +70,16 @@ public class RentalAgreement {
         this.owner = owner;
     }
 
+    public String getOwnerName(){
+        return this.owner.getUsername();
+    }
+
     public Host getHost() {
         return host;
+    }
+
+    public String getHostName(){
+        return this.host.getUsername();
     }
 
     public void setHost(Host host) {
@@ -122,15 +130,5 @@ public class RentalAgreement {
         NEW,
         ACTIVE,
         COMPLETED
-    }
-
-    @Override
-    public String toString() {
-        return "RentalAgreement{" +
-                "id=" + id +
-                ", status=" + status +
-                ", contractDate=" + contractDate +
-                ", rentingFee=" + rentingFee +
-                '}';
     }
 }

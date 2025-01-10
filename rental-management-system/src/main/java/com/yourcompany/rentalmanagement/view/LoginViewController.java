@@ -3,6 +3,7 @@ package com.yourcompany.rentalmanagement.view;
 import java.io.IOException;
 
 import com.yourcompany.rentalmanagement.controller.LoginController;
+import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.model.Manager;
 import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.User;
@@ -144,15 +145,30 @@ public class LoginViewController {
     public void navigateToMainView() {
         try {
             User currentUser = UserSession.getInstance().getCurrentUser();
+
             if (currentUser instanceof Owner || currentUser instanceof Manager) {
-                // Load ViewRentalProperties instead of PropertyForm
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewRentalProperties.fxml"));
+                Scene scene = new Scene(loader.load());
+
+                // Add CSS
+                scene.getStylesheets().addAll(
+                        getClass().getResource("/css/common.css").toExternalForm(),
+                        getClass().getResource("/css/property-list.css").toExternalForm()
+                );
+
+                Stage stage = (Stage) messageLabel.getScene().getWindow();
+                stage.setScene(scene);
+                stage.setTitle("Rental Properties");
+                stage.show();
+            } else if (currentUser instanceof Tenant) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TenantView.fxml"));
                 Scene scene = new Scene(loader.load());
                 Stage stage = (Stage) messageLabel.getScene().getWindow();
                 stage.setScene(scene);
                 stage.setTitle("Rental Properties");
                 stage.show();
-            } else {
+            }
+            else {
                 // Load for different roles
                 showSuccessMessage("Login successful! Other views will be implemented later...");
             }

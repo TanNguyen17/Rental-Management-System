@@ -5,61 +5,122 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.image.ImageView?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" 
+<ScrollPane xmlns:fx="http://javafx.com/fxml" 
       fx:controller="com.yourcompany.rentalmanagement.view.PropertyFormController"
-      spacing="15" alignment="CENTER" style="-fx-padding: 20;">
-    
-    <Text text="Add New Property" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
-    
-    <!-- Basic Property Info -->
-    <TextField fx:id="titleField" promptText="Property Title *"/>
-    <TextArea fx:id="descriptionField" promptText="Property Description" prefRowCount="3"/>
-    
-    <!-- Property Type Selection -->
-    <ComboBox fx:id="propertyTypeCombo" promptText="Select Property Type *"/>
-    
-    <!-- Property Status -->
-    <ComboBox fx:id="statusCombo" promptText="Property Status *"/>
-    
-    <!-- Price -->
-    <TextField fx:id="priceField" promptText="Renting Fee ($ per month) *"/>
-    
-    <!-- Address Fields -->
-    <VBox spacing="10">
-        <Text text="Property Address" style="-fx-font-weight: bold;"/>
-        <TextField fx:id="streetField" promptText="Street *"/>
-        <TextField fx:id="numberField" promptText="Number *"/>
-        <TextField fx:id="cityField" promptText="City *"/>
-        <TextField fx:id="stateField" promptText="State *"/>
+      fitToWidth="true"
+      VBox.vgrow="ALWAYS"
+      styleClass="form-scroll-pane">
+      
+    <VBox styleClass="property-form, form-container" spacing="20" VBox.vgrow="ALWAYS">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+        
+        <Text text="Add New Property" styleClass="header-text"/>
+        
+        <!-- Main Content -->
+        <HBox spacing="20" VBox.vgrow="ALWAYS">
+            <!-- Left Side -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS" prefWidth="400">
+                <!-- Basic Information -->
+                <VBox styleClass="form-section">
+                    <Text text="Basic Information" styleClass="section-title"/>
+                    <TextField fx:id="titleField" promptText="Property Title *" styleClass="form-field"/>
+                    <TextArea fx:id="descriptionField" promptText="Property Description" 
+                             prefRowCount="3" styleClass="form-field"/>
+                    
+                    <Text text="Property Type *" styleClass="section-subtitle"/>
+                    <ComboBox fx:id="propertyTypeCombo" styleClass="form-field" maxWidth="Infinity"/>
+                    
+                    <Text text="Property Status *" styleClass="section-subtitle"/>
+                    <ComboBox fx:id="statusCombo" styleClass="form-field" maxWidth="Infinity"/>
+                </VBox>
+                
+                <!-- Host Selection -->
+                <VBox styleClass="form-section">
+                    <Text text="Property Host" styleClass="section-title"/>
+                    <ComboBox fx:id="hostComboBox" promptText="Select Host (Optional)"
+                             styleClass="form-field" maxWidth="Infinity"/>
+                    <Label text="Note: Without a host, tenants can only view the property" 
+                           style="-fx-text-fill: #666666; -fx-font-style: italic;"/>
+                </VBox>
+                
+                <!-- Price -->
+                <VBox styleClass="form-section">
+                    <Text text="Pricing" styleClass="section-title"/>
+                    <TextField fx:id="priceField" promptText="Renting Fee ($ per month) *" 
+                              styleClass="form-field"/>
+                </VBox>
+                
+                <!-- Address -->
+                <VBox styleClass="form-section">
+                    <Text text="Property Address" styleClass="section-title"/>
+                    <GridPane hgap="10" vgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                        </columnConstraints>
+                        <TextField fx:id="streetField" promptText="Street *" 
+                                 styleClass="form-field" GridPane.columnIndex="0"/>
+                        <TextField fx:id="numberField" promptText="Number *" 
+                                 styleClass="form-field" GridPane.columnIndex="1"/>
+                        <TextField fx:id="cityField" promptText="City *" 
+                                 styleClass="form-field" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="stateField" promptText="State *" 
+                                 styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    </GridPane>
+                </VBox>
+            </VBox>
+            
+            <!-- Right Side -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS" prefWidth="400">
+                <!-- Image Upload -->
+                <VBox styleClass="form-section">
+                    <Text text="Property Image" styleClass="section-title"/>
+                    <VBox styleClass="image-preview" alignment="CENTER">
+                        <ImageView fx:id="propertyImageView" fitHeight="200" fitWidth="300" 
+                                  preserveRatio="true"/>
+                        <Button text="Upload Property Image *" onAction="#handleImageUpload"
+                                styleClass="primary-button"/>
+                    </VBox>
+                </VBox>
+                
+                <!-- Commercial Property Fields -->
+                <VBox fx:id="commercialFields" styleClass="property-details-section" visible="false" managed="false">
+                    <Text text="Commercial Property Details" styleClass="property-details-title"/>
+                    <VBox spacing="10">
+                        <TextField fx:id="businessTypeField" promptText="Business Type *" 
+                                  styleClass="form-field"/>
+                        <CheckBox fx:id="parkingSpaceCheck" text="Parking Space Available"
+                                 styleClass="form-checkbox"/>
+                        <TextField fx:id="squareFootageField" promptText="Square Footage (m²) *" 
+                                  styleClass="form-field"/>
+                    </VBox>
+                </VBox>
+                
+                <!-- Residential Property Fields -->
+                <VBox fx:id="residentialFields" styleClass="property-details-section" visible="false" managed="false">
+                    <Text text="Residential Property Details" styleClass="property-details-title"/>
+                    <VBox spacing="10">
+                        <TextField fx:id="bedroomsField" promptText="Number of Bedrooms *" 
+                                  styleClass="form-field"/>
+                        <CheckBox fx:id="gardenCheck" text="Garden Available"
+                                 styleClass="form-checkbox"/>
+                        <CheckBox fx:id="petFriendlyCheck" text="Pet Friendly"
+                                 styleClass="form-checkbox"/>
+                    </VBox>
+                </VBox>
+            </VBox>
+        </HBox>
+        
+        <!-- Bottom Section -->
+        <HBox alignment="CENTER" spacing="10">
+            <Button fx:id="submitButton" text="Create Property" 
+                    onAction="#handleSubmit" 
+                    styleClass="primary-button"/>
+            <Label fx:id="messageLabel"/>
+        </HBox>
     </VBox>
-    
-    <!-- Commercial Property Fields (initially hidden) -->
-    <VBox fx:id="commercialFields" spacing="10" visible="false" managed="false">
-        <Text text="Commercial Property Details" style="-fx-font-weight: bold;"/>
-        <TextField fx:id="businessTypeField" promptText="Business Type *"/>
-        <CheckBox fx:id="parkingSpaceCheck" text="Parking Space Available"/>
-        <TextField fx:id="squareFootageField" promptText="Square Footage *"/>
-    </VBox>
-    
-    <!-- Residential Property Fields (initially hidden) -->
-    <VBox fx:id="residentialFields" spacing="10" visible="false" managed="false">
-        <Text text="Residential Property Details" style="-fx-font-weight: bold;"/>
-        <TextField fx:id="bedroomsField" promptText="Number of Bedrooms *"/>
-        <CheckBox fx:id="gardenCheck" text="Garden Available"/>
-        <CheckBox fx:id="petFriendlyCheck" text="Pet Friendly"/>
-    </VBox>
-    
-    <!-- Image Upload -->
-    <VBox spacing="5">
-        <Button text="Upload Property Image *" onAction="#handleImageUpload"/>
-        <ImageView fx:id="propertyImageView" fitHeight="150" fitWidth="200" preserveRatio="true"/>
-    </VBox>
-    
-    <!-- Submit Button -->
-    <Button text="Create Property" onAction="#handleSubmit" 
-            style="-fx-pref-width: 200;"/>
-    
-    <!-- Error/Success Message -->
-    <Label fx:id="messageLabel"/>
-</VBox> 
+</ScrollPane> 

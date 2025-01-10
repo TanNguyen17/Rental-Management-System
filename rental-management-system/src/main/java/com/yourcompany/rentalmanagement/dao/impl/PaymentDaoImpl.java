@@ -1,39 +1,59 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
-import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.dao.PaymentDao;
+import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.Tenant;
+import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class PaymentDaoImpl implements PaymentDao {
-
-    private Transaction transaction = null;
-    private List<Payment> payments = new ArrayList<Payment>();
+    private Transaction transaction;
+    private List<Payment> payments;
     private Payment payment;
-    private Map<String, Double> monthlyPayments;
+    private Query<Payment> query;
+    public static final int PAGE_SIZE = 10;
 
     public PaymentDaoImpl() {
-        //loadData();
+        transaction = null;
+        payments = new ArrayList<Payment>();
     }
 
     @Override
-    public List<Payment> loadData() {
+    public List<Payment> loadData(int pageNumber, Map<String, String> filterValue) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
+            query = session.createQuery("from Payment", Payment.class);
+            if (filterValue != null) {
+                String method = filterValue.get("method");
+                String status = filterValue.get("status");
 
-            Query<Payment> query = session.createQuery("from Payment", Payment.class);
-            payments = query.list();
+                if (method != null && status != null) {
+                    query = session.createQuery("from Payment where method = :method AND status = :status", Payment.class);
+                    query.setParameter("method", method);
+                    query.setParameter("status", status);
+                } else if (status != null) {
+                    query = session.createQuery("from Payment where status = :status", Payment.class);
+                    query.setParameter("status", status);
+                } else if (method != null) {
+                    query = session.createQuery("from Payment where method = :method", Payment.class);
+                    query.setParameter("method", method);
+                }
 
-            transaction.commit();
-            
+            }
+            if (pageNumber > 0) {
+                query.setFirstResult((pageNumber - 1) * 10);
+                query.setMaxResults(10);
+            }
+
+            return query.list();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -44,16 +64,51 @@ public class PaymentDaoImpl implements PaymentDao {
     }
 
     @Override
-    public List<Payment> loadDataPag(int pageNumber) {
+    public List<Payment> loadDataByRole(int pageNumber, Map<String, String> filterValue, UserRole userRole, long userId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<Payment> criteriaQuery = criteriaBuilder.createQuery(Payment.class);
+            Root<Payment> paymentRoot = criteriaQuery.from(Payment.class);
 
-            Query<Payment> query = session.createQuery("from Payment", Payment.class);
-            query.setFirstResult((pageNumber - 1) * 10);
-            query.setMaxResults(10);
-            payments = query.list();
+            if (filterValue != null) {
+                String method = filterValue.get("method");
+                String status = filterValue.get("status");
 
-            transaction.commit();
+                Predicate predicate = null;
+                if (method != null) {
+                    predicate = criteriaBuilder.equal(paymentRoot.get("method"), method);
+                }
+                if (status != null) {
+                    if (predicate != null) {
+                        predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(paymentRoot.get("status"), status));
+                    } else {
+                        predicate = criteriaBuilder.equal(paymentRoot.get("status"), status);
+                    }
+                }
+
+                if (predicate != null) {
+                    criteriaQuery.where(predicate);
+                }
+            }
+
+            if (userRole != null) {
+                // Filtering based on userRole
+                if (userRole.equals(UserRole.TENANT)) {
+                    // Many to one relationship
+                    Join<Payment, Tenant> tenant = paymentRoot.join("tenants", JoinType.INNER);
+                    criteriaQuery.select(paymentRoot);
+                    criteriaQuery.where(criteriaBuilder.equal(tenant.get("id"), userId));
+                }
+            }
+
+            TypedQuery<Payment> query = session.createQuery(criteriaQuery);
+
+            if (pageNumber > 0) {
+                query.setFirstResult((pageNumber - 1) * 10);
+                query.setMaxResults(10);
+            }
+
+            return query.getResultList();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -82,46 +137,31 @@ public class PaymentDaoImpl implements PaymentDao {
         return tenant;
     }
 
-    @Override
-    public List<Payment> filterData(Map<String, String> filterValue) {
-        String method = filterValue.get("method");
-        String status = filterValue.get("status");
-
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            if (method != null && status != null) {
-                Query<Payment> query = session.createQuery("from Payment where method = :method AND status = :status", Payment.class);
-                query.setParameter("method", method);
-                query.setParameter("status", status);
-                payments = query.list();
-            }
-
-            else if (status != null) {
-                Query<Payment> query = session.createQuery("from Payment where status = :status", Payment.class);
-                query.setParameter("status", status);
-                payments = query.list();
-            } else if (method != null) {
-                Query<Payment> query = session.createQuery("from Payment where method = :method", Payment.class);
-                query.setParameter("method", method);
-                payments = query.list();
-            }
-
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return payments;
-    }
 
     @Override
-    public Long getTotalPaymentCount() {
+    public Long getPaymentCount(Map<String, String> filterValue) {
         Long count = null;
+        Query<Long> paymentCount = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction transaction = session.beginTransaction();
-            Query<Long> query = session.createQuery("SELECT COUNT(*) FROM Payment", Long.class);
-            count = (Long) query.uniqueResult();
-            transaction.commit();
+            paymentCount = session.createQuery("SELECT COUNT(*) FROM Payment", Long.class);
+            if (filterValue != null) {
+                String method = filterValue.get("method");
+                String status = filterValue.get("status");
+                System.out.println(method);
+                System.out.println(status);
+                if (method != null && status != null) {
+                    paymentCount = session.createQuery("SELECT COUNT(*) FROM Payment WHERE method = :method AND status = :status", Long.class);
+                    paymentCount.setParameter("method", method);
+                    paymentCount.setParameter("status", status);
+                } else if (status != null) {
+                    paymentCount = session.createQuery("SELECT COUNT(*) FROM Payment WHERE status = :status", Long.class);
+                    paymentCount.setParameter("status", status);
+                } else if (method != null) {
+                    paymentCount = session.createQuery("SELECT COUNT(*) FROM Payment WHERE method = :method", Long.class);
+                    paymentCount.setParameter("method", method);
+                }
+            }
+            count = paymentCount.uniqueResult();
         } catch (Exception e) {
             e.printStackTrace();
         }

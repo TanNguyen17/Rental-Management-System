@@ -1,7 +1,6 @@
 package com.yourcompany.rentalmanagement.model;
 
 import jakarta.persistence.*;
-import javafx.fxml.FXML;
 
 import java.time.LocalDate;
 
@@ -22,8 +21,12 @@ public class Payment {
     @Column(name = "amount", nullable = false, unique = true, updatable = false, length = 10)
     private double amount;
 
-    @Column(name = "status", nullable = false, length = 10)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private paymentStatus status;
+
+    @Column(name = "dueDate")
+    private LocalDate dueDate;
 
     @ManyToOne(targetEntity = Tenant.class)
     @JoinColumn(name = "tenant_id", nullable = false)
@@ -32,17 +35,6 @@ public class Payment {
     @OneToOne(targetEntity = RentalAgreement.class)
     @JoinColumn(name = "rental_agreement_id")
     private RentalAgreement rentalAgreement;
-
-    public Payment(long id, String receipt, String method, double amount, String status, LocalDate paymentDate) {
-        this.id = id;
-        this.receipt = receipt;
-        this.method = method;
-        this.amount = amount;
-        this.status = status;
-        this.tenant = null;
-        this.rentalAgreement = null;
-
-    }
 
     public long getId() {
         return id;
@@ -92,25 +84,24 @@ public class Payment {
         this.amount = amount;
     }
 
-    public String getStatus() {
+    public paymentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(paymentStatus status) {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "Payment{" +
-                "id=" + id +
-                ", receipt='" + receipt + '\'' +
-                ", method='" + method + '\'' +
-                ", amount=" + amount +
-                ", status='" + status + '\'' +
-                ", tenant=" + (tenant != null ? tenant.getId() : "null") +
-                ", rentalAgreement=" + (rentalAgreement != null ? rentalAgreement.getId() : "null") +
-                '}';
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public enum paymentStatus {
+        PAID,
+        UNPAID,
     }
 }
-

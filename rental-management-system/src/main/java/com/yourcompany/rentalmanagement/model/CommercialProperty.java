@@ -1,13 +1,21 @@
 package com.yourcompany.rentalmanagement.model;
 
-import jakarta.persistence.*;
-
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "Commercial_Property", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
+@Table(name = "Commercial_Property", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"id"})})
 public class CommercialProperty extends Property {
+
     @Column(name = "business_type", nullable = false)
     private String businessType;
 
@@ -17,8 +25,15 @@ public class CommercialProperty extends Property {
     @Column(name = "square_footage", nullable = false)
     private double squareFootage;
 
-    @ManyToMany(mappedBy = "commercialProperties")
-    private List<Host> hosts;
+    @ManyToMany(mappedBy = "commercialProperties",
+            fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Host> hosts = new ArrayList<>();
+
+
+    public CommercialProperty() {
+        this.hosts = new ArrayList<>();
+    }
 
     public String getBusinessType() {
         return businessType;
@@ -44,6 +59,7 @@ public class CommercialProperty extends Property {
         this.squareFootage = squareFootage;
     }
 
+    @Override
     public List<Host> getHosts() {
         return hosts;
     }
@@ -53,6 +69,9 @@ public class CommercialProperty extends Property {
     }
 
     public void addHost(Host host) {
+        if (this.hosts == null) {
+            this.hosts = new ArrayList<>();
+        }
         hosts.add(host);
     }
 }

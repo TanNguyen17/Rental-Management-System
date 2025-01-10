@@ -13,7 +13,8 @@ public class Tenant extends User{
     @JoinTable(
             name = "Tenant_RentalAgreement",
             joinColumns = { @JoinColumn(name = "tenant_id") },
-            inverseJoinColumns = { @JoinColumn(name = "rental_agreement_id") }
+            inverseJoinColumns = { @JoinColumn(name = "rental_agreement_id") },
+            uniqueConstraints = { @UniqueConstraint(columnNames = {"tenant_id, rental_agreement_id"}) }
     )
     private List<RentalAgreement> rentalAgreements = new ArrayList<>();
 

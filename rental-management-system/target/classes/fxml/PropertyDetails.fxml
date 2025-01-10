@@ -5,30 +5,69 @@
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" 
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
       fx:controller="com.yourcompany.rentalmanagement.view.PropertyDetailsController"
-      spacing="15" style="-fx-padding: 20;">
+      styleClass="details-scroll-pane"
+      fitToWidth="true"
+      prefHeight="720"
+      maxHeight="720">
     
-    <ImageView fx:id="propertyImage" fitHeight="300" fitWidth="400" preserveRatio="true"/>
-    
-    <GridPane hgap="10" vgap="10">
-        <Label text="Title:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <Label fx:id="titleLabel" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <VBox styleClass="details-container" spacing="20">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
         
-        <Label text="Price:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <Label fx:id="priceLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <!-- Header Section -->
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <Label fx:id="titleLabel" styleClass="details-title" HBox.hgrow="ALWAYS"/>
+            <Label fx:id="priceLabel" styleClass="details-price"/>
+        </HBox>
         
-        <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <Label fx:id="statusLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-        
-        <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-        <TextArea fx:id="descriptionArea" editable="false" wrapText="true" 
-                  GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-        
-        <Label text="Address:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-        <VBox fx:id="addressBox" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-        
-        <!-- Property specific details will be added dynamically -->
-        <VBox fx:id="specificDetailsBox" GridPane.columnSpan="2" GridPane.rowIndex="5"/>
-    </GridPane>
-</VBox> 
+        <!-- Main Content Section -->
+        <HBox spacing="20">
+            <!-- Left Column - Image -->
+            <VBox spacing="15" prefWidth="500">
+                <ImageView fx:id="propertyImage" fitWidth="500" fitHeight="350" 
+                          preserveRatio="true" styleClass="details-image"/>
+                
+                <!-- Description Section -->
+                <VBox styleClass="details-section" spacing="10">
+                    <Label text="Description" styleClass="section-title"/>
+                    <Label fx:id="descriptionLabel" styleClass="details-description" wrapText="true"/>
+                </VBox>
+                
+                <!-- Features Section -->
+                <VBox styleClass="details-section" spacing="10">
+                    <Label text="Features" styleClass="section-title"/>
+                    <FlowPane fx:id="featuresContainer" styleClass="features-container"/>
+                </VBox>
+            </VBox>
+            
+            <!-- Right Column - Details -->
+            <VBox spacing="15" prefWidth="300">
+                <!-- Status Section -->
+                <VBox styleClass="details-section" spacing="10">
+                    <Label text="Status" styleClass="section-title"/>
+                    <Label fx:id="statusLabel" styleClass="status-label"/>
+                </VBox>
+                
+                <!-- Location Section -->
+                <VBox styleClass="details-section" spacing="10">
+                    <Label text="Location" styleClass="section-title"/>
+                    <GridPane fx:id="addressGrid" vgap="5" hgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="100"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+                    </GridPane>
+                </VBox>
+                
+                <!-- Host Information Section -->
+                <VBox styleClass="details-section" spacing="10">
+                    <Label text="Hosting Information" styleClass="section-title"/>
+                    <VBox fx:id="hostContainer" spacing="5"/>
+                </VBox>
+            </VBox>
+        </HBox>
+    </VBox>
+</ScrollPane> 

@@ -1,13 +1,14 @@
 package com.yourcompany.rentalmanagement.dao;
 
+import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
+import com.yourcompany.rentalmanagement.model.UserRole;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RentalAgreementDao {
-    public void loadData();
-    public List<RentalAgreement> getRentalAgreementsById(long id);
-    public void createRentalAgreement(RentalAgreement rentalAgreement);
-    public void updateRentalAgreement(RentalAgreement rentalAgreement);
-    public void deleteRentalAgreement(RentalAgreement rentalAgreement);
+    public List<RentalAgreement> getAllRentalAgreements();
+    public List<RentalAgreement> getRentalAgreementsByRole(UserRole role, long userId);
+    public Map<String, Object> createRentalAgreement(RentalAgreement rentalAgreement, long tenantId, Property property, long ownerId, long hostId, List<Long> subTenantIds);
 }

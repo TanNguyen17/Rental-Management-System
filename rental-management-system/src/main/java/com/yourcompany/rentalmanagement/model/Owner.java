@@ -20,7 +20,8 @@ public class Owner extends User {
     @JoinTable(
             name = "Owner_Host",
             joinColumns = { @JoinColumn(name = "owner_id") },
-            inverseJoinColumns = { @JoinColumn(name = "host_id") }
+            inverseJoinColumns = { @JoinColumn(name = "host_id") },
+            uniqueConstraints = { @UniqueConstraint(columnNames = {"owner_id", "host_id"}) }
     )
     private List<Host> hosts = new ArrayList<>();
 

@@ -1,0 +1,11 @@
+.loading-spinner {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+}
+
+.loading-spinner .progress-indicator {
+    -fx-progress-color: #1E3058;
+}
+
+.loading-spinner .progress-indicator .spinner {
+    -fx-background-color: transparent;
+}

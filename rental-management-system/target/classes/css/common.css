@@ -1,0 +1,47 @@
+/* Common styles */
+.root {
+    -fx-background-color: #DCE8F8;
+    -fx-font-family: 'Segoe UI', sans-serif;
+}
+
+.header-text {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E3058;
+}
+
+.form-container {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+}
+
+.form-field {
+    -fx-pref-width: 100%;
+    -fx-min-height: 35px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+.primary-button {
+    -fx-background-color: #1E3058;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-min-height: 35px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: derive(#1E3058, 10%);
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane>.viewport {
+    -fx-background-color: transparent;
+}

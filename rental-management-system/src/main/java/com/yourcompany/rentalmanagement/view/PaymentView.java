@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement.view;
 
+import com.yourcompany.rentalmanagement.model.Payment;
+import com.yourcompany.rentalmanagement.util.TimeFormat;
 import javafx.fxml.FXML;
 import javafx.scene.text.Text;
 
@@ -17,14 +19,18 @@ public class PaymentView {
     private Text paymentDue;
 
     @FXML
+    private Text paymentMethod;
+
+    @FXML
     private Text paymentStatus;
 
     @FXML
-    void setText(String tenantName, String paymentTitle, double paymentAmount, String paymentDue, String paymentStatus) {
-        this.paymentTitle.setText(paymentTitle);
-        this.paymentAmount.setText(String.valueOf(paymentAmount));
-        this.paymentDue.setText(paymentDue);
-        this.paymentStatus.setText(paymentStatus);
-        this.tenantName.setText(tenantName);
+    void setData(Payment payment) {
+        this.paymentTitle.setText(payment.getReceipt());
+        this.paymentAmount.setText(String.valueOf(payment.getAmount()));
+        this.paymentMethod.setText(payment.getMethod());
+        this.paymentDue.setText(payment.getDueDate() != null ? TimeFormat.dateToString(payment.getDueDate()) : null);
+        this.paymentStatus.setText(payment.getStatus().toString());
+        this.tenantName.setText(payment.getTenant().getUsername());
     }
 }
