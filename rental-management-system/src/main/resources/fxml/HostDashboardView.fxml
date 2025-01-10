@@ -36,7 +36,8 @@
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <PieChart fx:id="pieChart" legendSide="BOTTOM" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" />
+                        <PieChart fx:id="pieChart" focusTraversable="true" labelsVisible="false" legendSide="BOTTOM" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" />
+                       
                      </children>
                   </VBox>
                </children></HBox>

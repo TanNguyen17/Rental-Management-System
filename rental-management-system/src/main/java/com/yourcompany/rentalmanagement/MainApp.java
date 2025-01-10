@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement;
 
+import com.yourcompany.rentalmanagement.dao.impl.RentalAgreementDaoImp;
+import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import org.hibernate.SessionFactory;
 
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
@@ -9,6 +11,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainApp extends Application {
 
@@ -44,6 +49,12 @@ public class MainApp extends Application {
     }
 
     public static void main(String[] args) {
+
         launch(args);
+//        RentalAgreementDaoImp dao = new RentalAgreementDaoImp();
+//        List<RentalAgreement> rentalAgreements = new ArrayList<>();
+//        rentalAgreements = dao.getRentalAgreementsById(2);
+//        System.out.println(rentalAgreements.toString());
+//        System.out.println(dao.getRelatedPayments(rentalAgreements).toString());
     }
 }

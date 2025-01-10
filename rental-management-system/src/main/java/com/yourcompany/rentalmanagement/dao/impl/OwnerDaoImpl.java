@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.yourcompany.rentalmanagement.model.Tenant;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -31,12 +32,17 @@ public class OwnerDaoImpl implements UserDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             owners = session.createQuery("from Owner", Owner.class).list();
             // owners.forEach(System.out::println);
+            transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
         }
+    }
+
+    public List<Owner> getOwners() {
+        return this.owners;
     }
 
     @Override

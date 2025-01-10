@@ -33,13 +33,13 @@ public class RentalAgreement {
     @JoinColumn(name = "host_id", nullable = false)
     private Host host;
 
-    @ManyToMany(mappedBy = "rentalAgreements")
+    @ManyToMany(mappedBy = "rentalAgreements", cascade = CascadeType.REMOVE)
     private List<Tenant> tenants = new ArrayList<>();
 
-    @OneToOne(mappedBy = "rentalAgreement")
+    @OneToOne(mappedBy = "rentalAgreement", cascade = CascadeType.REMOVE)
     private CommercialProperty commercialProperty;
 
-    @OneToOne(mappedBy = "rentalAgreement")
+    @OneToOne(mappedBy = "rentalAgreement", cascade = CascadeType.REMOVE)
     private ResidentialProperty residentialProperty;
 
     public long getId() {
@@ -126,6 +126,11 @@ public class RentalAgreement {
 
     @Override
     public String toString() {
-        return ("Hello");
+        return "RentalAgreement{" +
+                "id=" + id +
+                ", status=" + status +
+                ", contractDate=" + contractDate +
+                ", rentingFee=" + rentingFee +
+                '}';
     }
 }

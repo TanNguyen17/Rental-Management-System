@@ -1,5 +1,6 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +38,8 @@ public class PropertyDaoImpl implements PropertyDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                property.setCreatedAt(LocalDateTime.now());
-                property.setLastUpdated(LocalDateTime.now());
+                property.setCreatedAt(LocalDate.now());
+                property.setLastUpdated(LocalDate.now());
                 session.persist(property);
                 transaction.commit();
             } catch (Exception e) {
@@ -60,7 +61,7 @@ public class PropertyDaoImpl implements PropertyDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                property.setLastUpdated(LocalDateTime.now());
+                property.setLastUpdated(LocalDate.now());
                 session.merge(property);
                 transaction.commit();
             } catch (Exception e) {
@@ -93,8 +94,8 @@ public class PropertyDaoImpl implements PropertyDao {
                 Owner owner = session.get(Owner.class, property.getOwner().getId());
                 property.setOwner(owner);
 
-                property.setCreatedAt(LocalDateTime.now());
-                property.setLastUpdated(LocalDateTime.now());
+                property.setCreatedAt(LocalDate.now());
+                property.setLastUpdated(LocalDate.now());
                 session.persist(property);
                 transaction.commit();
             } catch (Exception e) {
@@ -113,8 +114,8 @@ public class PropertyDaoImpl implements PropertyDao {
                 Owner owner = session.get(Owner.class, property.getOwner().getId());
                 property.setOwner(owner);
 
-                property.setCreatedAt(LocalDateTime.now());
-                property.setLastUpdated(LocalDateTime.now());
+                property.setCreatedAt(LocalDate.now());
+                property.setLastUpdated(LocalDate.now());
                 session.persist(property);
                 transaction.commit();
             } catch (Exception e) {

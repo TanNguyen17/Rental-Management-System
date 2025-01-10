@@ -1,12 +1,15 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
 import com.yourcompany.rentalmanagement.dao.RentalAgreementDao;
+import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RentalAgreementDaoImp implements RentalAgreementDao {
     private List<RentalAgreement> rentalAgreements;
@@ -31,7 +34,43 @@ public class RentalAgreementDaoImp implements RentalAgreementDao {
     }
 
     @Override
-    public void getRentalAgreementsById(long id){};
+    public List<RentalAgreement> getRentalAgreementsById(long id){
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            rentalAgreements = session.createQuery("FROM RentalAgreement r WHERE r.host.id = :hostId", RentalAgreement.class).setParameter("hostId", id).getResultList();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return rentalAgreements;
+    };
+
+    public List<Payment> getRelatedPayments(List<RentalAgreement> rentalAgreements) {
+        List<Payment> relatedPayments = new ArrayList<>();
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            // Collect IDs of all rental agreements
+            List<Long> rentalAgreementIds = rentalAgreements.stream()
+                    .map(RentalAgreement::getId)
+                    .collect(Collectors.toList());
+
+            // Query to fetch payments related to all rental agreements
+            relatedPayments = session.createQuery("FROM Payment p WHERE p.rentalAgreement.id IN :rentalAgreementIds", Payment.class)
+                    .setParameter("rentalAgreementIds", rentalAgreementIds)
+                    .getResultList();
+
+            // Commit the transaction
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return relatedPayments;
+    }
+
     @Override
     public void createRentalAgreement(RentalAgreement rentalAgreement) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
