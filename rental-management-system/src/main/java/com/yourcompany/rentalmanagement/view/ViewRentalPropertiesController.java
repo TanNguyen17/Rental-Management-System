@@ -340,7 +340,7 @@ public class ViewRentalPropertiesController {
                 address.getNumber(),
                 address.getStreet(),
                 address.getCity(),
-                address.getState());
+                address.getProvince());
     }
 
     private MFXButton createActionButton(String text, String styleClass, Runnable action) {

@@ -443,7 +443,7 @@ public class PropertyFormController {
             streetField.setText(address.getStreet());
             numberField.setText(address.getNumber());
             cityField.setText(address.getCity());
-            stateField.setText(address.getState());
+            stateField.setText(address.getProvince());
         }
 
         // Set host if exists

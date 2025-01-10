@@ -93,7 +93,7 @@ public class PropertyDetailsController {
         addAddressField(0, "Street", address.getStreet());
         addAddressField(1, "Number", address.getNumber());
         addAddressField(2, "City", address.getCity());
-        addAddressField(3, "State", address.getState());
+        addAddressField(3, "State", address.getProvince());
     }
 
     private void addAddressField(int row, String label, String value) {

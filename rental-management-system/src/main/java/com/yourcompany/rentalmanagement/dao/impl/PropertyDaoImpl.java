@@ -135,7 +135,7 @@ public class PropertyDaoImpl implements PropertyDao {
 
                     // Remove from owner's collection
                     Owner owner = rp.getOwner();
-                    owner.getResidentialProperties().remove(rp);
+                    //owner.getResidentialProperties().remove(rp);
                     session.merge(owner);
                 } else if (property instanceof CommercialProperty) {
                     CommercialProperty cp = (CommercialProperty) property;
@@ -150,7 +150,7 @@ public class PropertyDaoImpl implements PropertyDao {
 
                     // Remove from owner's collection
                     Owner owner = cp.getOwner();
-                    owner.getCommercialProperties().remove(cp);
+                    //owner.getCommercialProperties().remove(cp);
                     session.merge(owner);
                 }
 
@@ -277,11 +277,11 @@ public class PropertyDaoImpl implements PropertyDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 
             Query<ResidentialProperty> residentialPropertyQuery = session.createQuery(
-                    "SELECT rp FROM ResidentialProperty rp JOIN rp.hosts h WHERE status = :status", ResidentialProperty.class);
+                    "SELECT rp FROM ResidentialProperty rp JOIN rp.hosts h WHERE rp.status = :status", ResidentialProperty.class);
             residentialPropertyQuery.setParameter("status", status);
 
             Query<CommercialProperty> commercialPropertyQuery = session.createQuery(
-                    "SELECT cp FROM CommercialProperty cp JOIN cp.hosts h WHERE status = :status", CommercialProperty.class);
+                    "SELECT cp FROM CommercialProperty cp JOIN cp.hosts h WHERE cp.status = :status", CommercialProperty.class);
             commercialPropertyQuery.setParameter("status", status);
 
             properties.addAll(residentialPropertyQuery.list());

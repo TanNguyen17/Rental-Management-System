@@ -2,25 +2,20 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
-import com.yourcompany.rentalmanagement.dao.impl.RentalAgreementDaoImp;
 import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.Property;
-import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Side;
 import javafx.scene.chart.*;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.*;
 
 public class HostDashboardViewController implements Initializable {

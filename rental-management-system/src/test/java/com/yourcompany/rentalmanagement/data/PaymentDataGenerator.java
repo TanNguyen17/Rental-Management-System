@@ -1,12 +1,8 @@
-package com.yourcompany.rentalmanagement;
+package com.yourcompany.rentalmanagement.data;
 
 import java.time.LocalDate;
 import java.util.*;
 
-import com.yourcompany.rentalmanagement.dao.impl.HostDaoImp;
-import com.yourcompany.rentalmanagement.dao.impl.OwnerDaoImpl;
-import com.yourcompany.rentalmanagement.dao.impl.TenantDaoImp;
-import com.yourcompany.rentalmanagement.model.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
