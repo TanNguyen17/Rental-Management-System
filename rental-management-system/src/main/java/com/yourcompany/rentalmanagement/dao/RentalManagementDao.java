@@ -7,4 +7,5 @@ import java.util.List;
 public interface RentalManagementDao {
     List<RentalAgreement> getAllRentalAgreements();
 
+    RentalAgreement getRentalAgreementById(long Id);
 }

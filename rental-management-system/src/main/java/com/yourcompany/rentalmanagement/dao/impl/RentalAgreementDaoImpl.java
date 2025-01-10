@@ -1,7 +1,9 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
 import com.yourcompany.rentalmanagement.dao.RentalManagementDao;
+import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
+import com.yourcompany.rentalmanagement.model.ResidentialProperty;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -13,6 +15,7 @@ import java.util.List;
 public class RentalAgreementDaoImpl implements RentalManagementDao {
     private List<RentalAgreement> rentalAgreements;
     private Query<RentalAgreement> query;
+    private RentalAgreement rentalAgreement;
     private Transaction transaction;
 
     public RentalAgreementDaoImpl() {
@@ -32,6 +35,16 @@ public class RentalAgreementDaoImpl implements RentalManagementDao {
             e.printStackTrace();
         }
         return rentalAgreements;
+    }
+
+    @Override
+    public RentalAgreement getRentalAgreementById(long id){
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            rentalAgreement = session.get(RentalAgreement.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rentalAgreement;
     }
 
     public static void main(String[] args) {

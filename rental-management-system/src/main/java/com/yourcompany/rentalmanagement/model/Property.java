@@ -136,6 +136,11 @@ public class Property {
         this.imageLink = imageLink;
     }
 
+    @Override
+    public String toString(){
+        return this.getTitle();
+    }
+
     public enum propertyStatus {
         AVAILABLE,
         RENTED,

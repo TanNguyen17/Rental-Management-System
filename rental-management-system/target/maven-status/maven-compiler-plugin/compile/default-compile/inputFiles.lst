@@ -19,6 +19,7 @@
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/Tenant.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/util/EmailUtil.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/impl/RentalAgreementDaoImpl.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/RentalAgreementFormView.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/util/UserSession.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/PaymentDao.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/Address.java

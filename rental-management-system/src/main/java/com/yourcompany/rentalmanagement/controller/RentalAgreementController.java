@@ -1,5 +1,6 @@
 package com.yourcompany.rentalmanagement.controller;
 
+import com.yourcompany.rentalmanagement.dao.RentalAgreementDao;
 import com.yourcompany.rentalmanagement.dao.impl.RentalAgreementDaoImpl;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
 
@@ -13,5 +14,9 @@ public class RentalAgreementController {
 
     public List<RentalAgreement> getAllRentalAgreements(){
         return rentalAgreementDao.getAllRentalAgreements();
+    }
+
+    public RentalAgreement getRentalAgreementById(long id){
+        return rentalAgreementDao.getRentalAgreementById(id);
     }
 }
