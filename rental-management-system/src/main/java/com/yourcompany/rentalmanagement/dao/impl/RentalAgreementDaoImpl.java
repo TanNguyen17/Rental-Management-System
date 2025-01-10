@@ -38,6 +38,24 @@ public class RentalAgreementDaoImpl implements RentalManagementDao {
     }
 
     @Override
+    public List<RentalAgreement> getRentalAgreementByRole(UserRole role, Long userId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            if (role.equals(UserRole.TENANT)) {
+                query = session.createQuery("from RentalAgreement", RentalAgreement.class);
+                query = session.createQuery("SELECT rA from RentalAgreement JOIN rA.tenants t WHERE t.id = :id", RentalAgreement.class);
+                query.setParameter("id", userId);
+            }
+            rentalAgreements = query.list();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return rentalAgreements;
+    }
+
+    @Override
     public Map<String, Object> createRentalAgreement(RentalAgreement rentalAgreement, long tenantId, Property property, long ownerId, long hostId, List<Long> subTenantIds) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();

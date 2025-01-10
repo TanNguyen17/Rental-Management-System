@@ -29,8 +29,8 @@ public class PaymentView {
         this.paymentTitle.setText(payment.getReceipt());
         this.paymentAmount.setText(String.valueOf(payment.getAmount()));
         this.paymentMethod.setText(payment.getMethod());
-        this.paymentDue.setText(TimeFormat.dateToString(payment.getDueDate()));
+        this.paymentDue.setText(payment.getDueDate() != null ? TimeFormat.dateToString(payment.getDueDate()) : null);
         this.paymentStatus.setText(payment.getStatus().toString());
-//        this.tenantName.setText(payment.getTenant().getUsername());
+        this.tenantName.setText(payment.getTenant().getUsername());
     }
 }

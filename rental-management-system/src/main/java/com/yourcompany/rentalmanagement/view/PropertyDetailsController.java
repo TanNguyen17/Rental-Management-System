@@ -42,7 +42,7 @@ public class PropertyDetailsController {
         Address address = property.getAddress();
         addressBox.getChildren().addAll(
                 new Label(address.getNumber() + " " + address.getStreet()),
-                new Label(address.getCity() + ", " + address.getState())
+                new Label(address.getCity() + ", " + address.getCity())
         );
 
         // Set specific details based on property type

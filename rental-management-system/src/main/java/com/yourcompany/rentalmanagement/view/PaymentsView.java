@@ -67,7 +67,7 @@ public class PaymentsView implements Initializable {
     private ComboBox<String> methodOption;
 
     @FXML
-    private ComboBox<String> statusOption;
+    private ComboBox<Payment.paymentStatus> statusOption;
 
     @FXML
     private TableView<Payment> paymentTable;
@@ -105,7 +105,9 @@ public class PaymentsView implements Initializable {
 
     private void initializeCombobox() {
         methodOption.setItems(FXCollections.observableArrayList("Debit Card", "Credit Card", "Bank Transfer"));
-        statusOption.setItems(FXCollections.observableArrayList("Failed", "Completed", "Pending"));
+        ObservableList<Payment.paymentStatus> statusOptions = FXCollections.observableArrayList(Payment.paymentStatus.values());
+        statusOption.setItems(statusOptions);
+//        statusOption.setItems(FXCollections.observableArrayList(Payment.paymentStatus.toString()));
     }
 
     private void initializeColumn() {
@@ -235,7 +237,7 @@ public class PaymentsView implements Initializable {
     public void filterPayment(ActionEvent event) {
         filter.clear();
         String method = methodOption.getValue();
-        String status = statusOption.getValue();
+        String status = statusOption.getValue().toString();
 
         filter.put("method", method);
         filter.put("status", status);
