@@ -30,6 +30,7 @@ public class PaymentDaoImpl implements PaymentDao {
     @Override
     public List<Payment> loadData(int pageNumber, Map<String, String> filterValue) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
             query = session.createQuery("from Payment", Payment.class);
             if (filterValue != null) {
                 String method = filterValue.get("method");
@@ -52,8 +53,8 @@ public class PaymentDaoImpl implements PaymentDao {
                 query.setFirstResult((pageNumber - 1) * 10);
                 query.setMaxResults(10);
             }
-
-            return query.list();
+            payments = query.list();
+            transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -66,28 +67,25 @@ public class PaymentDaoImpl implements PaymentDao {
     @Override
     public List<Payment> loadDataByRole(int pageNumber, Map<String, String> filterValue, UserRole userRole, long userId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             CriteriaQuery<Payment> criteriaQuery = criteriaBuilder.createQuery(Payment.class);
             Root<Payment> paymentRoot = criteriaQuery.from(Payment.class);
+
+            List<Predicate> predicates = new ArrayList<>();
 
             if (filterValue != null) {
                 String method = filterValue.get("method");
                 String status = filterValue.get("status");
 
                 Predicate predicate = null;
+
                 if (method != null) {
-                    predicate = criteriaBuilder.equal(paymentRoot.get("method"), method);
+                    predicates.add(criteriaBuilder.equal(paymentRoot.get("method"), method));
                 }
                 if (status != null) {
-                    if (predicate != null) {
-                        predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(paymentRoot.get("status"), status));
-                    } else {
-                        predicate = criteriaBuilder.equal(paymentRoot.get("status"), status);
-                    }
-                }
-
-                if (predicate != null) {
-                    criteriaQuery.where(predicate);
+                    predicates.add(criteriaBuilder.equal(paymentRoot.get("status"), status));
                 }
             }
 
@@ -95,10 +93,15 @@ public class PaymentDaoImpl implements PaymentDao {
                 // Filtering based on userRole
                 if (userRole.equals(UserRole.TENANT)) {
                     // Many to one relationship
-                    Join<Payment, Tenant> tenant = paymentRoot.join("tenants", JoinType.INNER);
-                    criteriaQuery.select(paymentRoot);
-                    criteriaQuery.where(criteriaBuilder.equal(tenant.get("id"), userId));
+                    Join<Payment, Tenant> tenant = paymentRoot.join("tenant", JoinType.INNER);
+                    predicates.add(criteriaBuilder.equal(tenant.get("id"), userId));
+//                    criteriaQuery.select(paymentRoot);
+//                    criteriaQuery.where(criteriaBuilder.equal(tenant.get("id"), userId));
                 }
+            }
+
+            if (!predicates.isEmpty()) {
+                criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
             }
 
             TypedQuery<Payment> query = session.createQuery(criteriaQuery);
@@ -108,7 +111,8 @@ public class PaymentDaoImpl implements PaymentDao {
                 query.setMaxResults(10);
             }
 
-            return query.getResultList();
+            payments = query.getResultList();
+            transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();

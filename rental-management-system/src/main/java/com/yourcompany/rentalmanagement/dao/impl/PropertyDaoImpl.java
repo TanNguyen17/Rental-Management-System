@@ -135,7 +135,7 @@ public class PropertyDaoImpl implements PropertyDao {
 
                     // Remove from owner's collection
                     Owner owner = rp.getOwner();
-                    owner.getResidentialProperties().remove(rp);
+//                    owner.getResidentialProperties().remove(rp);
                     session.merge(owner);
                 } else if (property instanceof CommercialProperty) {
                     CommercialProperty cp = (CommercialProperty) property;
@@ -150,7 +150,7 @@ public class PropertyDaoImpl implements PropertyDao {
 
                     // Remove from owner's collection
                     Owner owner = cp.getOwner();
-                    owner.getCommercialProperties().remove(cp);
+//                    owner.getCommercialProperties().remove(cp);
                     session.merge(owner);
                 }
 
@@ -270,6 +270,11 @@ public class PropertyDaoImpl implements PropertyDao {
             properties.addAll(commercialProperties);
         }
         return properties;
+    }
+
+    @Override
+    public List<Property> getPropertiesByStatus(Property.propertyStatus status) {
+        return List.of();
     }
 
     @Override
