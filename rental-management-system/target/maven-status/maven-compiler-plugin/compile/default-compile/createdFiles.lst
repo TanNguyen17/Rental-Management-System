@@ -16,7 +16,6 @@ com/yourcompany/rentalmanagement/view/RentalAgreementListView$2.class
 com/yourcompany/rentalmanagement/view/PropertyView.class
 com/yourcompany/rentalmanagement/view/PaymentsView$1.class
 com/yourcompany/rentalmanagement/view/PropertyFormController$1.class
-com/yourcompany/rentalmanagement/dao/impl/RentalAgreementDaoImp.class
 com/yourcompany/rentalmanagement/view/ViewRentalPropertiesController.class
 com/yourcompany/rentalmanagement/service/AuthService$1.class
 com/yourcompany/rentalmanagement/view/PropertyView$1.class

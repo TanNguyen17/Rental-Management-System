@@ -2,7 +2,7 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.dao.impl.HostDaoImp;
 import com.yourcompany.rentalmanagement.dao.impl.OwnerDaoImpl;
-import com.yourcompany.rentalmanagement.dao.impl.RentalAgreementDaoImp;
+import com.yourcompany.rentalmanagement.dao.impl.RentalAgreementDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.TenantDaoImp;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,7 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 
 public class RentalAgreementFormController {
-    private RentalAgreementDaoImp rentalAgreementDaoImp = new RentalAgreementDaoImp();
+    private RentalAgreementDaoImpl rentalAgreementDaoImpl = new RentalAgreementDaoImpl();
     private TenantDaoImp tenantDaoImp = new TenantDaoImp();
     private HostDaoImp hostDaoImp = new HostDaoImp();
     private OwnerDaoImpl ownerDaoImp = new OwnerDaoImpl();

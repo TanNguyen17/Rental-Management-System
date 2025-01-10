@@ -17,4 +17,8 @@ public interface RentalAgreementDao {
     void updateRentalAgreement(RentalAgreement rentalAgreement);
 
     void deleteRentalAgreement(RentalAgreement rentalAgreement);
+
+    List<RentalAgreement> getAllRentalAgreements();
+
+    RentalAgreement getRentalAgreementById(long id);
 }
