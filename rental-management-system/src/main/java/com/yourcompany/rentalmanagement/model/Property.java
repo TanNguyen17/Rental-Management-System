@@ -1,21 +1,33 @@
 package com.yourcompany.rentalmanagement.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Transient;
 
 @MappedSuperclass
-public class Property {
+public abstract class Property {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, updatable = false, nullable = false, length = 10)
     private long id;
 
-    @OneToOne(targetEntity = Address.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id", nullable = false, referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "address_id")
     private Address address;
 
     @Column(name = "price", nullable = false)
@@ -28,7 +40,7 @@ public class Property {
     @Column(name = "imageLink", nullable = false)
     private String imageLink;
 
-    @ManyToOne(targetEntity = Owner.class, cascade = {CascadeType.ALL})
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id", nullable = false)
     private Owner owner;
 
@@ -47,6 +59,9 @@ public class Property {
 
     @Column(name = "last_updated")
     private LocalDateTime lastUpdated;
+
+    @Transient
+    private Long hostId;
 
     public long getId() {
         return id;
@@ -136,9 +151,17 @@ public class Property {
         this.imageLink = imageLink;
     }
 
-    @Override
-    public String toString(){
-        return this.getTitle();
+    public Long getHostId() {
+        return hostId;
+    }
+
+    public void setHostId(Long hostId) {
+        this.hostId = hostId;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
     }
 
     public enum propertyStatus {
@@ -146,4 +169,6 @@ public class Property {
         RENTED,
         UNDER_MAINTENANCE
     }
+
+    public abstract List<Host> getHosts();
 }

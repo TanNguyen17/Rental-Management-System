@@ -16,11 +16,15 @@ public class Address {
     @Column(name = "street", nullable = false)
     private String street;
 
+    @Column(name = "ward", nullable = false)
+    private String ward;
+
     @Column(name = "city", nullable = false)
     private String city;
 
-    @Column(name = "state", nullable = false)
-    private String state;
+    @Column(name = "province", nullable = false)
+    private String province;
+
 
     public long getId() {
         return id;
@@ -54,11 +58,19 @@ public class Address {
         this.city = city;
     }
 
-    public String getState() {
-        return state;
+    public String getWard() {
+        return ward;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setWard(String ward) {
+        this.ward = ward;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 }

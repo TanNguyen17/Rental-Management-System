@@ -15,10 +15,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import org.controlsfx.control.CheckComboBox;
 import javafx.scene.text.Text;
+import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RentalAgreementCreationView implements Initializable {
     private RentalAgreementController rentalAgreementController = new RentalAgreementController();
@@ -60,6 +62,9 @@ public class RentalAgreementCreationView implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        contractPeriodError.setVisible(false);
+        chooseHostError.setVisible(false);
+
         initiateTenantData();
         initiateContractPeriod();
     }
@@ -88,7 +93,7 @@ public class RentalAgreementCreationView implements Initializable {
     }
 
     private void initiateContractPeriod() {
-        ObservableList<Integer> contractTime = FXCollections.observableArrayList(List.of(6, 7, 8, 9, 10, 11, 12));
+        ObservableList<Integer> contractTime = FXCollections.observableArrayList(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12));
         this.contractPeriod.setItems(contractTime);
     }
 
@@ -106,27 +111,40 @@ public class RentalAgreementCreationView implements Initializable {
                 }
             }
         } else {
+            chooseHostError.setVisible(true);
             chooseHostError.setText("Please select a host");
             return;
         }
 
+        // Get contract selected
         if (contractPeriod.getValue() != null) {
-            newRentalAgreement.setContractDate(LocalDate.now());
+            LocalDate startContractDate = LocalDate.now();
+            int periodInMonths = contractPeriod.getValue();
+
+            LocalDate endContractDate = startContractDate.plusMonths(periodInMonths);
+            newRentalAgreement.setStartContractDate(startContractDate);
+            newRentalAgreement.setEndContractDate(endContractDate);
         } else {
+            contractPeriodError.setVisible(true);
             contractPeriodError.setText("Please select a contract period");
             return;
         }
 
-        if (tenantSelection.getItems() != null) {
-            for (String tenantName : tenantSelection.getItems().stream().toList()) {
-                selectedTenants.add(tenantNames.get(tenantName));
-            }
-        }
+        // Get tenant selected
+//        if (tenantSelection.getItems() != null) {
+//            for (String tenantName : tenantSelection.getItems().stream().toList()) {
+//                selectedTenants.add(tenantNames.get(tenantName));
+//            }
+//        }
 
+        selectedTenants = tenantSelection.getCheckModel().getCheckedItems().stream()
+                .map(tenantNames::get)
+                .collect(Collectors.toList());
+
+        // Create new rental agreement
         newRentalAgreement.setStatus(RentalAgreement.rentalAgreementStatus.NEW);
         newRentalAgreement.setRentingFee(propertyInfo.getPrice());
-
-//        rentalAgreementController.createRentalAgreement(newRentalAgreement, userSession.getCurrentUser().getId(), propertyInfo, ownerInfo.getId(), selectHost.getId(), selectedTenants);
+        rentalAgreementController.createRentalAgreement(newRentalAgreement, userSession.getCurrentUser().getId(), propertyInfo, ownerInfo.getId(), selectHost.getId(), selectedTenants);
     }
 
     public void showSuccessAlert(String title, String content) {

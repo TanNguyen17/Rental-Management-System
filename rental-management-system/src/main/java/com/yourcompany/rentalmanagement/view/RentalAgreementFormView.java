@@ -58,7 +58,7 @@ public class RentalAgreementFormView {
         rentalAgreement = rentalAgreementController.getRentalAgreementById(id);
 
         // For Property Update
-        Property property = new Property();
+        Property property;
         if (rentalAgreement.getCommercialProperty() != null) {
              property = rentalAgreement.getCommercialProperty();
         } else {

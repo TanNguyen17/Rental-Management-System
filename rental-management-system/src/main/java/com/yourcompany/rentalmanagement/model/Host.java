@@ -20,21 +20,27 @@ public class Host extends User {
     @ManyToMany(mappedBy = "hosts", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Owner> owners = new ArrayList<>();
 
-    @ManyToMany(targetEntity = ResidentialProperty.class, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "Host_ResidentialProperty",
-            joinColumns = { @JoinColumn(name = "host_id") },
-            inverseJoinColumns = { @JoinColumn(name = "residential_property_id") }
+            joinColumns = {
+                @JoinColumn(name = "host_id")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "residential_property_id")},
+            uniqueConstraints = { @UniqueConstraint(columnNames = {"host_id", "residential_property_id"}) }
     )
     private List<ResidentialProperty> residentialProperties = new ArrayList<>();
 
-    @ManyToMany(targetEntity = CommercialProperty.class, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "Host_CommercialProperty",
-            joinColumns = { @JoinColumn(name = "host_id"), },
-            inverseJoinColumns = { @JoinColumn(name = "commercial_property_id") }
+            joinColumns = {
+                @JoinColumn(name = "host_id")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "commercial_property_id")},
+            uniqueConstraints = { @UniqueConstraint(columnNames = {"host_id", "commercial_property_id"}) }
     )
-    private List<CommercialProperty> commercialProperties;
+    private List<CommercialProperty> commercialProperties = new ArrayList<>();
 
     @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
     private List<RentalAgreement> rentalAgreements = new ArrayList<>();
@@ -67,8 +73,14 @@ public class Host extends User {
         this.commercialProperties = commercialProperties;
     }
 
-    public void addCommercialProperty(CommercialProperty commercialProperty) {
-        commercialProperties.add(commercialProperty);
+    public void addCommercialProperty(CommercialProperty property) {
+        if (this.commercialProperties == null) {
+            this.commercialProperties = new ArrayList<>();
+        }
+        this.commercialProperties.add(property);
+        if (!property.getHosts().contains(this)) {
+            property.getHosts().add(this);
+        }
     }
 
     public List<ResidentialProperty> getResidentialProperties() {
@@ -79,7 +91,13 @@ public class Host extends User {
         this.residentialProperties = residentialProperties;
     }
 
-    public void addResidentialProperty(ResidentialProperty residentialProperty) {
-        residentialProperties.add(residentialProperty);
+    public void addResidentialProperty(ResidentialProperty property) {
+        if (this.residentialProperties == null) {
+            this.residentialProperties = new ArrayList<>();
+        }
+        this.residentialProperties.add(property);
+        if (!property.getHosts().contains(this)) {
+            property.getHosts().add(this);
+        }
     }
 }

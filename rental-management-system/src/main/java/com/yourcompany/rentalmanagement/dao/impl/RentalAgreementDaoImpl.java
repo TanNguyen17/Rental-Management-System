@@ -1,5 +1,6 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
+import com.yourcompany.rentalmanagement.model.*;
 import com.yourcompany.rentalmanagement.dao.RentalAgreementDao;
 import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
@@ -9,7 +10,9 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RentalAgreementDaoImpl implements RentalAgreementDao {
@@ -17,6 +20,7 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
     private Query<RentalAgreement> query;
     private RentalAgreement rentalAgreement;
     private Transaction transaction;
+    Map<String, Object> data = new HashMap<>();
 
     public RentalAgreementDaoImpl() {
         transaction = null;
@@ -38,7 +42,7 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
     }
 
     @Override
-    public RentalAgreement getRentalAgreementById(long id){
+    public RentalAgreement getRentalAgreementById(long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             rentalAgreement = session.get(RentalAgreement.class, id);
         } catch (Exception e) {
@@ -62,7 +66,7 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
     }
 
     @Override
-    public List<RentalAgreement> getRentalAgreementsById(long id){
+    public List<RentalAgreement> getRentalAgreementsById(long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             rentalAgreements = session.createQuery("FROM RentalAgreement r WHERE r.host.id = :hostId", RentalAgreement.class).setParameter("hostId", id).getResultList();
         } catch (Exception e) {
@@ -72,7 +76,7 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
             e.printStackTrace();
         }
         return rentalAgreements;
-    };
+    }
 
     public List<Payment> getRelatedPayments(List<RentalAgreement> rentalAgreements) {
         List<Payment> relatedPayments = new ArrayList<>();
@@ -113,20 +117,83 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
         }
 
     }
+
     @Override
     public void updateRentalAgreement(RentalAgreement rentalAgreement) {
 
     }
-    @Override
-    public void deleteRentalAgreement(RentalAgreement rentalAgreement) {}
 
+    @Override
+    public void deleteRentalAgreement(RentalAgreement rentalAgreement) {
+    }
+
+
+    @Override
+    public List<RentalAgreement> getRentalAgreementsByRole(UserRole role, long userId) {
+        List<RentalAgreement> rentalAgreements = new ArrayList<>();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<RentalAgreement> query;
+            if (role.equals(UserRole.TENANT)) {
+                // Query to fetch rental agreements for tenants
+                query = session.createQuery(
+                        "SELECT rA FROM RentalAgreement rA JOIN rA.tenants t WHERE t.id = :id",
+                        RentalAgreement.class
+                );
+                query.setParameter("id", userId);
+            } else {
+                // Handle other roles or throw an exception
+                throw new IllegalArgumentException("Unsupported role: " + role);
+            }
+            rentalAgreements = query.list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rentalAgreements;
+    }
+
+
+            @Override
+            public Map<String, Object> createRentalAgreement(RentalAgreement rentalAgreement, long tenantId, Property property,long ownerId, long hostId, List<Long > subTenantIds){
+                try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+                    transaction = session.beginTransaction();
+                    List<Tenant> subTenants = new ArrayList<>();
+
+                    for (Long id : subTenantIds) {
+                        subTenants.add(session.get(Tenant.class, id));
+                    }
+
+                    Tenant tenant = session.get(Tenant.class, tenantId);
+                    Owner owner = session.get(Owner.class, ownerId);
+                    Host host = session.get(Host.class, hostId);
+
+                    rentalAgreement.setOwner(owner);
+                    rentalAgreement.setHost(host);
+
+                    tenant.addRentalAgreement(rentalAgreement);
+                    for (Tenant subTenant : subTenants) {
+                        subTenant.addRentalAgreement(rentalAgreement);
+                    }
+
+                    property.setRentalAgreement(rentalAgreement);
+                    property.setStatus(Property.propertyStatus.RENTED);
+
+                    session.persist(rentalAgreement);
+                    transaction.commit();
+
+                    data.put("rentalAgreement", rentalAgreement);
+                    data.put("status", "success");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return data;
+            }
 
 
     public static void main(String[] args) {
-        RentalAgreementDao test = new RentalAgreementDaoImpl();
+        RentalAgreementDaoImpl test = new RentalAgreementDaoImpl();
         List<RentalAgreement> db = test.getAllRentalAgreements();
         System.out.println("======================");
-        for (RentalAgreement rentalAgreement : db){
+        for (RentalAgreement rentalAgreement : db) {
             System.out.println(rentalAgreement.getTenants());
         }
     }

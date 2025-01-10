@@ -2,6 +2,8 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.RentalAgreementController;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
+import com.yourcompany.rentalmanagement.model.UserRole;
+import com.yourcompany.rentalmanagement.util.UserSession;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.collections.FXCollections;
@@ -25,8 +27,9 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class RentalAgreementListView implements Initializable {
-    RentalAgreementController rentalAgreementController = new RentalAgreementController();
-    ObservableList<RentalAgreement> rentalAgreements = FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements());
+    private RentalAgreementController rentalAgreementController = new RentalAgreementController();
+    private UserSession userSession = UserSession.getInstance();
+    private ObservableList<RentalAgreement> rentalAgreements;
 
     @FXML
     TableView<RentalAgreement> rentalAgreementTableView = new TableView<>();
@@ -61,6 +64,10 @@ public class RentalAgreementListView implements Initializable {
         initializeViewMoreColumn();
         initializeDeleteColumn();
         rentalAgreementTableView.setItems(rentalAgreements);
+    }
+
+    private void loadingData() {
+        FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(userSession.getCurrentUser().getRole(), userSession.getCurrentUser().getId()));
     }
 
     private void initializeColumn(){
