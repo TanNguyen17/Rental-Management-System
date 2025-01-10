@@ -15,10 +15,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import org.controlsfx.control.CheckComboBox;
 import javafx.scene.text.Text;
+import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RentalAgreementCreationView implements Initializable {
     private RentalAgreementController rentalAgreementController = new RentalAgreementController();
@@ -106,26 +108,34 @@ public class RentalAgreementCreationView implements Initializable {
                 }
             }
         } else {
+            chooseHostError.setVisible(true);
             chooseHostError.setText("Please select a host");
             return;
         }
 
+        // Get contract selected
         if (contractPeriod.getValue() != null) {
             newRentalAgreement.setContractDate(LocalDate.now());
         } else {
+            contractPeriodError.setVisible(true);
             contractPeriodError.setText("Please select a contract period");
             return;
         }
 
-        if (tenantSelection.getItems() != null) {
-            for (String tenantName : tenantSelection.getItems().stream().toList()) {
-                selectedTenants.add(tenantNames.get(tenantName));
-            }
-        }
+        // Get tenant selected
+//        if (tenantSelection.getItems() != null) {
+//            for (String tenantName : tenantSelection.getItems().stream().toList()) {
+//                selectedTenants.add(tenantNames.get(tenantName));
+//            }
+//        }
 
+        selectedTenants = tenantSelection.getCheckModel().getCheckedItems().stream()
+                .map(tenantNames::get)
+                .collect(Collectors.toList());
+
+        // Create new rental agreement
         newRentalAgreement.setStatus(RentalAgreement.rentalAgreementStatus.NEW);
         newRentalAgreement.setRentingFee(propertyInfo.getPrice());
-
         rentalAgreementController.createRentalAgreement(newRentalAgreement, userSession.getCurrentUser().getId(), propertyInfo, ownerInfo.getId(), selectHost.getId(), selectedTenants);
     }
 

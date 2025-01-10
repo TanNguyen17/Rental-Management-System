@@ -22,17 +22,23 @@ public class Host extends User {
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
-            name = "host_residentialproperty",
-            joinColumns = @JoinColumn(name = "host_id"),
-            inverseJoinColumns = @JoinColumn(name = "residential_property_id")
+            name = "Host_ResidentialProperty",
+            joinColumns = {
+                @JoinColumn(name = "host_id")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "residential_property_id")},
+            uniqueConstraints = { @UniqueConstraint(columnNames = {"host_id", "residential_property_id"}) }
     )
     private List<ResidentialProperty> residentialProperties = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
-            name = "host_commercialproperty",
-            joinColumns = @JoinColumn(name = "host_id"),
-            inverseJoinColumns = @JoinColumn(name = "commercial_property_id")
+            name = "Host_CommercialProperty",
+            joinColumns = {
+                @JoinColumn(name = "host_id")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "commercial_property_id")},
+            uniqueConstraints = { @UniqueConstraint(columnNames = {"host_id", "commercial_property_id"}) }
     )
     private List<CommercialProperty> commercialProperties = new ArrayList<>();
 

@@ -1,22 +1,58 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
-import com.yourcompany.rentalmanagement.dao.RentalAgreementDao;
+import com.yourcompany.rentalmanagement.dao.RentalManagementDao;
 import com.yourcompany.rentalmanagement.model.*;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RentalAgreementDaoImpl implements RentalAgreementDao {
-    Transaction transaction = null;
+public class RentalAgreementDaoImpl implements RentalManagementDao {
+    private List<RentalAgreement> rentalAgreements;
+    private Query<RentalAgreement> query;
+    private Transaction transaction;
     Map<String, Object> data = new HashMap<>();
+
+    public RentalAgreementDaoImpl() {
+        transaction = null;
+        rentalAgreements = new ArrayList<>();
+    }
+
     @Override
     public List<RentalAgreement> getAllRentalAgreements() {
-        return List.of();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            query = session.createQuery("from RentalAgreement", RentalAgreement.class);
+            return query.list();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return rentalAgreements;
+    }
+
+    @Override
+    public List<RentalAgreement> getRentalAgreementByRole(UserRole role, Long userId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            if (role.equals(UserRole.TENANT)) {
+                query = session.createQuery("from RentalAgreement", RentalAgreement.class);
+                query = session.createQuery("SELECT rA from RentalAgreement JOIN rA.tenants t WHERE t.id = :id", RentalAgreement.class);
+                query.setParameter("id", userId);
+            }
+            rentalAgreements = query.list();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return rentalAgreements;
     }
 
     @Override
@@ -54,4 +90,13 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
         }
         return data;
     }
+
+//    public static void main(String[] args) {
+//        RentalManagementDao test = new RentalAgreementDaoImpl();
+//        List<RentalAgreement> db = test.getAllRentalAgreements();
+//        System.out.println("======================");
+//        for (RentalAgreement rentalAgreement : db){
+//            System.out.println(rentalAgreement.getTenants());
+//        }
+//    }
 }
