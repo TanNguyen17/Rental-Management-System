@@ -1,0 +1,168 @@
+/* Form Container */
+.property-form {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-min-width: 800;
+    -fx-pref-width: 1280;
+}
+
+/* Section Styling */
+.form-section {
+    -fx-spacing: 10;
+    -fx-padding: 15;
+    -fx-background-color: #F8F9FA;
+    -fx-background-radius: 8;
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E3058;
+    -fx-padding: 0 0 10 0;
+}
+
+.section-subtitle {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E3058;
+    -fx-padding: 10 0 5 0;
+}
+
+/* Form Fields */
+.form-field {
+    -fx-pref-height: 35;
+    -fx-max-width: Infinity;
+    -fx-background-color: white;
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 4;
+    -fx-padding: 5 10;
+}
+
+.form-field:focused {
+    -fx-border-color: #1E3058;
+}
+
+/* Add specific style for numeric fields */
+.form-field:numeric {
+    -fx-alignment: CENTER-RIGHT;
+}
+
+/* Remove spinner arrows from numeric fields */
+.form-field:numeric .increment-arrow-button,
+.form-field:numeric .decrement-arrow-button {
+    -fx-opacity: 0;
+    -fx-padding: 0;
+}
+
+/* Property Type Sections */
+.property-details-section {
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-background-color: #F8F9FA;
+    -fx-background-radius: 8;
+}
+
+.property-details-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E3058;
+    -fx-padding: 0 0 10 0;
+}
+
+/* Checkboxes */
+.form-checkbox {
+    -fx-text-fill: #1E3058;
+    -fx-padding: 5 0;
+}
+
+.form-checkbox:selected .box {
+    -fx-background-color: #1E3058;
+}
+
+.form-checkbox .box {
+    -fx-background-color: white;
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 3;
+}
+
+.form-checkbox:hover .box {
+    -fx-border-color: #1E3058;
+}
+
+/* Image Upload Section */
+.image-preview {
+    -fx-background-color: #F8F9FA;
+    -fx-background-radius: 8;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
+/* Buttons */
+.primary-button {
+    -fx-background-color: #1E3058;
+    -fx-text-fill: white;
+    -fx-padding: 8 16;
+    -fx-background-radius: 4;
+}
+
+.primary-button:hover {
+    -fx-background-color: #2A4374;
+}
+
+/* Header */
+.header-text {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E3058;
+}
+
+/* Message Label */
+.message-label {
+    -fx-padding: 5 0;
+    -fx-font-size: 14px;
+}
+
+/* ComboBox Styling */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 4;
+}
+
+.combo-box:hover {
+    -fx-border-color: #1E3058;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #1E3058;
+    -fx-padding: 5 10;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #E0E0E0;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #DCE8F8;
+}
+
+.form-stack-pane {
+    -fx-background-color: transparent;
+}
+
+.form-stack-pane>.scroll-pane {
+    -fx-background-color: white;
+    -fx-padding: 20;
+}
+
+.form-container {
+    -fx-background-color: white;
+}
+
+.form-content {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-spacing: 15;
+}

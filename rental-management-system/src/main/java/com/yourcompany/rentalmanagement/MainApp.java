@@ -37,11 +37,15 @@ public class MainApp extends Application {
             }
             // If no valid stored session --> show login view
             Scene scene = new Scene(loader.load());
+            scene.getStylesheets().add(getClass().getResource("/css/property-list.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.setTitle("Rental Management System - Login");
             primaryStage.setWidth(1280);
             primaryStage.setHeight(720);
-            primaryStage.setResizable(false);
+            primaryStage.setMinWidth(800);
+            primaryStage.setMinHeight(600);
+            primaryStage.setResizable(true);
+            primaryStage.setMaximized(false);
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();
