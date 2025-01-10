@@ -66,10 +66,12 @@
                                  styleClass="form-field" GridPane.columnIndex="0"/>
                         <TextField fx:id="numberField" promptText="Number *" 
                                  styleClass="form-field" GridPane.columnIndex="1"/>
-                        <TextField fx:id="cityField" promptText="City *" 
+                        <TextField fx:id="wardField" promptText="Ward *" 
                                  styleClass="form-field" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                        <TextField fx:id="stateField" promptText="State *" 
+                        <TextField fx:id="districtField" promptText="District *" 
                                  styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <TextField fx:id="cityField" promptText="City/Province *" 
+                                 styleClass="form-field" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
                     </GridPane>
                 </VBox>
             </VBox>

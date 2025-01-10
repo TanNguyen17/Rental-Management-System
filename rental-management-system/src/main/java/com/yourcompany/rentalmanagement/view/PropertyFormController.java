@@ -62,9 +62,11 @@ public class PropertyFormController {
     @FXML
     private TextField numberField;
     @FXML
-    private TextField cityField;
+    private TextField wardField;
     @FXML
-    private TextField stateField;
+    private TextField districtField;
+    @FXML
+    private TextField cityField;
 
     @FXML
     private VBox commercialFields;
@@ -310,8 +312,9 @@ public class PropertyFormController {
         Address address = new Address();
         address.setStreet(streetField.getText());
         address.setNumber(numberField.getText());
+        address.setWard(wardField.getText());
+        address.setDistrict(districtField.getText());
         address.setCity(cityField.getText());
-        address.setProvince(stateField.getText());
         property.setAddress(address);
 
         if (isEditMode) {
@@ -337,8 +340,9 @@ public class PropertyFormController {
                 || statusCombo.getValue() == null
                 || streetField.getText().isEmpty()
                 || numberField.getText().isEmpty()
+                || wardField.getText().isEmpty()
+                || districtField.getText().isEmpty()
                 || cityField.getText().isEmpty()
-                || stateField.getText().isEmpty()
                 || (!isEditMode && selectedImage == null)) {
             showError("Please fill in all required fields (marked with *)");
             return false;
@@ -375,8 +379,9 @@ public class PropertyFormController {
         priceField.clear();
         streetField.clear();
         numberField.clear();
+        wardField.clear();
+        districtField.clear();
         cityField.clear();
-        stateField.clear();
         businessTypeField.clear();
         parkingSpaceCheck.setSelected(false);
         squareFootageField.clear();
@@ -442,8 +447,11 @@ public class PropertyFormController {
         if (address != null) {
             streetField.setText(address.getStreet());
             numberField.setText(address.getNumber());
+            wardField.setText(address.getWard());
+            districtField.setText(address.getDistrict());
             cityField.setText(address.getCity());
-            stateField.setText(address.getState());
+            
+
         }
 
         // Set host if exists
@@ -551,17 +559,8 @@ public class PropertyFormController {
                 scrollPane.setContent(container);
 
                 // Add method to show/hide spinner
-                loadingSpinner.show = () -> {
-                    loadingSpinner.setVisible(true);
-                    loadingSpinner.setMouseTransparent(false);
-                    originalContent.setDisable(true);
-                };
-
-                loadingSpinner.hide = () -> {
-                    loadingSpinner.setVisible(false);
-                    loadingSpinner.setMouseTransparent(true);
-                    originalContent.setDisable(false);
-                };
+                loadingSpinner.show();
+                loadingSpinner.hide();
             }
         });
     }

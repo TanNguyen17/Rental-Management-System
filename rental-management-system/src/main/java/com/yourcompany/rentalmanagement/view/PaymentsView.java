@@ -67,7 +67,7 @@ public class PaymentsView implements Initializable {
     private ComboBox<String> methodOption;
 
     @FXML
-    private ComboBox<Payment.paymentStatus> statusOption;
+    private ComboBox<String> statusOption;
 
     @FXML
     private TableView<Payment> paymentTable;
@@ -104,10 +104,21 @@ public class PaymentsView implements Initializable {
     }
 
     private void initializeCombobox() {
-        methodOption.setItems(FXCollections.observableArrayList("Debit Card", "Credit Card", "Bank Transfer"));
-        ObservableList<Payment.paymentStatus> statusOptions = FXCollections.observableArrayList(Payment.paymentStatus.values());
+        ObservableList<String> methodOptions = FXCollections.observableArrayList(
+                "All",
+                "Debit Card",
+                "Credit Card",
+                "Bank Transfer"
+        );
+        methodOption.setItems(methodOptions);
+        methodOption.setValue("All");
+
+        ObservableList<String> statusOptions = FXCollections.observableArrayList("All");
+        for (Payment.paymentStatus status : Payment.paymentStatus.values()) {
+            statusOptions.add(status.toString());
+        }
         statusOption.setItems(statusOptions);
-//        statusOption.setItems(FXCollections.observableArrayList(Payment.paymentStatus.toString()));
+        statusOption.setValue("All");
     }
 
     private void initializeColumn() {
@@ -123,17 +134,16 @@ public class PaymentsView implements Initializable {
 
                     if (empty || item == null) {
                         setText(null);
-                        setStyle(""); // Clear any previous styles
+                        setStyle("");
+                        getStyleClass().removeAll("status-paid", "status-unpaid");
                     } else {
                         setText(item);
                         if (item.equals("PAID")) {
-                            setStyle("-fx-background-color: green;"); // Green background
+                            getStyleClass().add("status-paid");
+                            getStyleClass().remove("status-unpaid");
                         } else if (item.equals("UNPAID")) {
-                            setStyle("-fx-background-color: red;"); // Red background (lightcoral is a softer red)
-                        } else if (item.equals("PENDING")) {
-                            setStyle("-fx-background-color: yellow;");
-                        } else {
-                            setStyle("");
+                            getStyleClass().add("status-unpaid");
+                            getStyleClass().remove("status-paid");
                         }
                     }
                 }
@@ -153,11 +163,14 @@ public class PaymentsView implements Initializable {
                     } else {
 
                         FontAwesomeIconView viewIcon = new FontAwesomeIconView(FontAwesomeIcon.EYE);
+                        viewIcon.getStyleClass().add("action-icon");
+
                         FontAwesomeIconView payIcon = new FontAwesomeIconView(FontAwesomeIcon.MONEY);
+                        payIcon.getStyleClass().add("action-icon");
 
                         viewIcon.setStyle(
                                 "-fx-cursor: hand ;"
-                                        + "-glyph-size:20px;"
+                                + "-glyph-size:20px;"
                         );
 
                         viewIcon.setOnMouseClicked(event -> {
@@ -183,7 +196,9 @@ public class PaymentsView implements Initializable {
 
     private void handleViewPayment() {
         payment = paymentTable.getSelectionModel().getSelectedItem();
-        if (payment == null) return;
+        if (payment == null) {
+            return;
+        }
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/fxml/PaymentView.fxml"));
@@ -220,10 +235,11 @@ public class PaymentsView implements Initializable {
 //            throw new RuntimeException(e);
 //        }
 //    }
-
     private void handlePayment() {
         payment = paymentTable.getSelectionModel().getSelectedItem();
-        if (payment == null) return;
+        if (payment == null) {
+            return;
+        }
 
         if (payment.getStatus().toString().toLowerCase().equals("paid")) {
             AlertUtils.showSuccessAlert("Payment is paid", "Your transaction has been paid");
@@ -237,10 +253,14 @@ public class PaymentsView implements Initializable {
     public void filterPayment(ActionEvent event) {
         filter.clear();
         String method = methodOption.getValue();
-        String status = statusOption.getValue().toString();
+        String status = statusOption.getValue();
 
-        filter.put("method", method);
-        filter.put("status", status);
+        if (method != null && !method.equals("All")) {
+            filter.put("method", method);
+        }
+        if (status != null && !status.equals("All")) {
+            filter.put("status", status);
+        }
 
         pageCache.clear();
         currentPageIndex = 1;
