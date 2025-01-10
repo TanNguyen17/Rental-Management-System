@@ -12,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import org.controlsfx.control.CheckComboBox;
+import org.hibernate.annotations.Check;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -19,17 +21,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class RentalAgreementFormView implements Initializable {
+public class RentalAgreementFormView {
     RentalAgreement rentalAgreement;
     RentalAgreementController rentalAgreementController = new RentalAgreementController();
     PropertyController propertyController = new PropertyController();
     UserController userController = new UserController();
     Map<String, Object> renderedData = new HashMap<>();
     private long rentalAgreementID;
-
-    public RentalAgreementFormView(long rentalAgreementID){
-        this.rentalAgreementID = rentalAgreementID;
-    }
 
     @FXML
     Label ownerShow = new Label();
@@ -41,15 +39,20 @@ public class RentalAgreementFormView implements Initializable {
     ComboBox<Host> hostInput = new ComboBox<>();
 
     @FXML
-    ComboBox<Tenant> subTenantInput = new ComboBox<>();
+    CheckComboBox<Tenant> subTenantInput = new CheckComboBox<>();
 
     @FXML
     ComboBox<String> contractedTimeInput = new ComboBox<>();
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle){
-        showRentalAgreementByIdForUpdate(1);
-    }
+    @FXML
+    ComboBox<RentalAgreement.rentalAgreementStatus> statusInput = new ComboBox<>();
+
+//    @Override
+//    public void initialize(URL url, ResourceBundle resourceBundle){
+//        showRentalAgreementByIdForUpdate(1);
+//    }
+
+    public RentalAgreementFormView(){}
 
     public void showRentalAgreementByIdForUpdate(long id){
         rentalAgreement = rentalAgreementController.getRentalAgreementById(id);
@@ -69,6 +72,7 @@ public class RentalAgreementFormView implements Initializable {
             // Update the label text when the ComboBox value changes
             if (newValue != null) {
                 ownerShow.setText("Owner: " + newValue.getOwner().toString());
+                hostInput.setValue(newValue.getRentalAgreement().getHost());
             }
         });
 
@@ -82,8 +86,20 @@ public class RentalAgreementFormView implements Initializable {
         hostInput.setItems(FXCollections.observableArrayList(otherHosts));
 
         //For sub tenant update
+//        List<Tenant> tenants = rentalAgreement.getTenants();
+//        System.out.println(tenants.toString());
+        List<Tenant> otherTenants = userController.getTenants();
+        subTenantInput.getItems().addAll(FXCollections.observableArrayList(otherTenants));
+//        subTenantInput.getCheckModel().getCheckedItems().addAll();
+
+        // For status update
+        RentalAgreement.rentalAgreementStatus status = rentalAgreement.getStatus();
+        statusInput.setValue(status);
+        statusInput.getItems().addAll(RentalAgreement.rentalAgreementStatus.NEW,
+                RentalAgreement.rentalAgreementStatus.ACTIVE, RentalAgreement.rentalAgreementStatus.COMPLETED);
 
         // For contract periods update => store renting fee
+//        List<String> contractPeriod
 
     }
 }

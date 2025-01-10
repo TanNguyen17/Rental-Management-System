@@ -83,8 +83,8 @@ public class RentalAgreementListView implements Initializable {
                 if (!empty){
                     Button button = new Button("View More");
                     button.setOnAction(e -> {
-//                        long raId = this.getTableView().getItems().get(getIndex()).getId();
-//                        openUpdateForm(raId);
+                        long raId = this.getTableView().getItems().get(getIndex()).getId();
+                        openUpdateForm(raId);
                     });
                     setText(null);
                     setGraphic(button);
@@ -119,7 +119,8 @@ public class RentalAgreementListView implements Initializable {
             VBox newRoot = loader.load();
 
             // Pass id to form
-            RentalAgreementFormView rentalAgreementFormView = new RentalAgreementFormView(id);
+            RentalAgreementFormView controller = loader.getController();
+            controller.showRentalAgreementByIdForUpdate(id);
 
             // Create a new Stage (or replace the existing one)
             Stage newStage = new Stage();

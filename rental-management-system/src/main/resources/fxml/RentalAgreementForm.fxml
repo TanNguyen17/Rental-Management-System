@@ -7,8 +7,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.CheckComboBox?>
 
-<VBox fx:id="raUpdateForm" alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="360.0" prefWidth="400.0" spacing="12.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementFormView">
+<VBox fx:id="raUpdateForm" alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="444.0" prefWidth="400.0" spacing="12.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementFormView">
    <children>
       <Label fx:id="formTitle" text="Rental Agreement">
          <font>
@@ -47,7 +48,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <ComboBox fx:id="subTenantInput" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Choose Sub Tenant" />
+            <CheckComboBox fx:id="subTenantInput" prefHeight="26.0" prefWidth="385.0" showCheckedCount="true" title="Choose sub tenants" />
          </children>
       </VBox>
       <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="347.0" spacing="8.0">
@@ -58,6 +59,16 @@
                </font>
             </Label>
             <ComboBox fx:id="contractedTimeInput" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="267.0" promptText="6 months (default)" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="347.0" spacing="8.0">
+         <children>
+            <Label prefHeight="18.0" prefWidth="114.0" text="Status">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="statusInput" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="267.0" promptText="Choose agreement status" />
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="68.0" prefWidth="376.0" spacing="24.0">
