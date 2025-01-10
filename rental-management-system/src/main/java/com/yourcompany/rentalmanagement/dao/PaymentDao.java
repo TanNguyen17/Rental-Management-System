@@ -5,12 +5,11 @@ import com.yourcompany.rentalmanagement.model.Tenant;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface PaymentDao {
-    public List<Payment> loadData();
-    public List<Payment> loadDataPag(int pageNumber);
+    public List<Payment> loadData(int pageNumber, Map<String, String> filterValue);
     public Tenant getTenant(long paymentId);
-    public List<Payment> filterData(Map<String, String> filterValue);
-    public Long getTotalPaymentCount();
+    public Long getPaymentCount(Map<String, String> filterValue);
 }
 

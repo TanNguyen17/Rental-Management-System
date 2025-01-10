@@ -2,6 +2,7 @@ package com.yourcompany.rentalmanagement.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
 import com.yourcompany.rentalmanagement.model.Payment;
@@ -16,23 +17,15 @@ public class PaymentController {
 
     }
 
-    public List<Payment> getAllPayment() {
-        return paymentDao.loadData();
-    }
-
-    public List<Payment> getPaymentsPag(int currentPage) {
-        return paymentDao.loadDataPag(currentPage);
+    public List<Payment> getPayments(int pageNumber, Map<String, String> filterValue) {
+        return paymentDao.loadData(pageNumber, filterValue);
     }
 
     public Tenant getTenant(long paymentId) {
         return paymentDao.getTenant(paymentId);
     }
 
-    public List<Payment> getFilterPayment(Map<String, String> filter) {
-        return paymentDao.filterData(filter);
-    }
-
-    public long getPaymentCount() {
-        return paymentDao.getTotalPaymentCount();
+    public long getPaymentCount(Map<String, String> filterValue) {
+        return paymentDao.getPaymentCount(filterValue);
     }
 }

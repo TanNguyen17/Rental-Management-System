@@ -1,0 +1,24 @@
+.toast {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 2);
+    -fx-min-height: 50;
+}
+
+.toast-success {
+    -fx-border-color: #4CAF50;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.toast-error {
+    -fx-border-color: #F44336;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.toast-message {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}

@@ -20,23 +20,19 @@ public class Host extends User {
     @ManyToMany(mappedBy = "hosts", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Owner> owners = new ArrayList<>();
 
-    @ManyToMany(targetEntity = ResidentialProperty.class, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
-            name = "Host_ResidentialProperty",
-            joinColumns = {
-                @JoinColumn(name = "host_id")},
-            inverseJoinColumns = {
-                @JoinColumn(name = "residential_property_id")}
+            name = "host_residentialproperty",
+            joinColumns = @JoinColumn(name = "host_id"),
+            inverseJoinColumns = @JoinColumn(name = "residential_property_id")
     )
     private List<ResidentialProperty> residentialProperties = new ArrayList<>();
 
-    @ManyToMany(targetEntity = CommercialProperty.class, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
-            name = "Host_CommercialProperty",
-            joinColumns = {
-                @JoinColumn(name = "host_id")},
-            inverseJoinColumns = {
-                @JoinColumn(name = "commercial_property_id")}
+            name = "host_commercialproperty",
+            joinColumns = @JoinColumn(name = "host_id"),
+            inverseJoinColumns = @JoinColumn(name = "commercial_property_id")
     )
     private List<CommercialProperty> commercialProperties = new ArrayList<>();
 
@@ -76,6 +72,9 @@ public class Host extends User {
             this.commercialProperties = new ArrayList<>();
         }
         this.commercialProperties.add(property);
+        if (!property.getHosts().contains(this)) {
+            property.getHosts().add(this);
+        }
     }
 
     public List<ResidentialProperty> getResidentialProperties() {
@@ -86,7 +85,13 @@ public class Host extends User {
         this.residentialProperties = residentialProperties;
     }
 
-    public void addResidentialProperty(ResidentialProperty residentialProperty) {
-        residentialProperties.add(residentialProperty);
+    public void addResidentialProperty(ResidentialProperty property) {
+        if (this.residentialProperties == null) {
+            this.residentialProperties = new ArrayList<>();
+        }
+        this.residentialProperties.add(property);
+        if (!property.getHosts().contains(this)) {
+            property.getHosts().add(this);
+        }
     }
 }
