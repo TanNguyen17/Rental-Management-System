@@ -339,8 +339,9 @@ public class ViewRentalPropertiesController {
         return String.format("%s %s, %s, %s",
                 address.getNumber(),
                 address.getStreet(),
-                address.getCity(),
-                address.getState());
+                address.getWard(),
+                address.getDistrict(),
+                address.getCity());
     }
 
     private MFXButton createActionButton(String text, String styleClass, Runnable action) {

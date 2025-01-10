@@ -1,12 +1,25 @@
 package com.yourcompany.rentalmanagement.model;
 
-import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+
 @Entity
-@Table(name = "Payment", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
+@Table(name = "Payment", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"id"})})
 public class Payment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false, length = 10)
@@ -18,7 +31,7 @@ public class Payment {
     @Column(name = "method", nullable = false)
     private String method;
 
-    @Column(name = "amount", nullable = false, unique = true, updatable = false, length = 10)
+    @Column(name = "amount", nullable = false, length = 10)
     private double amount;
 
     @Enumerated(EnumType.STRING)
