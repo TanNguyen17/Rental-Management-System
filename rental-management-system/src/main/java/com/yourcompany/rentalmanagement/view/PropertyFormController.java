@@ -311,7 +311,7 @@ public class PropertyFormController {
         address.setStreet(streetField.getText());
         address.setNumber(numberField.getText());
         address.setCity(cityField.getText());
-        address.setState(stateField.getText());
+        address.setProvince(stateField.getText());
         property.setAddress(address);
 
         if (isEditMode) {

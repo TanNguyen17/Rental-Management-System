@@ -3,7 +3,10 @@ package com.yourcompany.rentalmanagement.dao.impl;
 import com.yourcompany.rentalmanagement.dao.PaymentDao;
 import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.Tenant;
+import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -59,6 +62,62 @@ public class PaymentDaoImpl implements PaymentDao {
         }
         return payments;
     }
+
+    @Override
+    public List<Payment> loadDataByRole(int pageNumber, Map<String, String> filterValue, UserRole userRole, long userId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<Payment> criteriaQuery = criteriaBuilder.createQuery(Payment.class);
+            Root<Payment> paymentRoot = criteriaQuery.from(Payment.class);
+
+            if (filterValue != null) {
+                String method = filterValue.get("method");
+                String status = filterValue.get("status");
+
+                Predicate predicate = null;
+                if (method != null) {
+                    predicate = criteriaBuilder.equal(paymentRoot.get("method"), method);
+                }
+                if (status != null) {
+                    if (predicate != null) {
+                        predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(paymentRoot.get("status"), status));
+                    } else {
+                        predicate = criteriaBuilder.equal(paymentRoot.get("status"), status);
+                    }
+                }
+
+                if (predicate != null) {
+                    criteriaQuery.where(predicate);
+                }
+            }
+
+            if (userRole != null) {
+                // Filtering based on userRole
+                if (userRole.equals(UserRole.TENANT)) {
+                    // Many to one relationship
+                    Join<Payment, Tenant> tenant = paymentRoot.join("tenants", JoinType.INNER);
+                    criteriaQuery.select(paymentRoot);
+                    criteriaQuery.where(criteriaBuilder.equal(tenant.get("id"), userId));
+                }
+            }
+
+            TypedQuery<Payment> query = session.createQuery(criteriaQuery);
+
+            if (pageNumber > 0) {
+                query.setFirstResult((pageNumber - 1) * 10);
+                query.setMaxResults(10);
+            }
+
+            return query.getResultList();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return payments;
+    }
+
 
     @Override
     public Tenant getTenant(long paymentId) {

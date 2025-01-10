@@ -127,14 +127,14 @@ public class TenantDaoImpl implements UserDao {
                 if (tenant.getAddress() != null) {
                     Address address = tenant.getAddress();
                     address.setCity(data.get("province").toString());
-                    address.setState(data.get("city").toString());
+                    address.setCity(data.get("city").toString());
                     address.setNumber(data.get("streetNumber").toString());
                     address.setStreet(data.get("streetNam" +
                             "e").toString());
                 } else {
                     Address address = new Address();
                     address.setCity(data.get("province").toString());
-                    address.setState(data.get("city").toString());
+                    address.setCity(data.get("city").toString());
                     address.setNumber(data.get("streetNumber").toString());
                     address.setStreet(data.get("streetName").toString());
                     tenant.setAddress(address);

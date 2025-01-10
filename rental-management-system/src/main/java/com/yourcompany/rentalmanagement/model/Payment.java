@@ -2,6 +2,8 @@ package com.yourcompany.rentalmanagement.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "Payment", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
 public class Payment {
@@ -19,8 +21,12 @@ public class Payment {
     @Column(name = "amount", nullable = false, unique = true, updatable = false, length = 10)
     private double amount;
 
-    @Column(name = "status", nullable = false, length = 10)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private paymentStatus status;
+
+    @Column(name = "dueDate")
+    private LocalDate dueDate;
 
     @ManyToOne(targetEntity = Tenant.class)
     @JoinColumn(name = "tenant_id", nullable = false)
@@ -78,11 +84,24 @@ public class Payment {
         this.amount = amount;
     }
 
-    public String getStatus() {
+    public paymentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(paymentStatus status) {
         this.status = status;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public enum paymentStatus {
+        PAID,
+        UNPAID,
     }
 }

@@ -18,7 +18,7 @@ public class PaymentController {
     }
 
     public List<Payment> getPayments(int pageNumber, Map<String, String> filterValue) {
-        return paymentDao.loadData(pageNumber, filterValue);
+        return paymentDao.loadDataByRole(pageNumber, filterValue, null, 1);
     }
 
     public Tenant getTenant(long paymentId) {

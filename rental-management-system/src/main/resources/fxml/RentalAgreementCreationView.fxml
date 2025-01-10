@@ -42,7 +42,7 @@
                         <Insets right="10.0" />
                      </HBox.margin>
                   </ComboBox>
-                  <Text fx:id="chooseHostError" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fx:id="chooseHostError" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="31.0" prefWidth="400.0">
@@ -66,7 +66,7 @@
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin></ComboBox>
-                  <Text fx:id="contractPeriodError" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fx:id="contractPeriodError" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="31.0" prefWidth="400.0">

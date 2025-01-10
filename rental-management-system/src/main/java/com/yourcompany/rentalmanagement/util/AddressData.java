@@ -14,8 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProvinceData {
+public class AddressData {
     private static Map<String, List<String>> provinceCities = new HashMap<>();
+    public static Map<String, List<String>> cityWards = new HashMap<>();
 
     public static Map<String, List<String>> fetchProvinceData() {
         List<String> provinces = new ArrayList<>();
@@ -50,12 +51,32 @@ public class ProvinceData {
         List<String> cities = new ArrayList<>();
 
         for (int i = 0; i < districtsJson.length(); i++) {
-            JSONObject districtJson = districtsJson.getJSONObject(i);
-            String cityName = districtJson.getString("name");
+            JSONObject cityJson = districtsJson.getJSONObject(i);
+            String cityName = cityJson.getString("name");
+            String cityCode = String.valueOf(cityJson.getInt("code"));
             cities.add(cityName);
+
+            fetchWardData(cityCode, cityName);
         }
 
         provinceCities.put(provinceName, cities);
+    }
+
+    private static void fetchWardData(String cityCode, String cityName) throws IOException {
+        String apiUrl = "https://provinces.open-api.vn/api/d/" + cityCode + "?depth=2";
+        String jsonResponse = getJsonFromApi(apiUrl);
+
+        JSONObject wardJson = new JSONObject(jsonResponse);
+        JSONArray wardsJson = wardJson.getJSONArray("wards");
+
+        List<String> wards = new ArrayList<>();
+
+        for (int i = 0; i < wardsJson.length(); i++) {
+            JSONObject wardJsonObject = wardsJson.getJSONObject(i);
+            String wardName = wardJsonObject.getString("name");
+            wards.add(wardName);
+        }
+        cityWards.put(cityName, wards);
     }
 
     private static String getJsonFromApi(String apiUrl) throws IOException {

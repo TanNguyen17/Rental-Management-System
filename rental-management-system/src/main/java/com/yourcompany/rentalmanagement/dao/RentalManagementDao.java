@@ -7,8 +7,10 @@ import com.yourcompany.rentalmanagement.model.UserRole;
 import java.util.List;
 import java.util.Map;
 
-public interface RentalAgreementDao {
+public interface RentalManagementDao {
     public List<RentalAgreement> getAllRentalAgreements();
-    public List<RentalAgreement> getRentalAgreementsByRole(UserRole role, long userId);
+
+    public List<RentalAgreement> getRentalAgreementByRole(UserRole role, Long userId);
+
     public Map<String, Object> createRentalAgreement(RentalAgreement rentalAgreement, long tenantId, Property property, long ownerId, long hostId, List<Long> subTenantIds);
 }

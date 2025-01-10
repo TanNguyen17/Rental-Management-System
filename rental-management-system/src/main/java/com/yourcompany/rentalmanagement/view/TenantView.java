@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
@@ -51,7 +52,9 @@ public class TenantView implements Initializable {
     }
 
     @FXML
-    void btnRentalAgreement(ActionEvent event) {
+    void btnRentalAgreement(ActionEvent event) throws IOException {
+        TableView rentalAgreementView = FXMLLoader.load(getClass().getResource("/fxml/RentalAgreementView.fxml"));
+        borderPane.setCenter(rentalAgreementView);
     }
 
     @Override
