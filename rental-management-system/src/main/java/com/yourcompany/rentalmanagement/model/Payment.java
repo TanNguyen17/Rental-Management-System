@@ -1,6 +1,7 @@
 package com.yourcompany.rentalmanagement.model;
 
 import jakarta.persistence.*;
+import javafx.fxml.FXML;
 
 @Entity
 @Table(name = "Payment", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
@@ -85,4 +86,18 @@ public class Payment {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "id=" + id +
+                ", receipt='" + receipt + '\'' +
+                ", method='" + method + '\'' +
+                ", amount=" + amount +
+                ", status='" + status + '\'' +
+                ", tenant=" + (tenant != null ? tenant.getId() : "null") +
+                ", rentalAgreement=" + (rentalAgreement != null ? rentalAgreement.getId() : "null") +
+                '}';
+    }
 }
+

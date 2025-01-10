@@ -1,63 +1,133 @@
 package com.yourcompany.rentalmanagement.data;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
+import com.yourcompany.rentalmanagement.dao.impl.HostDaoImp;
+import com.yourcompany.rentalmanagement.dao.impl.OwnerDaoImpl;
+import com.yourcompany.rentalmanagement.dao.impl.TenantDaoImp;
+import com.yourcompany.rentalmanagement.model.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.yourcompany.rentalmanagement.model.Address;
-import com.yourcompany.rentalmanagement.model.CommercialProperty;
-import com.yourcompany.rentalmanagement.model.Host;
-import com.yourcompany.rentalmanagement.model.Owner;
-import com.yourcompany.rentalmanagement.model.Property;
-import com.yourcompany.rentalmanagement.model.RentalAgreement;
-import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
-public class PaymentDataGenerator {
-
+class DataGenerator {
     private static final String[] FIRST_NAMES = {"James", "John", "Robert", "Michael", "William", "David", "Richard", "Charles", "Joseph", "Thomas", "Mary", "Patricia", "Linda", "Barbara", "Elizabeth", "Jennifer", "Maria", "Susan", "Margaret", "Dorothy"};
     private static final String[] LAST_NAMES = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez", "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin"};
     private static final String[] BUSINESS_TYPES = {"Office", "Retail", "Restaurant", "Warehouse", "Industrial"};
+    public static void main(String[] args) {
+            Transaction transaction = null;
+            TenantDaoImp tenantDaoImp = new TenantDaoImp();
+            HostDaoImp hostDaoImp = new HostDaoImp();
+            OwnerDaoImpl ownerDaoImpl = new OwnerDaoImpl();
 
-    public static void generateTestData() {
-        Transaction transaction = null;
-        Random random = new Random();
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            List<Owner> owners = session.createQuery("from Owner", Owner.class).list();
-            List<CommercialProperty> properties = session.createQuery("from CommercialProperty", CommercialProperty.class).list();
-            List<Tenant> tenants = session.createQuery("from Tenant", Tenant.class).list();
-            List<Host> hosts = session.createQuery("from Host", Host.class).list();
+            Random random = new Random();
+            try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+                transaction = session.beginTransaction();
+                //List<Payment> payments = session.createQuery("FROM Payment", Payment.class).list();
+                List<Owner> owners = session.createQuery("FROM Owner", Owner.class).list();
+                System.out.println(owners.size());
+                List<Host> hosts = session.createQuery("FROM Host ", Host.class).list();
+                System.out.println(hosts.size());
+                List<Tenant> tenants = session.createQuery("FROM Tenant ", Tenant.class).list();
+                System.out.println(tenants.size());
+                List<RentalAgreement> rentalAgreements = session.createQuery("FROM RentalAgreement", RentalAgreement.class).list();
+                for (int i = 0; i < 40; i++) {
+                    try {
+//                        Tenant tenant = new Tenant();
+//                        tenant.setUsername(FIRST_NAMES[i] + " " + LAST_NAMES[i]);
+//                        tenant.setPassword(FIRST_NAMES[i] + 123);
+//                        tenant.setDob(generateRandomDate(random));
+//                        tenant.setEmail(FIRST_NAMES[i] + "@gmail.com");
+//                        tenant.setPhoneNumber(generateRandomPhoneNumber(random));
+//                        tenant.setAddress(generateRandomAddress(random));
+//                        tenant.setRole(UserRole.TENANT);
 
-            for (int i = 0; i < 20; i++) {
-                RentalAgreement rentalAgreement = new RentalAgreement();
-                rentalAgreement.setHost(hosts.get(i));
-                rentalAgreement.setOwner(owners.get(i));
-                rentalAgreement.setStatus(RentalAgreement.rentalAgreementStatus.NEW);
-                rentalAgreement.setContractDate(generateRandomDate(random));
-                rentalAgreement.setRentingFee(generateRandomPrice(random));
-                properties.get(i).setRentalAgreement(rentalAgreement);
-                tenants.get(i).addRentalAgreement(rentalAgreement);
-                session.persist(rentalAgreement);
+//                        Host host = new Host();
+//                        host.setUsername(LAST_NAMES[i] + " " +FIRST_NAMES[random.nextInt(20)]);
+//                        host.setPassword(FIRST_NAMES[random.nextInt(20)] + 321);
+//                        host.setDob(generateRandomDate(random));
+//                        host.setEmail(LAST_NAMES[i] + "@gmail.com");
+//                        host.setPhoneNumber(generateRandomPhoneNumber(random));
+//                        host.setAddress(generateRandomAddress(random));
+//                        host.setRole(UserRole.HOST);
+//
+//                        Owner owner = new Owner();
+//                        owner.setUsername(LAST_NAMES[19-i] + " " +FIRST_NAMES[i]);
+//                        owner.setPassword(FIRST_NAMES[i] + 222);
+//                        owner.setDob(generateRandomDate(random));
+//                        owner.setEmail(LAST_NAMES[19-i] + "@gmail.com");
+//                        owner.setPhoneNumber(generateRandomPhoneNumber(random));
+//                        owner.setAddress(generateRandomAddress(random));
+//                        owner.setRole(UserRole.OWNER);
+
+//                        RentalAgreement rentalAgreement = new RentalAgreement();
+//                        rentalAgreement.setStatus(generateRandomRentalAgreementStatus(random));
+//                        rentalAgreement.setContractDate(generateRandomDate(random));
+//                        rentalAgreement.setRentingFee(generateRandomPrice(random));
+//                        rentalAgreement.setOwner(owners.get(i));
+//                        rentalAgreement.setHost(hosts.get(i));
+//                        tenants.get(i).addRentalAgreement(rentalAgreement);
+
+
+
+//
+//                        ResidentialProperty residentialProperty = new ResidentialProperty();
+//                        residentialProperty.setAddress(generateRandomAddress(random));
+//                        residentialProperty.setPrice(generateRandomPrice(random));
+//                        residentialProperty.setStatus(generateRandomPropertyStatus(random));
+//                        residentialProperty.setImageLink("https://res.cloudinary.com/dqydgahsj/image/upload/v1736302426/jasoag8sgnv4iravwrax.jpg");
+//                        residentialProperty.setOwner(owners.get(i));
+//                        residentialProperty.setTitle("Residential");
+//                        residentialProperty.setRentalAgreement(rentalAgreements.get(i+20));
+//                        residentialProperty.setCreatedAt(generateRandomCreatedDate(random));
+//                        residentialProperty.setLastUpdated(generateRandomUpdatedDate(random));
+//                        residentialProperty.setNumberOfBedrooms(generateRandomNumberOfBedrooms(random));
+//                        residentialProperty.setPetFriendliness(generateRandomParkingSpace(random));
+//                        residentialProperty.setGardenAvailability(generateRandomParkingSpace(random));
+
+                        Payment payment = new Payment();
+                        payment.setReceipt("Receipt" + i);
+                        payment.setMethod(generateRandomPaymentMethod(random));
+                        payment.setAmount(generateRandomPrice(random));
+                        payment.setStatus(generateRandomPaymentStatus(random));
+                        payment.setRentalAgreement(rentalAgreements.get(i));
+                        if (i == 20) {
+                            payment.setTenant(tenants.get(0));
+                        } else if (i>20) {
+                            payment.setTenant(tenants.get(40 - i));
+                        } else {
+                            payment.setTenant(tenants.get(i));
+                        }
+
+
+                        // Persist rental agreement
+                        session.persist(payment);
+                    } catch (Exception e) {
+                        System.err.println("Error while persisting payment at index " + ": " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                e.printStackTrace();
             }
-
-            //Commit transaction
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
     }
 
     private static String generateUsername(String firstName, String lastName, Random random) {
         String baseUsername = firstName.toLowerCase() + lastName.toLowerCase();
         int randomNumber = random.nextInt(100); // Add a random number to avoid duplicates.
         return baseUsername + randomNumber;
+    }
+
+    private static String generateRandomPaymentMethod(Random random) {
+        String[] methods = {"CASH", "CARD", "ONLINE", "BANK_TRANSFER"};
+        return methods[random.nextInt(methods.length)];
     }
 
     private static Address generateRandomAddress(Random random) {
@@ -90,9 +160,23 @@ public class PaymentDataGenerator {
     }
 
     private static LocalDate generateRandomDate(Random random) {
-        long minDay = LocalDate.of(1950, 1, 1).toEpochDay();
-        long maxDay = LocalDate.of(2005, 1, 1).toEpochDay();
-        long randomDay = minDay + random.nextInt((int) (maxDay - minDay));
+        long minDay = LocalDate.of(2020, 1, 1).toEpochDay();
+        long maxDay = LocalDate.of(2024, 1, 1).toEpochDay();
+        long randomDay = minDay + random.nextInt((int)(maxDay - minDay));
+        return LocalDate.ofEpochDay(randomDay);
+    }
+
+    private static LocalDate generateRandomCreatedDate(Random random) {
+        long minDay = LocalDate.of(1980, 1, 1).toEpochDay();
+        long maxDay = LocalDate.of(2000, 1, 1).toEpochDay();
+        long randomDay = minDay + random.nextInt((int)(maxDay - minDay));
+        return LocalDate.ofEpochDay(randomDay);
+    }
+
+    private static LocalDate generateRandomUpdatedDate(Random random) {
+        long minDay = LocalDate.of(2001, 1, 1).toEpochDay();
+        long maxDay = LocalDate.of(2024, 1, 1).toEpochDay();
+        long randomDay = minDay + random.nextInt((int)(maxDay - minDay));
         return LocalDate.ofEpochDay(randomDay);
     }
 
@@ -104,8 +188,31 @@ public class PaymentDataGenerator {
         return 500 + (10000 - 500) * random.nextDouble(); // Square footage between 500 and 10,500
     }
 
+    private static RentalAgreement.rentalAgreementStatus generateRandomRentalAgreementStatus(Random random) {
+        RentalAgreement.rentalAgreementStatus[] statuses = RentalAgreement.rentalAgreementStatus.values();
+        return statuses[random.nextInt(statuses.length)];
+    }
+
     private static Property.propertyStatus generateRandomPropertyStatus(Random random) {
         Property.propertyStatus[] statuses = Property.propertyStatus.values();
         return statuses[random.nextInt(statuses.length)];
+    }
+
+    private static String generateRandomPaymentStatus(Random random) {
+        String[] statuses = {"PAID", "UNPAID"};
+        return statuses[random.nextInt(statuses.length)];
+    }
+
+    private static String generateRandomBusinessType(Random random) {
+        return BUSINESS_TYPES[random.nextInt(BUSINESS_TYPES.length)];
+    }
+
+    private static boolean generateRandomParkingSpace(Random random) {
+        return random.nextBoolean();
+    }
+    private static int generateRandomNumberOfBedrooms(Random random) {
+        int min = 1;
+        int max = 5;
+        return random.nextInt((max - min) + 1) + min; // Generates a random number between min and max
     }
 }

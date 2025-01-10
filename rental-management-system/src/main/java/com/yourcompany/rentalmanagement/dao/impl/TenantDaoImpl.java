@@ -2,7 +2,6 @@ package com.yourcompany.rentalmanagement.dao.impl;
 
 import com.yourcompany.rentalmanagement.dao.UserDao;
 import com.yourcompany.rentalmanagement.model.Address;
-import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.TimeFormat;
@@ -28,6 +27,14 @@ public class TenantDaoImpl implements UserDao {
         transaction = null;
         result = new HashMap<>();
         tenants = new ArrayList<>();
+    }
+
+    @Override
+    public void loadData(){}
+
+    @Override
+    public List<String> getAllUserName(){
+        return null;
     }
 
     @Override

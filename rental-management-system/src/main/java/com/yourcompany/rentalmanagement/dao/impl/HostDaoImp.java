@@ -1,52 +1,51 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.yourcompany.rentalmanagement.dao.UserDao;
+import com.yourcompany.rentalmanagement.model.Address;
+import com.yourcompany.rentalmanagement.model.Host;
+import com.yourcompany.rentalmanagement.util.HibernateUtil;
+import com.yourcompany.rentalmanagement.util.TimeFormat;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import com.yourcompany.rentalmanagement.dao.UserDao;
-import com.yourcompany.rentalmanagement.model.Address;
-import com.yourcompany.rentalmanagement.model.Owner;
-import com.yourcompany.rentalmanagement.util.HibernateUtil;
-import com.yourcompany.rentalmanagement.util.TimeFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-public class OwnerDaoImpl implements UserDao {
-    private List<Owner> owners = new ArrayList<>();
-    private List<String> ownerNames = new ArrayList<>();
-    private Owner owner;
-    private Transaction transaction;
+public class HostDaoImp implements UserDao {
+    private List<Host> hosts = new ArrayList<Host>();
+    private List<String> hostNames = new ArrayList<>();
+    private Host host;
+    private Transaction transaction = null;
     private Map<String, Object> result;
 
-    public OwnerDaoImpl() {
+    public HostDaoImp() {
         transaction = null;
     }
 
     @Override
-    public void loadData(){}
+    public <T extends Object> List<T> loadAll(){
+        return null;
+    }
 
     @Override
-    public List<Owner> loadAll() {
+    public void loadData() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            owners = session.createQuery("from Owner", Owner.class).list();
-            // owners.forEach(System.out::println);
-            transaction.commit();
+            hosts = session.createQuery("from Host", Host.class).list();
+            //hosts.forEach(System.out::println);
+            System.out.println(hosts.size());
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
         }
-        return owners;
     }
 
-    public List<Owner> getOwners() {
-        return this.owners;
+    public List<Host> getHosts() {
+        return this.hosts;
     }
 
     @Override
@@ -54,8 +53,8 @@ public class OwnerDaoImpl implements UserDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            Query<String> query = session.createQuery("select username from Owner ", String.class);
-            ownerNames = query.getResultList();
+            Query<String> query = session.createQuery("select username from Host", String.class);
+            hostNames = query.getResultList();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -63,21 +62,22 @@ public class OwnerDaoImpl implements UserDao {
             }
             e.printStackTrace();
         }
-        return ownerNames;
+        return hostNames;
     }
+
     @Override
     public Map<String, Object> updateProfile(long id, Map<String, Object> profile) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            owner = session.get(Owner.class, id);
+            host = session.get(Host.class, id);
 
-            if (owner != null) {
-                owner.setUsername((String) profile.get("username"));
-                owner.setDob(TimeFormat.stringToDate((String) profile.get("dob")));
-                owner.setDob(LocalDate.parse((String) profile.get("dob")));
-                owner.setEmail((String) profile.get("email"));
-                owner.setPhoneNumber(profile.get("phoneNumber").toString());
+            if (host != null) {
+                host.setUsername((String) profile.get("username"));
+                host.setDob(TimeFormat.stringToDate((String) profile.get("dob")));
+                host.setEmail((String) profile.get("email"));
+                host.setPhoneNumber(profile.get("phoneNumber").toString());
+                session.persist(host);
             }
 
             transaction.commit();
@@ -91,14 +91,14 @@ public class OwnerDaoImpl implements UserDao {
     }
 
     @Override
-    public Owner getUserById(long id) {
+    public Host getUserById(long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Owner> query = session.createQuery("from Owner where id = :id", Owner.class);
+            Query<Host> query = session.createQuery("from Host where id = :id", Host.class);
             query.setParameter("id", id);
-            owner = query.uniqueResult();
+            host = query.uniqueResult();
 
-            if (owner != null) {
-                Hibernate.initialize(owner.getAddress());
+            if (host != null) {
+                Hibernate.initialize(host.getAddress());
             }
 
         } catch (Exception e) {
@@ -107,7 +107,7 @@ public class OwnerDaoImpl implements UserDao {
             }
             e.printStackTrace();
         }
-        return owner;
+        return host;
     }
 
     @Override
@@ -115,11 +115,11 @@ public class OwnerDaoImpl implements UserDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            owner = session.get(Owner.class, id);
+            host = session.get(Host.class, id);
 
-            if (owner != null) {
-                owner.setProfileImage(imageLink);
-                session.persist(owner);
+            if (host != null) {
+                host.setProfileImage(imageLink);
+                session.persist(host);
             }
 
             transaction.commit();
@@ -137,14 +137,14 @@ public class OwnerDaoImpl implements UserDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            owner = session.get(Owner.class, id);
+            host = session.get(Host.class, id);
 
-            if (owner != null) {
-                Address address = owner.getAddress();
-                address.setCity(data.get("province").toString());
-                address.setState(data.get("city").toString());
-                address.setNumber(data.get("streetNumber").toString());
-                address.setStreet(data.get("streetName").toString());
+            if (host != null) {
+                Address address = host.getAddress();
+                address.setCity(data.get("city").toString());
+//                address.setState(data.get("state").toString());
+                address.setNumber(data.get("number").toString());
+                address.setStreet(data.get("street").toString());
             }
 
             transaction.commit();
@@ -162,11 +162,11 @@ public class OwnerDaoImpl implements UserDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            owner = session.get(Owner.class, id);
+            host = session.get(Host.class, id);
 
-            if (owner != null) {
-                owner.setPassword(newPassword);
-                session.persist(owner);
+            if (host != null) {
+                host.setPassword(newPassword);
+                session.persist(host);
             }
 
             transaction.commit();
@@ -178,4 +178,5 @@ public class OwnerDaoImpl implements UserDao {
         }
         return result;
     }
+
 }
