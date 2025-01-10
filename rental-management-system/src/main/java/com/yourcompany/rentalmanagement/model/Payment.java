@@ -3,6 +3,8 @@ package com.yourcompany.rentalmanagement.model;
 import jakarta.persistence.*;
 import javafx.fxml.FXML;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "Payment", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
 public class Payment {
@@ -30,6 +32,17 @@ public class Payment {
     @OneToOne(targetEntity = RentalAgreement.class)
     @JoinColumn(name = "rental_agreement_id")
     private RentalAgreement rentalAgreement;
+
+    public Payment(long id, String receipt, String method, double amount, String status, LocalDate paymentDate) {
+        this.id = id;
+        this.receipt = receipt;
+        this.method = method;
+        this.amount = amount;
+        this.status = status;
+        this.tenant = null;
+        this.rentalAgreement = null;
+
+    }
 
     public long getId() {
         return id;

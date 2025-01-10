@@ -27,7 +27,7 @@ public interface PropertyDao {
 
     List<Property> getPropertiesByOwner(long ownerId);
 
-    List<Property> getPropertiesByStatus(Property.propertyStatus status);
+    //List<Property> getPropertiesByStatus(Property.propertyStatus status);
 
     List<CommercialProperty> getAllCommercialProperties();
 

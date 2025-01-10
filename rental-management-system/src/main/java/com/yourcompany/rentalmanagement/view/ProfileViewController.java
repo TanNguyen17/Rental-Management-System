@@ -34,7 +34,7 @@ public class ProfileViewController implements Initializable {
     private CloudinaryService cloudinaryService = new CloudinaryService();
     private User currentUser;
     private Map<String, List<String>> provinceCities = new HashMap<>();
-
+    private final ProvinceData provinceData = new ProvinceData();
     @FXML
     private Text username;
 

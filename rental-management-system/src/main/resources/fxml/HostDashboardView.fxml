@@ -24,12 +24,12 @@
                <children>
                   <VBox maxWidth="650.0" minWidth="650.0" prefHeight="200.0" prefWidth="650.0">
                      <children>
-                        <LineChart>
+                        <LineChart fx:id="lineChart">
                           <xAxis>
-                            <CategoryAxis side="BOTTOM" />
+                            <CategoryAxis label="xAxis" side="BOTTOM" fx:id="xAxis" />
                           </xAxis>
                           <yAxis>
-                            <NumberAxis side="LEFT" />
+                            <NumberAxis fx:id="yAxis" label="yAxis" side="LEFT" />
                           </yAxis>
                         </LineChart>
                      </children>

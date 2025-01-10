@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,9 +18,10 @@ public class PaymentDaoImpl implements PaymentDao {
     private Transaction transaction = null;
     private List<Payment> payments = new ArrayList<Payment>();
     private Payment payment;
+    private Map<String, Double> monthlyPayments;
 
     public PaymentDaoImpl() {
-        loadData();
+        //loadData();
     }
 
     @Override
@@ -124,6 +126,51 @@ public class PaymentDaoImpl implements PaymentDao {
             e.printStackTrace();
         }
         return count;
+    }
+
+    public Map<String, Double> getMonthlyPayment(String id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Query query = session.createQuery(
+                    "SELECT MONTH(p.paymentDate) AS month, SUM(p.amount) AS totalPayment " +
+                            "FROM Payment p " +
+                            "JOIN p.rentalAgreement ra " +
+                            "WHERE ra.host.id = :hostId " +
+                            "GROUP BY MONTH(p.paymentDate) " +
+                            "ORDER BY MONTH(p.paymentDate)"
+            );
+            query.setParameter("hostId", id);
+            List<Object[]> results = query.getResultList();
+
+                // Map to store the results
+            monthlyPayments = new LinkedHashMap<>();
+
+            // Helper array for month names
+            String[] monthNames = {
+                    "January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+            };
+
+            // Save the results into the map
+            for (Object[] result : results) {
+                Integer month = (Integer) result[0];
+                Double totalPayment = (Double) result[1];
+                String monthName = monthNames[month - 1]; // Convert month index to name
+                monthlyPayments.put(monthName, totalPayment);
+            }
+
+            // Debugging: Print the map
+            monthlyPayments.forEach((month, total) ->
+                    System.out.println("Month: " + month + ", Total Payment: " + total)
+            );
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return monthlyPayments;
     }
 
 }

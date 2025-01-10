@@ -171,15 +171,15 @@ public class PropertyDaoImpl implements PropertyDao {
         }
     }
 
-    @Override
-    public List<Property> getPropertiesByStatus(Property.propertyStatus status) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Property> query = session.createQuery(
-                    "FROM Property WHERE status = :status", Property.class);
-            query.setParameter("status", status);
-            return query.list();
-        }
-    }
+//    @Override
+//    public List<Property> getPropertiesByStatus(Property.propertyStatus status) {
+//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+//            Query<Property> query = session.createQuery(
+//                    "FROM Property WHERE status = :status", Property.class);
+//            query.setParameter("status", status);
+//            return query.list();
+//        }
+//    }
 
     @Override
     public List<CommercialProperty> getAllCommercialProperties() {

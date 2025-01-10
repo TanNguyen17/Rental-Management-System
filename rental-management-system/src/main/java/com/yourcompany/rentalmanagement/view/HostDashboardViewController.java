@@ -2,6 +2,7 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
+import com.yourcompany.rentalmanagement.dao.impl.RentalAgreementDaoImp;
 import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.Property;
@@ -12,10 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Side;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.PieChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -34,7 +32,7 @@ public class HostDashboardViewController implements Initializable {
     private Host currentHost;
 
     @FXML
-    private LineChart<String, Number> lineChart;
+    private LineChart<String, Double> lineChart;
 
     @FXML
     private CategoryAxis xAxis;
@@ -65,6 +63,47 @@ public class HostDashboardViewController implements Initializable {
 
     @FXML
     private TableView<Property> propertyTable;
+
+    private void initializeLineChart() {
+        // Set up the axes
+        xAxis = new CategoryAxis();
+        xAxis.setLabel("Month");
+
+        yAxis = new NumberAxis();
+        yAxis.setLabel("Income ($)");
+
+        // Create the LineChart
+        lineChart.setTitle("Monthly Income Overview");
+
+        // Create data series
+        XYChart.Series<String, Double> incomeSeries = new XYChart.Series<>();
+        incomeSeries.setName("Monthly Income");
+
+        // Generate fake Payment data
+        Map<String, Double> monthlyIncome = new LinkedHashMap<>();
+
+        monthlyIncome.put("January", 617.9);
+        monthlyIncome.put("February", 771.13);
+        monthlyIncome.put("March", 809.64);
+        monthlyIncome.put("April", 190.41);
+        monthlyIncome.put("May", 956.14);
+        monthlyIncome.put("June", 640.38);
+        monthlyIncome.put("July", 968.2);
+        monthlyIncome.put("August", 276.3);
+        monthlyIncome.put("September", 463.96);
+        monthlyIncome.put("October", 907.36);
+        monthlyIncome.put("November", 276.3);
+        monthlyIncome.put("December", 635.45);
+
+
+        // Populate the series with data
+        for (Map.Entry<String, Double> entry : monthlyIncome.entrySet()) {
+            incomeSeries.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        }
+
+        // Add series to the chart
+        lineChart.getData().add(incomeSeries);
+    }
 
     private void initializePieChart() {
         // Count properties by status
@@ -97,55 +136,10 @@ public class HostDashboardViewController implements Initializable {
         propertyTable.setItems(properties);
     }
 
-    private void initializeLineChart() {
-        xAxis.setLabel("Month");
-        yAxis.setLabel("Income");
-        lineChart.setTitle("Income Overview (Last 12 Months)");
-
-        // Create data series for Expected and Real Income
-        LineChart.Series<String, Number> expectedIncomeSeries = new LineChart.Series<>();
-        expectedIncomeSeries.setName("Expected Income");
-
-        LineChart.Series<String, Number> realIncomeSeries = new LineChart.Series<>();
-        realIncomeSeries.setName("Real Income");
-
-        // Calculate income data
-        Map<String, Double> expectedIncomeData = calculateIncome(false); // All statuses
-        Map<String, Double> realIncomeData = calculateIncome(true); // Only 'DONE' payments
-
-        // Populate the series with data
-        for (String month : expectedIncomeData.keySet()) {
-            expectedIncomeSeries.getData().add(new LineChart.Data<>(month, expectedIncomeData.get(month)));
-            realIncomeSeries.getData().add(new LineChart.Data<>(month, realIncomeData.getOrDefault(month, 0.0)));
-        }
-
-        // Add data to the Line Chart
-        lineChart.getData().addAll(expectedIncomeSeries, realIncomeSeries);
-    }
-
-    /**
-     * Calculate income for the past 12 months.
-     *
-     * @param onlyDone If true, only 'DONE' payments are considered; otherwise, all payments are included.
-     * @return A map of month names to income values.
-     */
-    private Map<String, Double> calculateIncome(boolean onlyDone) {
-        Map<String, Double> incomeData = new LinkedHashMap<>();
-
-        // Initialize the last 12 months with zero income
-        for (int i = 0; i < 12; i++) {
-            LocalDate month = LocalDate.now().minusMonths(i);
-            String monthName = YearMonth.from(month).toString();
-            incomeData.put(monthName, 0.0);
-        }
-
-        // Aggregate payments for each month
-
-        return incomeData;
-    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeTableData();
         initializePieChart();
+        initializeLineChart();
     }
 }
