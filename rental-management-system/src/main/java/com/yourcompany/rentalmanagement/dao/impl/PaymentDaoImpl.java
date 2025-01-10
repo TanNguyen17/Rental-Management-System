@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PaymentDaoImpl implements PaymentDao {
+
     private Transaction transaction;
     private List<Payment> payments;
     private Payment payment;
@@ -118,7 +119,6 @@ public class PaymentDaoImpl implements PaymentDao {
         return payments;
     }
 
-
     @Override
     public Tenant getTenant(long paymentId) {
         Tenant tenant = null;
@@ -136,7 +136,6 @@ public class PaymentDaoImpl implements PaymentDao {
         }
         return tenant;
     }
-
 
     @Override
     public Long getPaymentCount(Map<String, String> filterValue) {
