@@ -60,8 +60,13 @@ public class HostDashboardViewController implements Initializable {
     private TableView<Property> propertyTable;
 
     private void initializeLineChart() {
+        String[] months = {"January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"};
         // Set up the axes
         xAxis = new CategoryAxis();
+        xAxis.setCategories(FXCollections.observableArrayList(
+                months
+        ));
         xAxis.setLabel("Month");
 
         yAxis = new NumberAxis();
@@ -74,26 +79,27 @@ public class HostDashboardViewController implements Initializable {
         XYChart.Series<String, Double> incomeSeries = new XYChart.Series<>();
         incomeSeries.setName("Monthly Income");
 
-        // Generate fake Payment data
-        Map<String, Double> monthlyIncome = new LinkedHashMap<>();
+        // Fetch total income
+        List<Double> monthlyIncome = paymentDaoImpl.getMonthlyPayment(1);
 
-        monthlyIncome.put("January", 617.9);
-        monthlyIncome.put("February", 771.13);
-        monthlyIncome.put("March", 809.64);
-        monthlyIncome.put("April", 190.41);
-        monthlyIncome.put("May", 956.14);
-        monthlyIncome.put("June", 640.38);
-        monthlyIncome.put("July", 968.2);
-        monthlyIncome.put("August", 276.3);
-        monthlyIncome.put("September", 463.96);
-        monthlyIncome.put("October", 907.36);
-        monthlyIncome.put("November", 276.3);
-        monthlyIncome.put("December", 635.45);
+//        monthlyIncome.put("January", 617.9);
+//        monthlyIncome.put("February", 771.13);
+//        monthlyIncome.put("March", 809.64);
+//        monthlyIncome.put("April", 190.41);
+//        monthlyIncome.put("May", 956.14);
+//        monthlyIncome.put("June", 640.38);
+//        monthlyIncome.put("July", 968.2);
+//        monthlyIncome.put("August", 276.3);
+//        monthlyIncome.put("September", 463.96);
+//        monthlyIncome.put("October", 907.36);
+//        monthlyIncome.put("November", 276.3);
+//        monthlyIncome.put("December", 635.45);
 
 
         // Populate the series with data
-        for (Map.Entry<String, Double> entry : monthlyIncome.entrySet()) {
-            incomeSeries.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        for (int i = 0; i < months.length; i++) {
+            double income = (i < monthlyIncome.size()) ? monthlyIncome.get(i) : 0.0;
+            incomeSeries.getData().add(new XYChart.Data<>(months[i], income));
         }
 
         // Add series to the chart

@@ -1,5 +1,6 @@
 package com.yourcompany.rentalmanagement;
 
+import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.UserSession;
@@ -9,6 +10,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.hibernate.SessionFactory;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class MainApp extends Application {
     private LoginViewController loginViewController = new LoginViewController();
@@ -55,5 +59,11 @@ public class MainApp extends Application {
 
     public static void main(String[] args) {
         launch(args);
+//        PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
+//        Map<String, Double> monthlyPayments = new LinkedHashMap<>();
+//        monthlyPayments= paymentDaoImpl.getMonthlyPayment(1);
+//        for (Map.Entry<String, Double> entry : monthlyPayments.entrySet()) {
+//            System.out.println(entry.getKey() + ": " + entry.getValue());
+//        }
     }
 }
