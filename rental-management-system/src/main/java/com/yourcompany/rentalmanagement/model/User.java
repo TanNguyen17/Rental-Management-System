@@ -141,4 +141,9 @@ public class User {
     public boolean checkPassword(String plainPassword) {
         return BCrypt.checkpw(plainPassword, this.password);
     }
+
+    @Override
+    public String toString(){
+        return this.getUsername();
+    }
 }

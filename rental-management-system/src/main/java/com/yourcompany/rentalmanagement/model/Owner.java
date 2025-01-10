@@ -50,4 +50,5 @@ public class Owner extends User {
     public void addRentalAgreement(RentalAgreement rentalAgreement) {
         rentalAgreements.add(rentalAgreement);
     }
+
 }

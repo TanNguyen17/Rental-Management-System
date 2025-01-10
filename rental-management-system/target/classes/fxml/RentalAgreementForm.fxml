@@ -22,7 +22,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <ComboBox fx:id="propertyInput" editable="true" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Choose a Property" />
+            <ComboBox fx:id="propertyInput" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Choose a Property" />
             <Label fx:id="ownerShow" text="Owner: " textFill="#0087ee">
                <font>
                   <Font name="System Bold" size="13.0" />
@@ -37,7 +37,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <ComboBox fx:id="hostInput" editable="true" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Choose a Host" />
+            <ComboBox fx:id="hostInput" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Choose a Host" />
          </children>
       </VBox>
       <VBox prefHeight="45.0" prefWidth="347.0" spacing="8.0">
@@ -47,7 +47,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <ComboBox fx:id="subTenantInput" editable="true" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Choose Sub Tenant" />
+            <ComboBox fx:id="subTenantInput" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Choose Sub Tenant" />
          </children>
       </VBox>
       <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="347.0" spacing="8.0">
@@ -57,7 +57,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <ComboBox fx:id="contractedTimeInput" editable="true" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="267.0" promptText="6 months (default)" />
+            <ComboBox fx:id="contractedTimeInput" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="267.0" promptText="6 months (default)" />
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="68.0" prefWidth="376.0" spacing="24.0">

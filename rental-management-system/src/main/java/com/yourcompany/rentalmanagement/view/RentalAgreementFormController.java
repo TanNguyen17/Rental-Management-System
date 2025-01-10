@@ -15,7 +15,6 @@ public class RentalAgreementFormController {
     private TenantDaoImp tenantDaoImp = new TenantDaoImp();
     private HostDaoImp hostDaoImp = new HostDaoImp();
     private OwnerDaoImpl ownerDaoImp = new OwnerDaoImpl();
-
     @FXML
     private ComboBox<String> tenantField;
 

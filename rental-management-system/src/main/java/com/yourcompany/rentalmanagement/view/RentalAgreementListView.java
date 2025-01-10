@@ -7,13 +7,17 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.net.URL;
@@ -79,7 +83,8 @@ public class RentalAgreementListView implements Initializable {
                 if (!empty){
                     Button button = new Button("View More");
                     button.setOnAction(e -> {
-                        System.out.println(this.getTableRow().getIndex());
+//                        long raId = this.getTableView().getItems().get(getIndex()).getId();
+//                        openUpdateForm(raId);
                     });
                     setText(null);
                     setGraphic(button);
@@ -105,6 +110,25 @@ public class RentalAgreementListView implements Initializable {
                 }
             }
         });
+    }
+
+    private void openUpdateForm(long id) {
+        try {
+            // Load the FXML file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RentalAgreementForm.fxml"));
+            VBox newRoot = loader.load();
+
+            // Pass id to form
+            RentalAgreementFormView rentalAgreementFormView = new RentalAgreementFormView(id);
+
+            // Create a new Stage (or replace the existing one)
+            Stage newStage = new Stage();
+            newStage.setTitle("Update Rental Agreement");
+            newStage.setScene(new Scene(newRoot, 400, 360));
+            newStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
