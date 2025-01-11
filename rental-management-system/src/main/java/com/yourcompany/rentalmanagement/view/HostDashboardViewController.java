@@ -9,13 +9,17 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.*;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.geometry.Side;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -24,6 +28,9 @@ public class HostDashboardViewController implements Initializable {
     private PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
     private ObservableList<Property> properties;
     private UserSession userSession = UserSession.getInstance();
+
+    @FXML
+    private BorderPane borderPane;
 
     @FXML
     private LineChart<String, Double> lineChart;
@@ -155,8 +162,25 @@ public class HostDashboardViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        initializeSideMenu();
+        new Thread(() -> {
+
+        }).start();
         initializeTableData();
         initializePieChart();
         initializeLineChart();
+    }
+
+    private void initializeSideMenu() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SideMenu.fxml"));
+            VBox sideMenu = loader.load();
+            SideMenuView sideMenuView = loader.getController();
+            sideMenuView.setBorderPane(borderPane);
+            borderPane.setLeft(sideMenu);
+            System.out.println("BorderPane set in SideMenuView.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

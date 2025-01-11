@@ -3,11 +3,7 @@ package com.yourcompany.rentalmanagement.view;
 import java.io.IOException;
 
 import com.yourcompany.rentalmanagement.controller.LoginController;
-import com.yourcompany.rentalmanagement.model.Manager;
-import com.yourcompany.rentalmanagement.model.Owner;
-import com.yourcompany.rentalmanagement.model.Tenant;
-import com.yourcompany.rentalmanagement.model.User;
-import com.yourcompany.rentalmanagement.model.UserRole;
+import com.yourcompany.rentalmanagement.model.*;
 import com.yourcompany.rentalmanagement.util.UserSession;
 
 import javafx.fxml.FXML;
@@ -142,7 +138,7 @@ public class LoginViewController {
             User currentUser = UserSession.getInstance().getCurrentUser();
 
             if (currentUser instanceof Owner || currentUser instanceof Manager) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewRentalProperties.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OwnerView.fxml"));
                 Scene scene = new Scene(loader.load());
 
                 scene.getStylesheets().addAll(
@@ -152,14 +148,23 @@ public class LoginViewController {
 
                 Stage stage = (Stage) messageLabel.getScene().getWindow();
                 stage.setScene(scene);
-                stage.setTitle("Rental Properties");
+                stage.setTitle("Rental Management System");
                 stage.show();
             } else if (currentUser instanceof Tenant) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TenantView.fxml"));
                 Scene scene = new Scene(loader.load());
                 Stage stage = (Stage) messageLabel.getScene().getWindow();
                 stage.setScene(scene);
-                stage.setTitle("Rental Properties");
+                stage.setTitle("Rental Management System");
+                stage.show();
+            } else if (currentUser instanceof Manager) {
+
+            } else if (currentUser instanceof Host) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
+                Scene scene = new Scene(loader.load());
+                Stage stage = (Stage) messageLabel.getScene().getWindow();
+                stage.setScene(scene);
+                stage.setTitle("Rental Management System");
                 stage.show();
             }
             else {

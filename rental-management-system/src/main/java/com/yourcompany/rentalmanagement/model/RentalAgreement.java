@@ -36,7 +36,7 @@ public class RentalAgreement {
     @Column(name = "startContractDate", nullable = false)
     private LocalDate startContractDate;
 
-    @Column(name = "endContractDate", nullable = false)
+    @Column(name = "endContractDate")
     private LocalDate endContractDate;
 
     @Column(name = "rentingFee", nullable = false)
@@ -131,15 +131,16 @@ public class RentalAgreement {
         return startContractDate;
     }
 
-    public void setContractDate(LocalDate contractDate) {
-        this.startContractDate = contractDate;
+    public void setStartContractDate(LocalDate startContractDate) {
+        this.startContractDate = startContractDate;
     }
 
     public LocalDate getEndContractDate() {
-        return this.endContractDate;
+        return endContractDate;
     }
-    public void setEndContractDate(LocalDate contractDate){
-        this.endContractDate = contractDate;
+
+    public void setEndContractDate(LocalDate endContractDate) {
+        this.endContractDate = endContractDate;
     }
 
     public double getRentingFee() {

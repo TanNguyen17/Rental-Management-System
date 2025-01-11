@@ -62,6 +62,9 @@ public class RentalAgreementCreationView implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        contractPeriodError.setVisible(false);
+        chooseHostError.setVisible(false);
+
         initiateTenantData();
         initiateContractPeriod();
     }
@@ -70,6 +73,7 @@ public class RentalAgreementCreationView implements Initializable {
         hostInfo = ((List<Host>) data.get("hosts"));
         ownerInfo = ((Owner) data.get("owner"));
         propertyInfo = ((Property) data.get("property"));
+
         for (Host host : hostInfo) {
             hostNames.add(host.getUsername());
         }
@@ -90,7 +94,7 @@ public class RentalAgreementCreationView implements Initializable {
     }
 
     private void initiateContractPeriod() {
-        ObservableList<Integer> contractTime = FXCollections.observableArrayList(List.of(6, 7, 8, 9, 10, 11, 12));
+        ObservableList<Integer> contractTime = FXCollections.observableArrayList(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12));
         this.contractPeriod.setItems(contractTime);
     }
 
@@ -115,7 +119,12 @@ public class RentalAgreementCreationView implements Initializable {
 
         // Get contract selected
         if (contractPeriod.getValue() != null) {
-            newRentalAgreement.setContractDate(LocalDate.now());
+            LocalDate startContractDate = LocalDate.now();
+            int periodInMonths = contractPeriod.getValue();
+
+            LocalDate endContractDate = startContractDate.plusMonths(periodInMonths);
+            newRentalAgreement.setStartContractDate(startContractDate);
+            newRentalAgreement.setEndContractDate(endContractDate);
         } else {
             contractPeriodError.setVisible(true);
             contractPeriodError.setText("Please select a contract period");

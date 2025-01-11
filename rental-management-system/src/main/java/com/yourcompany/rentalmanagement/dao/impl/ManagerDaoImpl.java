@@ -2,6 +2,7 @@ package com.yourcompany.rentalmanagement.dao.impl;
 
 import java.util.List;
 
+import com.yourcompany.rentalmanagement.model.User;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -10,7 +11,6 @@ import com.yourcompany.rentalmanagement.dao.ManagerDao;
 import com.yourcompany.rentalmanagement.model.Manager;
 import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
-import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
 public class ManagerDaoImpl implements ManagerDao {

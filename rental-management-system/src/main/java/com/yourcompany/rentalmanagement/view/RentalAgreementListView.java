@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import com.yourcompany.rentalmanagement.controller.RentalAgreementController;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
+import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.UserSession;
 
 import javafx.collections.FXCollections;
@@ -57,7 +58,11 @@ public class RentalAgreementListView implements Initializable {
 
         initializeColumn();
         initializeViewMoreColumn();
-        initializeDeleteColumn();
+
+        if (userSession.getCurrentUser().getRole().equals(UserRole.MANAGER) || userSession.getCurrentUser().getRole().equals(UserRole.HOST)) {
+            delete.setVisible(false);
+            initializeDeleteColumn();
+        }
 
         loadingData();
 
