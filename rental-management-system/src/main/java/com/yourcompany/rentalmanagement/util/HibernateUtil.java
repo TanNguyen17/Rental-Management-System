@@ -24,7 +24,7 @@ public class HibernateUtil {
             try {
                 // Create registry
                 registry = new StandardServiceRegistryBuilder()
-                        .configure("/hibernate.cfg.xml") // Changed path
+                        .configure("/hibernate/hibernate.cfg.xml") // Changed path
                         .build();
 
                 // Create MetadataSources

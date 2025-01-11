@@ -75,7 +75,7 @@ public class PaymentDataGenerator {
                 rentalAgreement.setHost(hosts.get(i % hosts.size()));
                 rentalAgreement.setOwner(owners.get(i % owners.size()));
                 rentalAgreement.setStatus(RentalAgreement.rentalAgreementStatus.NEW);
-                rentalAgreement.setContractDate(generateRandomDate(random));
+                rentalAgreement.setStartContractDate(generateRandomDate(random));
                 rentalAgreement.setRentingFee(generateRandomPrice(random));
 
                 Property property = properties.get(i % properties.size());

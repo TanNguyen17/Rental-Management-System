@@ -33,10 +33,10 @@ public class RentalAgreement {
     @Column(name = "status", nullable = false)
     private RentalAgreement.rentalAgreementStatus status;
 
-    @Column(name = "contractDate", nullable = false)
-    private LocalDate contractDate;
+    @Column(name = "startContractDate", nullable = false)
+    private LocalDate startContractDate;
 
-    @Column(name = "endContractDate", nullable = false)
+    @Column(name = "endContractDate")
     private LocalDate endContractDate;
 
     @Column(name = "rentingFee", nullable = false)
@@ -127,12 +127,20 @@ public class RentalAgreement {
         this.status = status;
     }
 
-    public LocalDate getContractDate() {
-        return contractDate;
+    public LocalDate getStartContractDate() {
+        return startContractDate;
     }
 
-    public void setContractDate(LocalDate contractDate) {
-        this.contractDate = contractDate;
+    public void setStartContractDate(LocalDate startContractDate) {
+        this.startContractDate = startContractDate;
+    }
+
+    public LocalDate getEndContractDate() {
+        return endContractDate;
+    }
+
+    public void setEndContractDate(LocalDate endContractDate) {
+        this.endContractDate = endContractDate;
     }
 
     public double getRentingFee() {

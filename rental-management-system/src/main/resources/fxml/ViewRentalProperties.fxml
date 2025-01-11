@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.geometry.Insets?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
 <VBox xmlns:fx="http://javafx.com/fxml" 
@@ -38,14 +44,14 @@
     </HBox>
     
     <!-- Property List in ScrollPane -->
-    <ScrollPane fx:id="propertyScrollPane" 
-               VBox.vgrow="ALWAYS" 
-               fitToWidth="true" 
+    <ScrollPane fx:id="propertyScrollPane"
+               VBox.vgrow="ALWAYS"
+               fitToWidth="true"
                styleClass="property-scroll"
                fitToHeight="true">
         <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
-            <ListView fx:id="propertyList" 
-                     styleClass="property-list" 
+            <ListView fx:id="propertyList"
+                     styleClass="property-list"
                      VBox.vgrow="ALWAYS"/>
         </VBox>
     </ScrollPane>
