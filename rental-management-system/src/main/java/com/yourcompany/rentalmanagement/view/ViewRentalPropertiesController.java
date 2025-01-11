@@ -1,15 +1,21 @@
 package com.yourcompany.rentalmanagement.view;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.yourcompany.rentalmanagement.dao.PropertyDao;
+import com.yourcompany.rentalmanagement.dao.UserDao;
+import com.yourcompany.rentalmanagement.dao.impl.OwnerDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
 import com.yourcompany.rentalmanagement.model.Address;
 import com.yourcompany.rentalmanagement.model.CommercialProperty;
+import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.ResidentialProperty;
+import com.yourcompany.rentalmanagement.model.User;
+import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.UserSession;
 import com.yourcompany.rentalmanagement.view.components.LoadingSpinner;
 import com.yourcompany.rentalmanagement.view.components.Toast;
@@ -29,6 +35,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -61,16 +68,21 @@ public class ViewRentalPropertiesController {
     private MFXButton prevButton;
     @FXML
     private MFXButton nextButton;
+    @FXML
+    private ScrollPane propertyScrollPane;
 
     private final PropertyDao propertyDao;
+    private final UserDao userDao;
     private static final int PAGE_SIZE = 10;
     private int currentPage = 0;
     private List<Property> allProperties;
     private LoadingSpinner loadingSpinner;
+    private Label noPropertiesLabel;
 
     public ViewRentalPropertiesController() {
         System.out.println("ViewRentalPropertiesController constructor called");
         this.propertyDao = new PropertyDaoImpl();
+        this.userDao = new OwnerDaoImpl();
     }
 
     @FXML
@@ -80,6 +92,7 @@ public class ViewRentalPropertiesController {
             setupLoadingSpinner();
             setupFilters();
             setupPropertyList();
+            setupNoPropertiesLabel();
             loadProperties();
             updatePaginationControls();
         } catch (Exception e) {
@@ -104,13 +117,33 @@ public class ViewRentalPropertiesController {
     }
 
     private void setupFilters() {
-        ownerFilterCombo.getItems().addAll("My Properties", "All Properties");
-        ownerFilterCombo.setValue("My Properties");
+        User currentUser = UserSession.getInstance().getCurrentUser();
+
+        if (currentUser.getRole() == UserRole.MANAGER) {
+            List<Object> userList = userDao.loadAll();
+            List<Owner> owners = new ArrayList<>();
+
+            for (Object obj : userList) {
+                if (obj instanceof Owner) {
+                    owners.add((Owner) obj);
+                }
+            }
+
+            List<String> ownerNames = new ArrayList<>();
+            ownerNames.add("All Owners");
+            owners.forEach(owner -> ownerNames.add(owner.getUsername()));
+
+            ownerFilterCombo.setItems(FXCollections.observableArrayList(ownerNames));
+            ownerFilterCombo.setValue("All Owners");
+        } else {
+            // For non-managers, show My Properties/All Properties
+            ownerFilterCombo.getItems().addAll("My Properties", "All Properties");
+            ownerFilterCombo.setValue("All Properties");
+        }
 
         propertyTypeFilterCombo.getItems().addAll("All Types", "Commercial", "Residential");
         propertyTypeFilterCombo.setValue("All Types");
 
-        // Initialize secondary filters (hidden by default)
         setupSecondaryFilters();
 
         ownerFilterCombo.setOnAction(e -> refreshProperties());
@@ -119,7 +152,6 @@ public class ViewRentalPropertiesController {
             refreshProperties();
         });
 
-        // Add listeners for secondary filters
         secondaryFilter1.setOnAction(e -> refreshProperties());
         secondaryFilter2.setOnAction(e -> refreshProperties());
         secondaryFilter3.setOnAction(e -> refreshProperties());
@@ -194,7 +226,7 @@ public class ViewRentalPropertiesController {
         propertyList.setFocusTraversable(false);
         propertyList.getStyleClass().add("property-list");
 
-        propertyList.setMinHeight(500);  // Adjust this value as needed
+        propertyList.setMinHeight(700);
         propertyList.setPrefHeight(Region.USE_COMPUTED_SIZE);
         propertyList.setMaxHeight(Double.MAX_VALUE);
         VBox.setVgrow(propertyList, Priority.ALWAYS);
@@ -288,12 +320,26 @@ public class ViewRentalPropertiesController {
                     setupResidentialAttributes((ResidentialProperty) property, attributes);
                 }
 
+                // Get current user and role
+                User currentUser = UserSession.getInstance().getCurrentUser();
+                UserRole userRole = currentUser.getRole();
+
                 buttonsBox.getChildren().clear();
-                buttonsBox.getChildren().addAll(
-                        createActionButton("View Details", "view-button", () -> showPropertyDetails(property)),
-                        createActionButton("Edit", "edit-button", () -> handleEdit(property)),
-                        createActionButton("Delete", "delete-button", () -> handleDelete(property))
+                // Always show view details button
+                buttonsBox.getChildren().add(
+                        createActionButton("View Details", "view-button", () -> showPropertyDetails(property))
                 );
+
+                // Show edit/delete buttons only for managers or property owners
+                boolean canEditDelete = userRole == UserRole.MANAGER
+                        || (property.getOwner().getId() == currentUser.getId());
+
+                if (canEditDelete) {
+                    buttonsBox.getChildren().addAll(
+                            createActionButton("Edit", "edit-button", () -> handleEdit(property)),
+                            createActionButton("Delete", "delete-button", () -> handleDelete(property))
+                    );
+                }
 
                 setGraphic(card);
             }
@@ -355,12 +401,36 @@ public class ViewRentalPropertiesController {
     private void loadProperties() {
         loadingSpinner.show();
         try {
-            if ("All Properties".equals(ownerFilterCombo.getValue())) {
-                allProperties = propertyDao.getAllProperties();
+            User currentUser = UserSession.getInstance().getCurrentUser();
+
+            if (currentUser.getRole() == UserRole.MANAGER) {
+                String selectedOwnerName = ownerFilterCombo.getValue();
+                if (selectedOwnerName != null && !"All Owners".equals(selectedOwnerName)) {
+                    // Find the owner by username
+                    List<Object> userList = userDao.loadAll();
+                    Optional<Owner> selectedOwner = userList.stream()
+                            .filter(obj -> obj instanceof Owner)
+                            .map(obj -> (Owner) obj)
+                            .filter(owner -> owner.getUsername().equals(selectedOwnerName))
+                            .findFirst();
+
+                    if (selectedOwner.isPresent()) {
+                        allProperties = propertyDao.getPropertiesByOwner(selectedOwner.get().getId());
+                    } else {
+                        allProperties = propertyDao.getAllProperties();
+                    }
+                } else {
+                    allProperties = propertyDao.getAllProperties();
+                }
             } else {
-                long ownerId = UserSession.getInstance().getCurrentUser().getId();
-                allProperties = propertyDao.getPropertiesByOwner(ownerId);
+                // Existing logic for non-managers
+                if ("My Properties".equals(ownerFilterCombo.getValue())) {
+                    allProperties = propertyDao.getPropertiesByOwner(currentUser.getId());
+                } else {
+                    allProperties = propertyDao.getAllProperties();
+                }
             }
+
             applyFiltersAndUpdateList();
         } catch (Exception e) {
             showError("Error loading properties: " + e.getMessage());
@@ -374,14 +444,25 @@ public class ViewRentalPropertiesController {
                 .filter(p -> filterByType(p, propertyTypeFilterCombo.getValue()))
                 .toList();
 
-        int fromIndex = currentPage * PAGE_SIZE;
-        int toIndex = Math.min(fromIndex + PAGE_SIZE, filteredProperties.size());
+        if (filteredProperties.isEmpty()) {
+            propertyList.setVisible(false);
+            propertyList.setManaged(false);
+            noPropertiesLabel.setVisible(true);
+            noPropertiesLabel.setManaged(true);
+        } else {
+            propertyList.setVisible(true);
+            propertyList.setManaged(true);
+            noPropertiesLabel.setVisible(false);
+            noPropertiesLabel.setManaged(false);
 
-        if (fromIndex < filteredProperties.size()) {
-            List<Property> pageProperties = filteredProperties.subList(fromIndex, toIndex);
-            propertyList.setItems(FXCollections.observableArrayList(pageProperties));
-            // Scroll to top when page changes
-            propertyList.scrollTo(0);
+            int fromIndex = currentPage * PAGE_SIZE;
+            int toIndex = Math.min(fromIndex + PAGE_SIZE, filteredProperties.size());
+
+            if (fromIndex < filteredProperties.size()) {
+                List<Property> pageProperties = filteredProperties.subList(fromIndex, toIndex);
+                propertyList.setItems(FXCollections.observableArrayList(pageProperties));
+                propertyList.scrollTo(0);
+            }
         }
 
         updatePaginationControls();
@@ -577,6 +658,12 @@ public class ViewRentalPropertiesController {
 
     @FXML
     public void handleAddProperty() {
+        User currentUser = UserSession.getInstance().getCurrentUser();
+        if (currentUser.getRole() != UserRole.OWNER && currentUser.getRole() != UserRole.MANAGER) {
+            showError("Only owners and managers can add properties");
+            return;
+        }
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PropertyForm.fxml"));
             Scene scene = new Scene(loader.load());
@@ -619,5 +706,18 @@ public class ViewRentalPropertiesController {
 
     private void showError(String message) {
         Toast.showError((Stage) propertyList.getScene().getWindow(), message);
+    }
+
+    private void setupNoPropertiesLabel() {
+        noPropertiesLabel = new Label("No properties found");
+        noPropertiesLabel.getStyleClass().add("no-properties-label");
+        noPropertiesLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #666666; -fx-padding: 20;");
+        noPropertiesLabel.setVisible(false);
+        noPropertiesLabel.setManaged(false);
+
+        // Add it to the scroll pane's content
+        VBox container = (VBox) propertyScrollPane.getContent();
+        container.getChildren().add(noPropertiesLabel);
+        VBox.setMargin(noPropertiesLabel, new Insets(20));
     }
 }

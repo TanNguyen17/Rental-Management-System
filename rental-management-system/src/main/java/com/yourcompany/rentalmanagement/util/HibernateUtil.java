@@ -5,11 +5,19 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.event.service.spi.EventListenerRegistry;
+import org.hibernate.event.spi.EventType;
+import org.hibernate.internal.SessionFactoryImpl;
+
+import com.yourcompany.rentalmanagement.service.PaymentEventListener;
+import com.yourcompany.rentalmanagement.view.PaymentsView;
+
 
 public class HibernateUtil {
 
     private static StandardServiceRegistry registry;
     private static SessionFactory sessionFactory;
+    private static PaymentsView paymentsView;
 
     public static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
@@ -21,19 +29,6 @@ public class HibernateUtil {
 
                 // Create MetadataSources
                 MetadataSources sources = new MetadataSources(registry);
-
-                // I think that we should add all entities explicitly, not in hibernate.cfg.xml
-                sources.addAnnotatedClass(com.yourcompany.rentalmanagement.model.User.class);
-                sources.addAnnotatedClass(com.yourcompany.rentalmanagement.model.Tenant.class);
-                sources.addAnnotatedClass(com.yourcompany.rentalmanagement.model.Host.class);
-                sources.addAnnotatedClass(com.yourcompany.rentalmanagement.model.Owner.class);
-                sources.addAnnotatedClass(com.yourcompany.rentalmanagement.model.Manager.class);
-                sources.addAnnotatedClass(com.yourcompany.rentalmanagement.model.Address.class);
-                sources.addAnnotatedClass(com.yourcompany.rentalmanagement.model.Property.class);
-                sources.addAnnotatedClass(com.yourcompany.rentalmanagement.model.ResidentialProperty.class);
-                sources.addAnnotatedClass(com.yourcompany.rentalmanagement.model.CommercialProperty.class);
-                sources.addAnnotatedClass(com.yourcompany.rentalmanagement.model.RentalAgreement.class);
-                sources.addAnnotatedClass(com.yourcompany.rentalmanagement.model.Payment.class);
 
                 // Create Metadata
                 Metadata metadata = sources.getMetadataBuilder().build();
@@ -52,6 +47,15 @@ public class HibernateUtil {
             }
         }
         return sessionFactory;
+    }
+
+    private static void registerEventListeners(SessionFactory sessionFactory) {
+        EventListenerRegistry eventListenerRegistry = ((SessionFactoryImpl) sessionFactory).getServiceRegistry().getService(EventListenerRegistry.class);
+        PaymentEventListener paymentEventListener = new PaymentEventListener(paymentsView);
+        assert eventListenerRegistry != null;
+        eventListenerRegistry.appendListeners(EventType.POST_INSERT, paymentEventListener);
+        eventListenerRegistry.appendListeners(EventType.POST_UPDATE, paymentEventListener);
+        eventListenerRegistry.appendListeners(EventType.POST_DELETE, paymentEventListener);
     }
 
     public static void shutdown() {
