@@ -1,0 +1,212 @@
+/* Base colors */
+.root {
+    -fx-background-color: #DCE8F8;
+    -fx-font-family: 'Segoe UI', sans-serif;
+}
+
+/* Main container */
+.main-container {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+}
+
+/* Tab Pane Styling */
+.login-tab-pane {
+    -fx-tab-min-width: 170px;
+    -fx-tab-max-width: 250px;
+    -fx-background-color: transparent;
+    -fx-pref-width: 500;
+}
+
+.login-tab-pane .tab-header-area {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.login-tab-pane .tab-header-area .headers-region {
+    -fx-background-color: transparent;
+}
+
+.login-tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #1E3058;
+}
+
+.login-tab-pane .control-buttons-tab {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-opacity: 0;
+    -fx-max-width: 0;
+    -fx-pref-width: 0;
+    -fx-min-width: 0;
+    visibility: hidden;
+}
+
+.tab {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: transparent;
+    -fx-padding: 10px 20px;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-cursor: hand;
+}
+
+.tab:hover {
+    -fx-background-color: derive(#DCE8F8, 60%);
+}
+
+.tab:selected {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #1E3058;
+}
+
+.tab .tab-label {
+    -fx-text-fill: #1E3058;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Remove any extra buttons/controls */
+.tab .tab-container .tab-close-button,
+.tab .tab-container .tab-down-button,
+.control-buttons-tab {
+    visibility: hidden;
+    -fx-padding: 0;
+    -fx-max-width: 0;
+    -fx-min-width: 0;
+    -fx-pref-width: 0;
+}
+
+/* Remove focus border */
+.tab-pane:focused,
+.tab-pane .tab-header-area:focused,
+.tab-pane .tab:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* Form Controls */
+.text-field,
+.password-field {
+    -fx-background-color: white;
+    -fx-background-radius: 4px;
+    -fx-border-color: #1E3058;
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused,
+.password-field:focused {
+    -fx-border-color: derive(#1E3058, 20%);
+}
+
+/* ComboBox Styling */
+.combo-box {
+    -fx-background-color: white;
+    -fx-background-radius: 4px;
+    -fx-border-color: #1E3058;
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #1E3058;
+    -fx-padding: 4px 8px;
+}
+
+/* Buttons */
+.button {
+    -fx-background-color: #1E3058;
+    -fx-text-fill: white;
+    -fx-background-radius: 4px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-padding: 8px 16px;
+}
+
+.button:hover {
+    -fx-background-color: derive(#1E3058, 10%);
+}
+
+.secondary-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #1E3058;
+    -fx-text-fill: #1E3058;
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+}
+
+.secondary-button:hover {
+    -fx-background-color: derive(#DCE8F8, -5%);
+}
+
+/* Welcome Text */
+.welcome-text {
+    -fx-fill: #1E3058;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-margin-bottom: 20px;
+}
+
+/* Form Container */
+.form-container {
+    -fx-spacing: 15px;
+    -fx-padding: 30px 20px;
+}
+
+/* Error Message */
+.error-label {
+    -fx-text-fill: #F44336;
+    -fx-font-size: 12px;
+}
+
+/* Add these styles */
+.image-container {
+    -fx-background-color: #DCE8F8;
+}
+
+.image-container ImageView {
+    -fx-fit-width: 780px;
+    -fx-fit-height: 720px;
+}
+
+/* Form side */
+.form-side {
+    -fx-background-color: white;
+    -fx-padding: 40px;
+}
+
+/* Add spacing between form elements */
+.text-field,
+.password-field,
+.combo-box,
+.button {
+    -fx-pref-height: 40px;
+    -fx-margin: 10px 0;
+}
+
+/* Hide the tab dropdown button completely */
+.tab-pane .tab-header-area .tab-header-background .control-buttons-tab {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-opacity: 0;
+    -fx-max-width: 0;
+    -fx-pref-width: 0;
+    -fx-min-width: 0;
+}
+
+.tab-down-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-opacity: 0;
+    -fx-max-width: 0;
+    -fx-pref-width: 0;
+    -fx-min-width: 0;
+}

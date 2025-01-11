@@ -3,33 +3,23 @@ package com.yourcompany.rentalmanagement;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.service.PaymentScheduler;
 import com.yourcompany.rentalmanagement.util.AddressData;
-import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.UserSession;
+import org.hibernate.SessionFactory;
+
+import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.view.LoginViewController;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.hibernate.SessionFactory;
 
 public class MainApp extends Application {
     private LoginViewController loginViewController = new LoginViewController();
     private FXMLLoader loader;
-    private PaymentScheduler scheduler = new PaymentScheduler();
     @Override
     public void start(Stage primaryStage) {
-        new Thread(() -> {
-            // Load address data
-            AddressData.fetchProvinceData();
-            System.out.println("Province Data fetched: ");
-
-        }).start();
-
-        new Thread(() -> {
-            scheduler.startPaymentGeneration();
-        }).start();
-
         try {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             if (sessionFactory != null) {

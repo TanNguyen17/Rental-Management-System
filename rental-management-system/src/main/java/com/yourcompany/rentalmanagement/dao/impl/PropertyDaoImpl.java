@@ -4,18 +4,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.function.Consumer;
-import java.util.Map;
-import java.util.function.Predicate;
 
-import com.yourcompany.rentalmanagement.model.*;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Root;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -37,7 +30,16 @@ public class PropertyDaoImpl implements PropertyDao {
     private Property property = null;
     private Map<String, Object> data = new HashMap<>();
     private List<Host> hosts = new ArrayList<>();
-    private Transaction transaction;
+
+    // Add cache for properties
+    private static Map<String, List<Property>> propertyCache = new HashMap<>();
+    private static final int CACHE_DURATION_MINUTES = 5;
+    private static LocalDateTime lastCacheUpdate;
+
+    private boolean isCacheValid() {
+        return lastCacheUpdate != null
+                && LocalDateTime.now().minusMinutes(CACHE_DURATION_MINUTES).isBefore(lastCacheUpdate);
+    }
 
     @Override
     public void createProperty(Property property) {
@@ -66,7 +68,6 @@ public class PropertyDaoImpl implements PropertyDao {
 //                ResidentialProperty property = session.createQuery(
 //                                "FROM ResidentialProperty p LEFT JOIN FETCH p.hosts WHERE p.id = :id", ResidentialProperty.class)
 //                        .setParameter("id", id) -> single result
-
                 hostQuery.setParameter("id", id);
                 hosts = hostQuery.getResultList();
 
@@ -113,6 +114,7 @@ public class PropertyDaoImpl implements PropertyDao {
                 property.setLastUpdated(LocalDateTime.now());
                 session.merge(property);
                 transaction.commit();
+                clearCache();
             } catch (Exception e) {
                 transaction.rollback();
                 throw e;
@@ -130,41 +132,29 @@ public class PropertyDaoImpl implements PropertyDao {
 
                 // Clear host relationships first
                 if (property instanceof ResidentialProperty) {
-                    ResidentialProperty rp = (ResidentialProperty) property;
                     String deleteJoinTableQuery = """
                         DELETE FROM host_residentialproperty 
                         WHERE residential_property_id = :propertyId
                         """;
                     session.createNativeQuery(deleteJoinTableQuery)
-                            .setParameter("propertyId", rp.getId())
+                            .setParameter("propertyId", property.getId())
                             .executeUpdate();
-                    rp.getHosts().clear();
 
-                    // Remove from owner's collection
-                    Owner owner = rp.getOwner();
-//                    owner.getResidentialProperties().remove(rp);
-                    session.merge(owner);
                 } else if (property instanceof CommercialProperty) {
-                    CommercialProperty cp = (CommercialProperty) property;
                     String deleteJoinTableQuery = """
                         DELETE FROM host_commercialproperty 
                         WHERE commercial_property_id = :propertyId
                         """;
                     session.createNativeQuery(deleteJoinTableQuery)
-                            .setParameter("propertyId", cp.getId())
+                            .setParameter("propertyId", property.getId())
                             .executeUpdate();
-                    cp.getHosts().clear();
-
-                    // Remove from owner's collection
-                    Owner owner = cp.getOwner();
-//                    owner.getCommercialProperties().remove(cp);
-                    session.merge(owner);
                 }
 
                 // Delete the property (address will be deleted via cascade)
                 session.remove(property);
 
                 transaction.commit();
+                clearCache();
             } catch (Exception e) {
                 transaction.rollback();
                 throw e;
@@ -235,16 +225,33 @@ public class PropertyDaoImpl implements PropertyDao {
 
     @Override
     public List<Property> getAllProperties() {
+        // Check cache first
+        String cacheKey = "all_properties";
+        if (propertyCache.containsKey(cacheKey) && isCacheValid()) {
+            return propertyCache.get(cacheKey);
+        }
+
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             List<Property> properties = new ArrayList<>();
 
-            Query<ResidentialProperty> residentialQuery = session.createQuery(
-                    "FROM ResidentialProperty", ResidentialProperty.class);
-            properties.addAll(residentialQuery.list());
+            // Use separate queries with consistent aliases
+            String residentialHql = """
+                SELECT rp FROM ResidentialProperty rp 
+                LEFT JOIN FETCH rp.address a 
+                LEFT JOIN FETCH rp.owner o
+                """;
+            properties.addAll(session.createQuery(residentialHql, Property.class).list());
 
-            Query<CommercialProperty> commercialQuery = session.createQuery(
-                    "FROM CommercialProperty", CommercialProperty.class);
-            properties.addAll(commercialQuery.list());
+            String commercialHql = """
+                SELECT cp FROM CommercialProperty cp 
+                LEFT JOIN FETCH cp.address a 
+                LEFT JOIN FETCH cp.owner o
+                """;
+            properties.addAll(session.createQuery(commercialHql, Property.class).list());
+
+            // Update cache
+            propertyCache.put(cacheKey, properties);
+            lastCacheUpdate = LocalDateTime.now();
 
             return properties;
         }
@@ -280,73 +287,41 @@ public class PropertyDaoImpl implements PropertyDao {
     }
 
     @Override
-    public List<Property> getPropertiesByStatus(Property.propertyStatus status) {
-        return List.of();
-    }
+    public List<Property> getPropertiesAvailableForRenting(Property.propertyStatus status) {
+        String cacheKey = "available_" + status;
+        if (propertyCache.containsKey(cacheKey) && isCacheValid()) {
+            return propertyCache.get(cacheKey);
+        }
 
-    @Override
-    public List<Property> getPropertiesAvailableForRenting(Property.propertyStatus status, Map<String, Object> filter) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
+            List<Property> properties = new ArrayList<>();
 
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<ResidentialProperty> residentialQuery = criteriaBuilder.createQuery(ResidentialProperty.class);
-            CriteriaQuery<CommercialProperty> commercialQuery = criteriaBuilder.createQuery(CommercialProperty.class);
+            // Use separate queries with consistent aliases
+            String residentialHql = """
+                SELECT rp FROM ResidentialProperty rp 
+                LEFT JOIN FETCH rp.address a 
+                LEFT JOIN FETCH rp.hosts h 
+                LEFT JOIN FETCH rp.owner o
+                WHERE rp.status = :status
+                """;
+            properties.addAll(session.createQuery(residentialHql, Property.class)
+                    .setParameter("status", status)
+                    .list());
 
-            Root<ResidentialProperty> residentialPropertyRoot = residentialQuery.from(ResidentialProperty.class);
-            Root<CommercialProperty> commercialPropertyRoot = commercialQuery.from(CommercialProperty.class);
+            String commercialHql = """
+                SELECT cp FROM CommercialProperty cp 
+                LEFT JOIN FETCH cp.address a 
+                LEFT JOIN FETCH cp.hosts h 
+                LEFT JOIN FETCH cp.owner o
+                WHERE cp.status = :status
+                """;
+            properties.addAll(session.createQuery(commercialHql, Property.class)
+                    .setParameter("status", status)
+                    .list());
 
-            List<jakarta.persistence.criteria.Predicate> predicates = new ArrayList<>();
+            propertyCache.put(cacheKey, properties);
+            lastCacheUpdate = LocalDateTime.now();
 
-            Join<ResidentialProperty, Address> residentialPropertyAddressJoin = residentialPropertyRoot.join("address");
-            Join<CommercialProperty, Address> commercialPropertyAddressJoin = commercialPropertyRoot.join("address");
-
-
-
-            if (filter != null) {
-                String province = (String) filter.get("province");
-                String district = (String) filter.get("district");
-                String ward = (String) filter.get("ward");
-
-                Predicate predicate = null;
-
-                if (province != null) {
-                    predicates.add(criteriaBuilder.equal(residentialPropertyAddressJoin.get("province"), province));
-                    predicates.add(criteriaBuilder.equal(commercialPropertyAddressJoin.get("province"), province));
-                }
-
-                if (district != null) {
-                    predicates.add(criteriaBuilder.equal(commercialPropertyAddressJoin.get("district"), district));
-                    predicates.add(criteriaBuilder.equal(residentialPropertyAddressJoin.get("district"), district));
-                }
-
-                if (ward != null) {
-                    predicates.add(criteriaBuilder.equal(commercialPropertyAddressJoin.get("ward"), ward));
-                    predicates.add(criteriaBuilder.equal(residentialPropertyAddressJoin.get("ward"), ward));
-                }
-            }
-
-            if (!predicates.isEmpty()) {
-                residentialQuery.where(predicates.toArray(new jakarta.persistence.criteria.Predicate[predicates.size()]));
-                commercialQuery.where(predicates.toArray(new jakarta.persistence.criteria.Predicate[predicates.size()]));
-            }
-
-            TypedQuery<CommercialProperty> commercialPropertyQuery = session.createQuery(commercialQuery);
-            TypedQuery<ResidentialProperty> residentialPropertyQuery = session.createQuery(residentialQuery);
-
-            properties.addAll(commercialPropertyQuery.getResultList());
-            properties.addAll(residentialPropertyQuery.getResultList());
-
-//            Query<ResidentialProperty> residentialPropertyQuery = session.createQuery(
-//                    "SELECT rp FROM ResidentialProperty rp JOIN rp.hosts h WHERE status = :status", ResidentialProperty.class);
-//            residentialPropertyQuery.setParameter("status", status);
-//
-//            Query<CommercialProperty> commercialPropertyQuery = session.createQuery(
-//                    "SELECT cp FROM CommercialProperty cp JOIN cp.hosts h WHERE status = :status", CommercialProperty.class);
-//            commercialPropertyQuery.setParameter("status", status);
-//
-//            properties.addAll(residentialPropertyQuery.list());
-//            properties.addAll(commercialPropertyQuery.list());
             return properties;
         }
     }
@@ -411,13 +386,49 @@ public class PropertyDaoImpl implements PropertyDao {
 
     @Override
     public List<Property> getPropertiesPage(int page, int pageSize, long ownerId) {
+        // Check page cache first
+        String cacheKey = "page_" + page + "_" + ownerId;
+        if (propertyCache.containsKey(cacheKey) && isCacheValid()) {
+            return propertyCache.get(cacheKey);
+        }
+
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "FROM Property p WHERE p.owner.id = :ownerId ORDER BY p.createdAt DESC";
-            return session.createQuery(hql, Property.class)
+            // Use separate queries with pagination
+            List<Property> properties = new ArrayList<>();
+
+            String residentialHql = """
+                SELECT rp FROM ResidentialProperty rp 
+                LEFT JOIN FETCH rp.address a 
+                LEFT JOIN FETCH rp.owner o
+                WHERE rp.owner.id = :ownerId
+                ORDER BY rp.createdAt DESC
+                """;
+
+            properties.addAll(session.createQuery(residentialHql, Property.class)
                     .setParameter("ownerId", ownerId)
                     .setFirstResult(page * pageSize)
                     .setMaxResults(pageSize)
-                    .list();
+                    .list());
+
+            String commercialHql = """
+                SELECT cp FROM CommercialProperty cp 
+                LEFT JOIN FETCH cp.address a 
+                LEFT JOIN FETCH cp.owner o
+                WHERE cp.owner.id = :ownerId
+                ORDER BY cp.createdAt DESC
+                """;
+
+            properties.addAll(session.createQuery(commercialHql, Property.class)
+                    .setParameter("ownerId", ownerId)
+                    .setFirstResult(page * pageSize)
+                    .setMaxResults(pageSize)
+                    .list());
+
+            // Cache the page
+            propertyCache.put(cacheKey, properties);
+            lastCacheUpdate = LocalDateTime.now();
+
+            return properties;
         }
     }
 
@@ -446,5 +457,50 @@ public class PropertyDaoImpl implements PropertyDao {
                     .setParameter("ownerId", ownerId)
                     .uniqueResult();
         }
+    }
+
+    public List<ResidentialProperty> getResidentialPropertiesByOwner(long ownerId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                    "FROM ResidentialProperty WHERE owner.id = :ownerId",
+                    ResidentialProperty.class)
+                    .setParameter("ownerId", ownerId)
+                    .list();
+        }
+    }
+
+    public List<CommercialProperty> getCommercialPropertiesByOwner(long ownerId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                    "FROM CommercialProperty WHERE owner.id = :ownerId",
+                    CommercialProperty.class)
+                    .setParameter("ownerId", ownerId)
+                    .list();
+        }
+    }
+
+    // Add method to clear cache when needed (e.g., after updates)
+    public void clearCache() {
+        propertyCache.clear();
+        lastCacheUpdate = null;
+    }
+
+    // Add method for infinite scroll
+    public void loadMoreProperties(int currentPage, int pageSize, long ownerId,
+            Consumer<List<Property>> onSuccess, Consumer<Throwable> onError) {
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                return getPropertiesPage(currentPage + 1, pageSize, ownerId);
+            } catch (Exception e) {
+                throw new CompletionException(e);
+            }
+        })
+                .thenAcceptAsync(properties -> {
+                    Platform.runLater(() -> onSuccess.accept(properties));
+                })
+                .exceptionally(throwable -> {
+                    Platform.runLater(() -> onError.accept(throwable));
+                    return null;
+                });
     }
 }

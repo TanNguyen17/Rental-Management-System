@@ -1,32 +1,27 @@
 package com.yourcompany.rentalmanagement.data;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.hibernate.Session;
-import com.yourcompany.rentalmanagement.util.HibernateUtil;
+
+import com.yourcompany.rentalmanagement.service.PaymentEventListener;
 
 public class DataGeneratorTest {
-    
-    @Test
-    public void testGeneratePropertyData() {
-        System.out.println("property data..");
-        try (Session testSession = HibernateUtil.getSessionFactory().openSession()) {
-            PropertyDataGenerator.generateTestData();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+
+    @BeforeAll
+    public static void setup() {
+        PaymentEventListener.setTestEnvironment(true);
     }
 
-    /* when use, take this comment out
     @Test
-    public void testGeneratePaymentData() {
-        System.out.println("payment data..");
-        try (Session testSession = HibernateUtil.getSessionFactory().openSession()) {
+    public void testGenerateAllData() {
+        System.out.println("Generating all test data...");
+
+        try {
+            PropertyDataGenerator.generateTestData();
             PaymentDataGenerator.generateTestData();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error generating test data: " + e.getMessage());
             throw e;
         }
     }
-    */
-} 
+}

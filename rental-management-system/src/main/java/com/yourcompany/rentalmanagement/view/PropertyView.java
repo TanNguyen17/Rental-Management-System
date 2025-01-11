@@ -1,9 +1,12 @@
 package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.PropertyController;
-import com.yourcompany.rentalmanagement.model.*;
+import com.yourcompany.rentalmanagement.model.CommercialProperty;
+import com.yourcompany.rentalmanagement.model.Property;
+import com.yourcompany.rentalmanagement.model.ResidentialProperty;
 import com.yourcompany.rentalmanagement.util.AddressData;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -84,7 +87,7 @@ public class PropertyView implements Initializable {
         try {
             List<Property> properties = propertyController.getPropertyByStatus(Property.propertyStatus.AVAILABLE, data);
             propertyList.setItems(FXCollections.observableList(properties));
-        } catch (Exception e){
+        } catch (Exception e) {
             System.err.println("Error loading properties: " + e.getMessage());
             //Show error in UI
             Platform.runLater(() -> {
@@ -154,16 +157,16 @@ public class PropertyView implements Initializable {
             Property refreshedProperty;
             if (property instanceof ResidentialProperty) {
                 refreshedProperty = session.createQuery(
-                                "FROM ResidentialProperty p " +
-                                        "LEFT JOIN FETCH p.address " +
-                                        "WHERE p.id = :id", ResidentialProperty.class)
+                        "FROM ResidentialProperty p "
+                        + "LEFT JOIN FETCH p.address "
+                        + "WHERE p.id = :id", ResidentialProperty.class)
                         .setParameter("id", property.getId())
                         .getSingleResult();
             } else {
                 refreshedProperty = session.createQuery(
-                                "FROM CommercialProperty p " +
-                                        "LEFT JOIN FETCH p.address " +
-                                        "WHERE p.id = :id", CommercialProperty.class)
+                        "FROM CommercialProperty p "
+                        + "LEFT JOIN FETCH p.address "
+                        + "WHERE p.id = :id", CommercialProperty.class)
                         .setParameter("id", property.getId())
                         .getSingleResult();
             }
@@ -189,7 +192,6 @@ public class PropertyView implements Initializable {
             // Implement rent property logic here
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RentalAgreementCreationView.fxml"));
             Scene scene = new Scene(loader.load());
-
 
             if (property instanceof ResidentialProperty) {
                 ResidentialProperty residentialProperty = (ResidentialProperty) property;

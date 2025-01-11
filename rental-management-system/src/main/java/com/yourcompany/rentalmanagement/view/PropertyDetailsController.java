@@ -92,8 +92,9 @@ public class PropertyDetailsController {
 
         addAddressField(0, "Street", address.getStreet());
         addAddressField(1, "Number", address.getNumber());
-        addAddressField(2, "City", address.getCity());
-        addAddressField(3, "State", address.getProvince());
+        addAddressField(2, "Ward", address.getWard());
+        addAddressField(3, "District", address.getDistrict());
+        addAddressField(4, "City/Province", address.getCity());
     }
 
     private void addAddressField(int row, String label, String value) {

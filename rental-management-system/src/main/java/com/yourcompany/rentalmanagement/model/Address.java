@@ -1,10 +1,18 @@
 package com.yourcompany.rentalmanagement.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "Address", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
+@Table(name = "Address", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"id"})})
 public class Address {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false)
@@ -19,12 +27,11 @@ public class Address {
     @Column(name = "ward", nullable = false)
     private String ward;
 
+    @Column(name = "district", nullable = false)
+    private String district;
+
     @Column(name = "city", nullable = false)
     private String city;
-
-    @Column(name = "province", nullable = false)
-    private String province;
-
 
     public long getId() {
         return id;
@@ -50,12 +57,12 @@ public class Address {
         this.street = street;
     }
 
-    public String getCity() {
-        return city;
+    public String getDistrict() {
+        return district;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setDistrict(String district) {
+        this.district = district;
     }
 
     public String getWard() {
@@ -66,11 +73,11 @@ public class Address {
         this.ward = ward;
     }
 
-    public String getProvince() {
-        return province;
+    public String getCity() {
+        return city;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public void setCity(String city) {
+        this.city = city;
     }
 }
