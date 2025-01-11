@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementFormController">
+   <left>
+      <Pane prefHeight="400.0" prefWidth="158.0" BorderPane.alignment="CENTER" />
+   </left>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" visible="true" BorderPane.alignment="BOTTOM_RIGHT">
+         <children>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="RENTAL AGREEMENT ">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font></Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="#1">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font></Text>
+               </children>
+            </HBox>
+            <VBox prefHeight="50.0" prefWidth="442.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tenant name" />
+                  <ComboBox fx:id="tenantField" prefWidth="150.0" />
+               </children>
+            </VBox>
+            <VBox layoutX="10.0" layoutY="110.0" prefHeight="50.0" prefWidth="442.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Owner name" />
+                  <ComboBox fx:id="ownerField" prefWidth="150.0" />
+               </children>
+            </VBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+               <children>
+                  <Button fx:id="uploadButton" mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fx:id="imageView" fitHeight="84.0" fitWidth="109.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                  </Button>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="441.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Host name" />
+                              <ComboBox fx:id="hostField" prefWidth="150.0" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="441.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Property type" />
+                              <ComboBox fx:id="propertyTypeField" prefWidth="150.0" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="441.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Property name" />
+                              <ComboBox fx:id="propertyField" prefWidth="150.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <VBox layoutX="10.0" layoutY="161.0" prefHeight="42.0" prefWidth="329.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Renting fee" />
+                  <TextField fx:id="rentingFeeField" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" VBox.vgrow="NEVER" />
+               </children>
+            </VBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="442.0" spacing="20.0">
+               <children>
+                  <DatePicker fx:id="startDateField" />
+                  <DatePicker fx:id="endDateField" />
+               </children>
+            </HBox>
+            <VBox layoutX="10.0" layoutY="306.0" prefHeight="50.0" prefWidth="442.0" VBox.vgrow="NEVER">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status" />
+                  <ComboBox fx:id="statusField" prefWidth="150.0" />
+               </children>
+            </VBox>
+            <Button fx:id="submitButton" mnemonicParsing="false" text="SUBMIT" />
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

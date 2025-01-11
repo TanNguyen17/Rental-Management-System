@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AddressData {
-    private static Map<String, List<String>> provinceCities = new HashMap<>();
+    public static Map<String, List<String>> provinceCities = new HashMap<>();
     public static Map<String, List<String>> cityWards = new HashMap<>();
 
     public static Map<String, List<String>> fetchProvinceData() {

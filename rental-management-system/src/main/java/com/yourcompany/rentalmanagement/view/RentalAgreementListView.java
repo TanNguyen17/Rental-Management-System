@@ -1,11 +1,14 @@
 package com.yourcompany.rentalmanagement.view;
 
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
+
 import com.yourcompany.rentalmanagement.controller.RentalAgreementController;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.UserSession;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,14 +18,9 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.util.Callback;
-
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ResourceBundle;
 
 public class RentalAgreementListView implements Initializable {
+
     private RentalAgreementController rentalAgreementController = new RentalAgreementController();
     private UserSession userSession = UserSession.getInstance();
     private ObservableList<RentalAgreement> rentalAgreements;
@@ -55,18 +53,30 @@ public class RentalAgreementListView implements Initializable {
     TableColumn<RentalAgreement, Double> rentingFee = new TableColumn<>();
 
     @Override
-    public void initialize(URL url, ResourceBundle bundle){
+    public void initialize(URL url, ResourceBundle bundle) {
+        rentalAgreements = FXCollections.observableArrayList();
+
         initializeColumn();
         initializeViewMoreColumn();
-        initializeDeleteColumn();
+
+        if (userSession.getCurrentUser().getRole().equals(UserRole.MANAGER) || userSession.getCurrentUser().getRole().equals(UserRole.HOST)) {
+            delete.setVisible(false);
+            initializeDeleteColumn();
+        }
+
+        loadingData();
+
         rentalAgreementTableView.setItems(rentalAgreements);
     }
 
     private void loadingData() {
-        FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(userSession.getCurrentUser().getRole(), userSession.getCurrentUser().getId()));
+        rentalAgreements.setAll(rentalAgreementController.getAllRentalAgreements(
+                userSession.getCurrentUser().getRole(),
+                userSession.getCurrentUser().getId()
+        ));
     }
 
-    private void initializeColumn(){
+    private void initializeColumn() {
         agreementId.setCellValueFactory(new PropertyValueFactory<>("id"));
         status.setCellValueFactory(new PropertyValueFactory<>("status"));
         contractedDate.setCellValueFactory(new PropertyValueFactory<>("contractDate"));
@@ -74,21 +84,50 @@ public class RentalAgreementListView implements Initializable {
         host.setCellValueFactory(new PropertyValueFactory<>("hostName"));
         rentingFee.setCellValueFactory(new PropertyValueFactory<>("rentingFee"));
 //        tenants.setCellValueFactory(new PropertyValueFactory<>("tenantsName"));
+
+        status.setCellFactory(column -> {
+            return new TableCell<RentalAgreement, RentalAgreement.rentalAgreementStatus>() {
+                @Override
+                protected void updateItem(RentalAgreement.rentalAgreementStatus item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null) {
+                        setText(null);
+                        setStyle("");
+                        getStyleClass().removeAll("status-new", "status-active", "status-completed");
+                    } else {
+                        setText(item.toString());
+                        switch (item) {
+                            case NEW:
+                                getStyleClass().add("status-new");
+                                break;
+                            case ACTIVE:
+                                getStyleClass().add("status-active");
+                                break;
+                            case COMPLETED:
+                                getStyleClass().add("status-completed");
+                                break;
+                        }
+                    }
+                }
+            };
+        });
     }
 
     private void initializeViewMoreColumn() {
-        view.setCellFactory(col -> new TableCell<>(){
+        view.setCellFactory(col -> new TableCell<>() {
             @Override
-            public void updateItem(Button item, boolean empty){
+            public void updateItem(Button item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(null);
                 setGraphic(null);
-                if (!empty){
+                if (!empty) {
                     Button button = new Button("View More");
+                    button.getStyleClass().addAll("button", "view-button");
                     button.setOnAction(e -> {
-                        System.out.println(this.getTableRow().getIndex());
+                        RentalAgreement agreement = getTableView().getItems().get(getIndex());
+                        System.out.println("Viewing agreement: " + agreement.getId());
                     });
-                    setText(null);
                     setGraphic(button);
                 }
             }
@@ -96,18 +135,19 @@ public class RentalAgreementListView implements Initializable {
     }
 
     private void initializeDeleteColumn() {
-        delete.setCellFactory(col -> new TableCell<>(){
+        delete.setCellFactory(col -> new TableCell<>() {
             @Override
-            public void updateItem(Button item, boolean empty){
+            public void updateItem(Button item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(null);
                 setGraphic(null);
-                if (!empty){
+                if (!empty) {
                     Button button = new Button("Delete");
+                    button.getStyleClass().addAll("button", "delete-button");
                     button.setOnAction(e -> {
-                        System.out.println(this.getTableRow().getIndex());
+                        RentalAgreement agreement = getTableView().getItems().get(getIndex());
+                        System.out.println("Deleting agreement: " + agreement.getId());
                     });
-                    setText(null);
                     setGraphic(button);
                 }
             }

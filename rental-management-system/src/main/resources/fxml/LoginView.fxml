@@ -3,73 +3,69 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml" 
             fx:controller="com.yourcompany.rentalmanagement.view.LoginViewController"
-            prefWidth="1280" prefHeight="720">
+            prefWidth="1280" prefHeight="720"
+            stylesheets="@../css/login.css">
             
     <HBox>
-        <!-- Left side -->
-        <StackPane style="-fx-background-color: #E0E0E0;" prefWidth="640" prefHeight="720">
-            <Text text="Image Placeholder" style="-fx-font-size: 24;"/>
-        </StackPane>
+        <!-- Left side - Image -->
+        <VBox styleClass="image-container" prefWidth="780" prefHeight="720">
+            <ImageView fitWidth="780" fitHeight="720" preserveRatio="false">
+                <Image url="@../images/login-illustration.jpg"/>
+            </ImageView>
+        </VBox>
         
-        <!-- Right side -->
-        <VBox prefWidth="640" prefHeight="720" alignment="CENTER" spacing="20" style="-fx-padding: 40;">
-            <TabPane style="-fx-pref-width: 400;">
+        <!-- Right side - Login Form -->
+        <VBox styleClass="form-side" prefWidth="500" alignment="CENTER">
+            <padding>
+                <Insets top="20" right="40" bottom="40" left="40"/>
+            </padding>
+            
+            <TabPane styleClass="login-tab-pane" tabClosingPolicy="UNAVAILABLE">
                 <tabs>
                     <!-- Login Tab -->
                     <Tab text="Login" closable="false">
-                        <VBox spacing="15" alignment="CENTER">
-                            <padding>
-                                <Insets top="20" right="30" bottom="20" left="30"/>
-                            </padding>
-                            
-                            <Text text="Welcome Back!" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+                        <VBox styleClass="form-container" alignment="CENTER">
+                            <Text text="Welcome Back!" styleClass="welcome-text"/>
                             <TextField fx:id="loginUsername" promptText="Username" 
-                                     style="-fx-pref-height: 35;"
                                      onKeyPressed="#handleLoginKeyPress"/>
                             <PasswordField fx:id="loginPassword" promptText="Password"
-                                         style="-fx-pref-height: 35;"
                                          onKeyPressed="#handleLoginKeyPress"/>
                             <Button text="Login" onAction="#handleLogin"
-                                    style="-fx-pref-width: 200; -fx-pref-height: 35;"/>
-                            <Button text="Continue as Visitor" onAction="#handleVisitor"
-                                    style="-fx-pref-width: 200; -fx-pref-height: 35;"/>
+                                    maxWidth="Infinity"/>
+                            <Button text="Continue as Visitor" 
+                                    onAction="#handleVisitor"
+                                    styleClass="secondary-button"
+                                    maxWidth="Infinity"/>
                         </VBox>
                     </Tab>
                     
                     <!-- Sign Up Tab -->
                     <Tab text="Sign Up" closable="false">
-                        <VBox spacing="15" alignment="CENTER">
-                            <padding>
-                                <Insets top="20" right="30" bottom="20" left="30"/>
-                            </padding>
-                            
-                            <Text text="Create Account" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+                        <VBox styleClass="form-container" alignment="CENTER">
+                            <Text text="Create Account" styleClass="welcome-text"/>
                             <TextField fx:id="signupUsername" promptText="Username"
-                                     style="-fx-pref-height: 35;"
                                      onKeyPressed="#handleSignupKeyPress"/>
                             <PasswordField fx:id="signupPassword" promptText="Password"
-                                         style="-fx-pref-height: 35;"
                                          onKeyPressed="#handleSignupKeyPress"/>
                             <TextField fx:id="signupEmail" promptText="Email"
-                                     style="-fx-pref-height: 35;"
                                      onKeyPressed="#handleSignupKeyPress"/>
                             <ComboBox fx:id="roleComboBox" promptText="Select Role"
-                                    style="-fx-pref-width: 340; -fx-pref-height: 35;"
+                                    maxWidth="Infinity"
                                     onKeyPressed="#handleSignupKeyPress"/>
                             <Button text="Sign Up" onAction="#handleSignup"
-                                    style="-fx-pref-width: 200; -fx-pref-height: 35;"/>
+                                    maxWidth="Infinity"/>
                         </VBox>
                     </Tab>
                 </tabs>
             </TabPane>
             
-            <Label fx:id="messageLabel" style="-fx-text-fill: red;"/>
+            <Label fx:id="messageLabel" styleClass="error-label"/>
         </VBox>
     </HBox>
-    
 </AnchorPane>

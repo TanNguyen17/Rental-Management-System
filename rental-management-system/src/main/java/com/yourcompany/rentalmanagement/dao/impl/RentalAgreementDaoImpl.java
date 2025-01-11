@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,11 +39,27 @@ public class RentalAgreementDaoImpl implements RentalManagementDao {
     }
 
     @Override
+    public List<RentalAgreement> getActiveRentalAgreements(LocalDate today) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<RentalAgreement> query = session.createQuery(
+                    "FROM RentalAgreement WHERE startContractDate <= :today AND endContractDate >= :today", RentalAgreement.class);
+            query.setParameter("today", today);
+            rentalAgreements = query.list();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return rentalAgreements;
+    }
+
+    @Override
     public List<RentalAgreement> getRentalAgreementByRole(UserRole role, Long userId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             if (role.equals(UserRole.TENANT)) {
                 query = session.createQuery("from RentalAgreement", RentalAgreement.class);
-                query = session.createQuery("SELECT rA from RentalAgreement JOIN rA.tenants t WHERE t.id = :id", RentalAgreement.class);
+                query = session.createQuery("SELECT rA from RentalAgreement rA LEFT JOIN FETCH rA.tenants t WHERE t.id = :id", RentalAgreement.class);
                 query.setParameter("id", userId);
             }
             rentalAgreements = query.list();

@@ -1,11 +1,24 @@
 package com.yourcompany.rentalmanagement.view;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 import com.yourcompany.rentalmanagement.controller.UserController;
 import com.yourcompany.rentalmanagement.model.User;
+import com.yourcompany.rentalmanagement.util.AddressData;
 import com.yourcompany.rentalmanagement.util.AlertUtils;
 import com.yourcompany.rentalmanagement.util.CloudinaryService;
-import com.yourcompany.rentalmanagement.util.AddressData;
 import com.yourcompany.rentalmanagement.util.UserSession;
+
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -13,26 +26,19 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.*;
-
 
 public class ProfileView implements Initializable {
     private UserController userController;
     private CloudinaryService cloudinaryService = new CloudinaryService();
-    private Map<String, List<String>> provinceCities = new HashMap<>();
-    private Map<String, List<String>> cityWards = new HashMap<>();
     private User currentUser = UserSession.getInstance().getCurrentUser();
 
     @FXML
@@ -87,7 +93,7 @@ public class ProfileView implements Initializable {
     private ChoiceBox<String> provinceChoice;
 
     @FXML
-    private ChoiceBox<String> cityChoice;
+    private ChoiceBox<String> districtChoice;
 
     @FXML
     private ChoiceBox<String> wardChoice;
@@ -134,27 +140,19 @@ public class ProfileView implements Initializable {
                 }
             });
         }).start();
-
-        // Load address data in the background
-        new Thread(() -> {
             // Load address data
-            provinceCities = AddressData.fetchProvinceData();
-            System.out.println("provinceCities: " + provinceCities.size());
-            cityWards = AddressData.cityWards;
-
             Platform.runLater(() -> {
                 initialAddress();
                 provinceChoice.setOnAction(event -> {
                     String selectedProvince = provinceChoice.getValue();
-                    updateCityCombobox(selectedProvince);
+                    updateDistrictCombobox(selectedProvince);
                 });
 
-                cityChoice.setOnAction(event -> {
-                    String selectedCity = cityChoice.getValue();
+                districtChoice.setOnAction(event -> {
+                    String selectedCity = districtChoice.getValue();
                     updateWardCombobox(selectedCity);
                 });
             });
-        }).start();
     }
 
     private void initialProfile() {
@@ -173,19 +171,19 @@ public class ProfileView implements Initializable {
 
     // handle add current user address
     private void initialAddress() {
-        provinceChoice.getItems().addAll(provinceCities.keySet());
+        provinceChoice.getItems().addAll(AddressData.provinceCities.keySet());
         if (currentUser.getAddress() != null) {
             streetName.setText(currentUser.getAddress().getStreet());
             streetNumber.setText(currentUser.getAddress().getNumber());
 
             if (provinceChoice.getItems().contains(currentUser.getAddress().getCity())) {
                 provinceChoice.setValue(currentUser.getAddress().getCity());
-                updateCityCombobox(currentUser.getAddress().getCity());
+                updateDistrictCombobox(currentUser.getAddress().getCity());
 
                 //Populate city choice and set its value
-                if (cityChoice.getItems().contains(currentUser.getAddress().getCity())) {
-                    cityChoice.setValue(currentUser.getAddress().getCity());
-                    updateCityCombobox(currentUser.getAddress().getCity());
+                if (districtChoice.getItems().contains(currentUser.getAddress().getCity())) {
+                    districtChoice.setValue(currentUser.getAddress().getCity());
+                    updateDistrictCombobox(currentUser.getAddress().getCity());
 
                     if (wardChoice.getItems().contains(currentUser.getAddress().getWard())) {
                         wardChoice.setValue(currentUser.getAddress().getWard());
@@ -193,12 +191,8 @@ public class ProfileView implements Initializable {
                     }
 
                 } else {
-                    System.err.println("City not found in ComboBox: " + currentUser.getAddress().getCity());
-                }
-
-            } else {
-                System.err.println("Province not found in ComboBox: " + currentUser.getAddress().getProvince());
-            }
+                    System.err.println("City/Province not found in ComboBox: " + currentUser.getAddress().getCity());
+                }          }
         } else {
             streetName.setText("Street");
             streetNumber.setText("Street Number");
@@ -235,7 +229,7 @@ public class ProfileView implements Initializable {
         String streetNameText = streetName.getText();
         String streetNumberText = streetNumber.getText();
         String province = provinceChoice.getValue();
-        String city = cityChoice.getValue();
+        String city = districtChoice.getValue();
 
         if (streetNameText == null) {
             errorStreetName.setText("Please enter street name");
@@ -366,20 +360,20 @@ public class ProfileView implements Initializable {
     }
 
     // Update cities data into combobox when province is selected
-    private void updateCityCombobox(String selectedProvince) {
+    private void updateDistrictCombobox(String selectedProvince) {
         if (selectedProvince != null) {
-            List<String> cities = provinceCities.getOrDefault(selectedProvince, new ArrayList<>());
+            List<String> cities = AddressData.provinceCities.getOrDefault(selectedProvince, new ArrayList<>());
             ObservableList<String> cityList = FXCollections.observableArrayList(cities);
-            cityChoice.setItems(cityList);
+            districtChoice.setItems(cityList);
         } else {
-            cityChoice.getItems().clear();
+            districtChoice.getItems().clear();
         }
     }
 
     // Update wards data into combobox when city is selected
     private void updateWardCombobox(String selectedCity) {
         if (selectedCity != null) {
-            List<String> wards = cityWards.getOrDefault(selectedCity, new ArrayList<>());
+            List<String> wards = AddressData.cityWards.getOrDefault(selectedCity, new ArrayList<>());
             ObservableList<String> wardList = FXCollections.observableArrayList(wards);
             wardChoice.setItems(wardList);
         } else {

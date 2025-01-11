@@ -18,7 +18,6 @@ import jakarta.persistence.OneToOne;
 
 @MappedSuperclass
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false, length = 10)
@@ -39,7 +38,7 @@ public class User {
     @Column(name = "phoneNumber", nullable = true, unique = true) //test
     private String phoneNumber;
 
-    @Column(name = "profileImage")
+    @Column(name = "profileImage", nullable = true)
     private String profileImage;
 
     @OneToOne(targetEntity = Address.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -50,7 +49,7 @@ public class User {
     @Column(name = "role", nullable = false)
     private UserRole role;
 
-    @Column(name = "salt", nullable = false, length = 100)
+    @Column(name = "salt", nullable = true, length = 100)
     private String salt;
 
     public long getId() {

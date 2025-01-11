@@ -1,15 +1,17 @@
 package com.yourcompany.rentalmanagement.controller;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
-import com.yourcompany.rentalmanagement.model.Payment;
-import com.yourcompany.rentalmanagement.model.Tenant;
+import com.yourcompany.rentalmanagement.model.*;
 
 public class PaymentController {
+
     PaymentDaoImpl paymentDao = new PaymentDaoImpl();
+    Map<String, String> data = new HashMap<>();
     List<Payment> payments;
     private static final int PAGE_SIZE = 10;
 
@@ -17,8 +19,28 @@ public class PaymentController {
 
     }
 
+    public boolean createPayment(Payment payment, long rentalAgreementId, long tenantId) {
+        data = paymentDao.createPayment(payment, rentalAgreementId, tenantId);
+        if (data.get("status") == "failed") {
+            return false;
+        }
+        return true;
+    }
+
     public List<Payment> getPayments(int pageNumber, Map<String, String> filterValue) {
         return paymentDao.loadDataByRole(pageNumber, filterValue, null, 1);
+    }
+
+    public List<Payment> getPaymentsOfTenant(int pageNumber, Map<String, String> filterValue, UserRole userRole, long tenantId) {
+        return paymentDao.loadDataByRole(pageNumber, filterValue, userRole, tenantId);
+    }
+
+    public boolean shouldGeneratePayment(RentalAgreement rentalAgreement, LocalDate today) {
+        Payment latestPayment = paymentDao.getLatestPayment(rentalAgreement, today);
+        if (latestPayment == null) return false;
+
+        LocalDate nextDueDate = latestPayment.getDueDate();
+        return today.isEqual(nextDueDate) || today.isAfter(nextDueDate);
     }
 
     public Tenant getTenant(long paymentId) {

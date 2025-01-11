@@ -1,15 +1,29 @@
 package com.yourcompany.rentalmanagement.model;
 
-import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+
 @Entity
-@Table(name = "Rental_Agreement", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
+@Table(name = "Rental_Agreement", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"id"})})
 public class RentalAgreement {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false, length = 10)
@@ -19,8 +33,11 @@ public class RentalAgreement {
     @Column(name = "status", nullable = false)
     private RentalAgreement.rentalAgreementStatus status;
 
-    @Column(name = "contractDate", nullable = false)
-    private LocalDate contractDate;
+    @Column(name = "startContractDate", nullable = false)
+    private LocalDate startContractDate;
+
+    @Column(name = "endContractDate")
+    private LocalDate endContractDate;
 
     @Column(name = "rentingFee", nullable = false)
     private double rentingFee;
@@ -70,7 +87,7 @@ public class RentalAgreement {
         this.owner = owner;
     }
 
-    public String getOwnerName(){
+    public String getOwnerName() {
         return this.owner.getUsername();
     }
 
@@ -78,7 +95,7 @@ public class RentalAgreement {
         return host;
     }
 
-    public String getHostName(){
+    public String getHostName() {
         return this.host.getUsername();
     }
 
@@ -110,12 +127,20 @@ public class RentalAgreement {
         this.status = status;
     }
 
-    public LocalDate getContractDate() {
-        return contractDate;
+    public LocalDate getStartContractDate() {
+        return startContractDate;
     }
 
-    public void setContractDate(LocalDate contractDate) {
-        this.contractDate = contractDate;
+    public void setStartContractDate(LocalDate startContractDate) {
+        this.startContractDate = startContractDate;
+    }
+
+    public LocalDate getEndContractDate() {
+        return endContractDate;
+    }
+
+    public void setEndContractDate(LocalDate endContractDate) {
+        this.endContractDate = endContractDate;
     }
 
     public double getRentingFee() {

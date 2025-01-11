@@ -13,7 +13,7 @@
       VBox.vgrow="ALWAYS"
       styleClass="form-scroll-pane">
       
-    <VBox styleClass="property-form, form-container" spacing="20" VBox.vgrow="ALWAYS">
+    <VBox styleClass="property-form, form-container" spacing="20">
         <padding>
             <Insets top="20" right="20" bottom="20" left="20"/>
         </padding>
@@ -47,14 +47,7 @@
                            style="-fx-text-fill: #666666; -fx-font-style: italic;"/>
                 </VBox>
                 
-                <!-- Price -->
-                <VBox styleClass="form-section">
-                    <Text text="Pricing" styleClass="section-title"/>
-                    <TextField fx:id="priceField" promptText="Renting Fee ($ per month) *" 
-                              styleClass="form-field"/>
-                </VBox>
-                
-                <!-- Address -->
+                <!-- Property Address -->
                 <VBox styleClass="form-section">
                     <Text text="Property Address" styleClass="section-title"/>
                     <GridPane hgap="10" vgap="10">
@@ -66,10 +59,12 @@
                                  styleClass="form-field" GridPane.columnIndex="0"/>
                         <TextField fx:id="numberField" promptText="Number *" 
                                  styleClass="form-field" GridPane.columnIndex="1"/>
-                        <TextField fx:id="cityField" promptText="City *" 
+                        <TextField fx:id="wardField" promptText="Ward *" 
                                  styleClass="form-field" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                        <TextField fx:id="stateField" promptText="State *" 
+                        <TextField fx:id="districtField" promptText="District *" 
                                  styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <TextField fx:id="cityField" promptText="City/Province *" 
+                                 styleClass="form-field" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
                     </GridPane>
                 </VBox>
             </VBox>
@@ -85,6 +80,13 @@
                         <Button text="Upload Property Image *" onAction="#handleImageUpload"
                                 styleClass="primary-button"/>
                     </VBox>
+                </VBox>
+
+                <!-- Price -->
+                <VBox styleClass="form-section">
+                    <Text text="Pricing" styleClass="section-title"/>
+                    <TextField fx:id="priceField" promptText="Renting Fee ($ per month) *" 
+                              styleClass="form-field"/>
                 </VBox>
                 
                 <!-- Commercial Property Fields -->
@@ -115,12 +117,19 @@
             </VBox>
         </HBox>
         
-        <!-- Bottom Section -->
-        <HBox alignment="CENTER" spacing="10">
-            <Button fx:id="submitButton" text="Create Property" 
-                    onAction="#handleSubmit" 
-                    styleClass="primary-button"/>
-            <Label fx:id="messageLabel"/>
+        <!-- Sticky Button Container -->
+        <HBox alignment="CENTER_RIGHT" 
+              styleClass="sticky-button-container" 
+              spacing="10">
+            <padding>
+                <Insets top="20" right="0" bottom="0" left="0"/>
+            </padding>
+            <MFXButton fx:id="submitButton" 
+                       text="Create Property" 
+                       onAction="#handleSubmit" 
+                       styleClass="primary-button"
+                       prefWidth="200"
+                       prefHeight="40"/>
         </HBox>
     </VBox>
 </ScrollPane> 
