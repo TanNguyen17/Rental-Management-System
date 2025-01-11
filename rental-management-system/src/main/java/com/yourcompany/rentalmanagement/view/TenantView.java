@@ -53,7 +53,7 @@ public class TenantView implements Initializable {
 
     @FXML
     void btnRentalAgreement(ActionEvent event) throws IOException {
-        TableView rentalAgreementView = FXMLLoader.load(getClass().getResource("/fxml/RentalAgreementView.fxml"));
+        TableView rentalAgreementView = FXMLLoader.load(getClass().getResource("/fxml/manager/rental-agreement-management/RentalAgreementView.fxml"));
         borderPane.setCenter(rentalAgreementView);
     }
 

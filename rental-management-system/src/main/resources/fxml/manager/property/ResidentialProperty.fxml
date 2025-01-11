@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="10.0" stylesheets="@../css/rental-agreement.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementListView">
+<VBox spacing="10.0" stylesheets="@../../../css/rental-agreement.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementListView">
    <children>
       <TableView fx:id="rentalAgreementTableView" styleClass="table-view" VBox.vgrow="ALWAYS">
          <columns>

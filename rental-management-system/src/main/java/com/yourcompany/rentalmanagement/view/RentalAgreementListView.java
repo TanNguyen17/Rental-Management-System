@@ -4,8 +4,6 @@ import com.yourcompany.rentalmanagement.controller.RentalAgreementController;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.UserSession;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,10 +15,8 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -134,7 +130,7 @@ public class RentalAgreementListView implements Initializable {
     private void openAddNewDataForm(){
         try {
             // Load the FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RentalAgreementForm.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/manager/rental-agreement-management/RentalAgreementForm.fxml"));
             VBox newRoot = loader.load();
 
             RentalAgreementFormView controller = loader.getController();
@@ -153,7 +149,7 @@ public class RentalAgreementListView implements Initializable {
     private void openUpdateForm(long id) {
         try {
             // Load the FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RentalAgreementForm.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/manager/rental-agreement-management/RentalAgreementForm.fxml"));
             VBox newRoot = loader.load();
 
             // Pass id to form
