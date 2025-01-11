@@ -1,23 +1,27 @@
 package com.yourcompany.rentalmanagement.view;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.UserSession;
+
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
 
 public class SideMenuView implements Initializable {
 
@@ -41,11 +45,26 @@ public class SideMenuView implements Initializable {
 
     private Map<UserRole, Map<String, String>> menuConfig = new HashMap<>();
 
-
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {;
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         configureMenu();
         populateMenu();
+
+        // Show initial view based on user role
+        Platform.runLater(() -> {
+            UserRole role = userSession.getCurrentUser().getRole();
+            String initialView = switch (role) {
+                case OWNER, TENANT ->
+                    "/fxml/ViewRentalProperties.fxml";
+                case HOST ->
+                    "/fxml/RentalAgreementListView.fxml";
+                case MANAGER ->
+                    "/fxml/ManagerDashBoard.fxml";
+                default ->
+                    throw new IllegalStateException("Unexpected role: " + role);
+            };
+            loadView(initialView);
+        });
     }
 
     private void configureMenu() {
@@ -72,7 +91,9 @@ public class SideMenuView implements Initializable {
     }
 
     private void populateMenu() {
-        if (userSession.getCurrentUser() == null) return;
+        if (userSession.getCurrentUser() == null) {
+            return;
+        }
 
         UserRole role = userSession.getCurrentUser().getRole();
         Map<String, String> roleMenu = menuConfig.getOrDefault(role, new LinkedHashMap<>());
@@ -91,11 +112,11 @@ public class SideMenuView implements Initializable {
             buttonOrder.addAll(Arrays.asList("Dashboard", "Profile"));
         }
 
-
         for (String buttonName : buttonOrder) {
             if (roleMenu.containsKey(buttonName)) {
                 String fxmlPath = roleMenu.get(buttonName);
                 Button button = new Button(buttonName);
+                button.getStyleClass().add("menu-button");
                 button.setPrefWidth(180);
                 button.setPrefHeight(45);
                 button.setOnAction(event -> loadView(fxmlPath));
@@ -131,13 +152,18 @@ public class SideMenuView implements Initializable {
 //            profile.setOnMouseClicked(event -> loadView("/fxml/ProfileView.fxml"));
 //        }
 //    }
-
     private void loadView(String fxmlPath) {
         try {
-            AnchorPane anchorPane = FXMLLoader.load(getClass().getResource(fxmlPath));
-            this.borderPane.setCenter(anchorPane);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            javafx.scene.Node view = loader.load();
+            if (this.borderPane != null) {
+                this.borderPane.setCenter(view);
+            } else {
+                System.err.println("BorderPane is null. Make sure setBorderPane is called.");
+            }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            System.err.println("Error loading view: " + fxmlPath);
         }
     }
 
