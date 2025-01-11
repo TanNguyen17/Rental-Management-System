@@ -166,6 +166,4 @@ public class HostDashboardViewController implements Initializable {
         initializePieChart();
         initializeTableData();
     }
-
-
 }

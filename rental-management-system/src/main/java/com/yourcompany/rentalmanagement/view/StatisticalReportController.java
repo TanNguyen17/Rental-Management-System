@@ -75,7 +75,7 @@ public class StatisticalReportController implements Initializable {
 
 
     private void loadTable(){
-        totalProperty.setText(String.valueOf(propertyDaoImpl.getTotalPropertyCount()));
+        totalProperty.setText(String.valueOf(propertyDaoImpl.getTotalResidentialPropertyCount() + propertyDaoImpl.getTotalCommercialPropertyCount()));
         totalHost.setText(String.valueOf(hostDaoImpl.getTotalUsers()));
         totalOwner.setText(String.valueOf(ownerDaoImpl.getTotalUsers()));
         totalTenant.setText(String.valueOf(tenantDaoImpl.getTotalUsers()));

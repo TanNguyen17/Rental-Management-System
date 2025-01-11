@@ -65,6 +65,7 @@ public class OwnerDaoImpl implements UserDao {
         }
         return ownerNames;
     }
+
     @Override
     public long getTotalUsers() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {

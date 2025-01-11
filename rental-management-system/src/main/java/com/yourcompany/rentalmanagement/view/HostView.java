@@ -15,6 +15,7 @@ public class HostView implements Initializable {
     @FXML
     private BorderPane borderPane;
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // TODO Auto-generated method stub
@@ -25,7 +26,7 @@ public class HostView implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SideMenu.fxml"));
             VBox sideMenu = loader.load();
             FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
-            Node mainView = mainLoader.load();
+            javafx.scene.Node mainView = mainLoader.load();
             borderPane.setCenter(mainView);
             SideMenuView sideMenuView = loader.getController();
             sideMenuView.setBorderPane(borderPane);

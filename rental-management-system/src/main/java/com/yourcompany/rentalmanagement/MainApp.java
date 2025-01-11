@@ -51,7 +51,7 @@ public class MainApp extends Application {
                 loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
             }
              //If no valid stored session --> show login view
-            //loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
+            //loader = new FXMLLoader(getClass().getResource("/fxml/HostView.fxml"));
             Scene scene = new Scene(loader.load());
             scene.getStylesheets().addAll(
                     getClass().getResource("/css/property-list.css").toExternalForm(),

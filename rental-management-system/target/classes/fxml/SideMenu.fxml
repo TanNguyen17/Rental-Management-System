@@ -11,7 +11,6 @@
     <padding>
         <Insets top="20" right="16" bottom="20" left="16"/>
     </padding>
-    
     <ComboBox fx:id="roleComboBox" styleClass="role-combo"/>
     
     <VBox fx:id="navBar" styleClass="nav-container" spacing="12">
