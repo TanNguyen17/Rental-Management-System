@@ -1,5 +1,6 @@
 package com.yourcompany.rentalmanagement;
 
+import com.yourcompany.rentalmanagement.service.PaymentScheduler;
 import org.hibernate.SessionFactory;
 
 import com.yourcompany.rentalmanagement.model.UserRole;

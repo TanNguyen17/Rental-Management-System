@@ -178,7 +178,7 @@ public class PaymentsView implements Initializable {
                         FontAwesomeIconView sendEmailIcon = null;
 
                         if (currentUser.getRole().equals(UserRole.TENANT)) {
-                            payIcon = new FontAwesomeIconView(FontAwesomeIcon.MAIL_REPLY);
+                            payIcon = new FontAwesomeIconView(FontAwesomeIcon.MONEY);
                             payIcon.getStyleClass().add("action-icon");
                         } else {
                             sendEmailIcon = new FontAwesomeIconView(FontAwesomeIcon.MAIL_REPLY);

@@ -120,26 +120,30 @@ public class TenantDaoImpl implements UserDao {
     public Map<String, Object> updateAddress(long id, Map<String, Object> data) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-
-            tenant = session.get(Tenant.class, id);
+            Query<Tenant> query = session.createQuery("SELECT t from Tenant t where t.id = :id", Tenant.class);
+            query.setParameter("id", id);
+            tenant = query.uniqueResult();
 
             if (tenant != null) {
                 if (tenant.getAddress() != null) {
                     Address address = tenant.getAddress();
                     address.setCity(data.get("province").toString());
-                    address.setCity(data.get("city").toString());
+                    address.setDistrict(data.get("district").toString());
+                    address.setWard(data.get("ward").toString());
                     address.setNumber(data.get("streetNumber").toString());
                     address.setStreet(data.get("streetNam" +
                             "e").toString());
                 } else {
                     Address address = new Address();
                     address.setCity(data.get("province").toString());
-                    address.setCity(data.get("city").toString());
+                    address.setDistrict(data.get("district").toString());
+                    address.setWard(data.get("ward").toString());
                     address.setNumber(data.get("streetNumber").toString());
                     address.setStreet(data.get("streetName").toString());
                     tenant.setAddress(address);
                 }
             }
+
             transaction.commit();
             result.put("status", "success");
             result.put("message", "Address updated successfully");

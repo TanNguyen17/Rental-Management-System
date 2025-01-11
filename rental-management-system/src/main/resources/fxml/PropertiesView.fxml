@@ -66,14 +66,20 @@
                   <Button fx:id="findButton" mnemonicParsing="false" onAction="#filterProperty" text="Find" />
                </children>
             </HBox>
-            <ScrollPane prefHeight="515.0">
+            <ScrollPane prefHeight="515.0" prefWidth="996.0">
                <content>
-                  <VBox prefHeight="499.0" prefWidth="1065.0">
+                  <VBox prefHeight="499.0" prefWidth="1035.0">
                      <children>
-                        <ListView fx:id="propertyList" prefHeight="499.0" />
+                        <ListView fx:id="propertyList" prefHeight="499.0" prefWidth="1035.0">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin></ListView>
                      </children>
                   </VBox>
                </content>
+               <VBox.margin>
+                  <Insets left="50.0" right="20.0" />
+               </VBox.margin>
             </ScrollPane>
             <HBox prefHeight="0.0" prefWidth="787.0" />
          </children>

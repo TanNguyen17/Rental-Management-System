@@ -28,6 +28,7 @@ public class OwnerView implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SideMenu.fxml"));
             FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/fxml/ViewRentalProperties.fxml"));
+
             VBox sideMenu = loader.load();
             AnchorPane main = mainLoader.load();
             SideMenuView sideMenuView = loader.getController();

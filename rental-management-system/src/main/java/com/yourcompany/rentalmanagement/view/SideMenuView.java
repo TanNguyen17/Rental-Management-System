@@ -50,21 +50,21 @@ public class SideMenuView implements Initializable {
         configureMenu();
         populateMenu();
 
-        // Show initial view based on user role
-        Platform.runLater(() -> {
-            UserRole role = userSession.getCurrentUser().getRole();
-            String initialView = switch (role) {
-                case OWNER, TENANT ->
-                    "/fxml/ViewRentalProperties.fxml";
-                case HOST ->
-                    "/fxml/RentalAgreementListView.fxml";
-                case MANAGER ->
-                    "/fxml/ManagerDashBoard.fxml";
-                default ->
-                    throw new IllegalStateException("Unexpected role: " + role);
-            };
-            loadView(initialView);
-        });
+        // Show initial view based on user role (No need)
+//        Platform.runLater(() -> {
+//            UserRole role = userSession.getCurrentUser().getRole();
+//            String initialView = switch (role) {
+//                case OWNER, TENANT ->
+//                    "/fxml/ViewRentalProperties.fxml";
+//                case HOST ->
+//                    "/fxml/RentalAgreementListView.fxml";
+//                case MANAGER ->
+//                    "/fxml/ManagerDashBoard.fxml";
+//                default ->
+//                    throw new IllegalStateException("Unexpected role: " + role);
+//            };
+//            loadView(initialView);
+//        });
     }
 
     private void configureMenu() {
