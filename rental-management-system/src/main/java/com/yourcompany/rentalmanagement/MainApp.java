@@ -22,7 +22,9 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        paymentScheduler.startPaymentGeneration();
+        new Thread(() -> {
+            paymentScheduler.startPaymentGeneration();
+        });
         new Thread(() -> {
             // Load address data
             AddressData.fetchProvinceData();
