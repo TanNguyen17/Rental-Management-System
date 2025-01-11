@@ -2,11 +2,14 @@
     -fx-background-color: transparent;
     -fx-padding: 10;
     -fx-fit-to-width: true;
+    -fx-pref-height: -1;
+    -fx-max-height: infinity;
 }
 
 .property-list .list-cell {
     -fx-background-color: transparent;
     -fx-padding: 5;
+    -fx-pref-height: -1;
 }
 
 .property-list .list-cell:selected {
@@ -166,6 +169,10 @@
     -fx-background: transparent;
     -fx-background-color: transparent;
     -fx-padding: 0 20;
+    -fx-fit-to-width: true;
+    -fx-fit-to-height: true;
+    -fx-hbar-policy: NEVER;
+    -fx-vbar-policy: NEVER;
 }
 
 .property-scroll>.viewport {
@@ -399,4 +406,11 @@
 .address-info {
     -fx-font-size: 14px;
     -fx-text-fill: #666666;
+}
+
+.no-properties-label {
+    -fx-font-size: 18px;
+    -fx-text-fill: #666666;
+    -fx-alignment: center;
+    -fx-padding: 20;
 }

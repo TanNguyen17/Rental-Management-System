@@ -24,6 +24,7 @@ com\yourcompany\rentalmanagement\util\EmailUtil.class
 com\yourcompany\rentalmanagement\view\components\Toast.class
 com\yourcompany\rentalmanagement\controller\LoginController.class
 com\yourcompany\rentalmanagement\model\RentalAgreement.class
+com\yourcompany\rentalmanagement\view\RentalAgreementFormController.class
 com\yourcompany\rentalmanagement\util\AlertUtils.class
 com\yourcompany\rentalmanagement\dao\HostDao.class
 com\yourcompany\rentalmanagement\dao\impl\TenantDaoImpl.class
@@ -44,6 +45,7 @@ com\yourcompany\rentalmanagement\model\Tenant.class
 com\yourcompany\rentalmanagement\model\Property$propertyStatus.class
 com\yourcompany\rentalmanagement\dao\ManagerDao.class
 com\yourcompany\rentalmanagement\dao\impl\OwnerDaoImpl.class
+com\yourcompany\rentalmanagement\view\HostDashboardViewController.class
 com\yourcompany\rentalmanagement\view\PaymentsView.class
 com\yourcompany\rentalmanagement\view\PaymentsView$2.class
 com\yourcompany\rentalmanagement\dao\PaymentDao.class
