@@ -223,7 +223,7 @@
                                              <children>
                                                 <VBox prefHeight="122.0" prefWidth="499.0">
                                                    <children>
-                                                      <Label text="Province">
+                                                      <Label text="Province/City">
                                                          <font>
                                                             <Font size="20.0" />
                                                          </font>
@@ -234,12 +234,12 @@
                                                 </VBox>
                                                 <VBox prefHeight="122.0" prefWidth="499.0">
                                                    <children>
-                                                      <Label text="City">
+                                                      <Label text="District">
                                                          <font>
                                                             <Font size="20.0" />
                                                          </font>
                                                       </Label>
-                                                      <ChoiceBox fx:id="cityChoice" prefHeight="35.0" prefWidth="150.0" />
+                                                      <ChoiceBox fx:id="districtChoice" prefHeight="35.0" prefWidth="150.0" />
                                                       <Text fx:id="cityChoiceError" fill="RED" />
                                                    </children>
                                                 </VBox>

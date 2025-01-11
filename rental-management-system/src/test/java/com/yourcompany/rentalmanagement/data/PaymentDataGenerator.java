@@ -37,7 +37,7 @@ public class PaymentDataGenerator {
                 rentalAgreement.setHost(hosts.get(i));
                 rentalAgreement.setOwner(owners.get(i));
                 rentalAgreement.setStatus(RentalAgreement.rentalAgreementStatus.NEW);
-                rentalAgreement.setContractDate(generateRandomDate(random));
+                rentalAgreement.setStartContractDate(generateRandomDate(random));
                 rentalAgreement.setRentingFee(generateRandomPrice(random));
                 properties.get(i).setRentalAgreement(rentalAgreement);
                 tenants.get(i).addRentalAgreement(rentalAgreement);
@@ -65,7 +65,7 @@ public class PaymentDataGenerator {
         address.setNumber(String.valueOf(random.nextInt(1000) + 1)); // Random number between 1 and 1000
         address.setStreet(generateRandomStreetName(random));
         address.setCity(generateRandomCityName(random));
-        address.setState(generateRandomState(random));
+        address.setProvince(generateRandomState(random));
         return address;
     }
 

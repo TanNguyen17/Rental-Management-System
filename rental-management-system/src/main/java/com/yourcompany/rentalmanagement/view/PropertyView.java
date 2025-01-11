@@ -2,9 +2,12 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.PropertyController;
 import com.yourcompany.rentalmanagement.model.*;
+import com.yourcompany.rentalmanagement.util.AddressData;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,20 +22,59 @@ import org.hibernate.Session;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class PropertyView implements Initializable {
 
     private final PropertyController propertyController = new PropertyController();
     private Map<String, Object> data = new HashMap<>();
+    private Map<String, List<String>> provinceCities = new HashMap<>();
+    private Map<String, List<String>> cityWards = new HashMap<>();
+
     @FXML
-    private ListView<Property> propertyList; // Use ListView<Property> directly
+    private ListView<Property> propertyList;
+
+    @FXML
+    private ChoiceBox<String> provinceChoice;
+
+    @FXML
+    private ChoiceBox<String> districtChoice;
+
+    @FXML
+    private ChoiceBox<String> wardChoice;
+
+    @FXML
+    private Button findButton;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        loadAddress();
+//        loadAvailableProperty();
+//        setupPropertyList();
+    }
+
+    private void loadAddress() {
+        Platform.runLater(() -> {
+            provinceChoice.getItems().addAll(AddressData.provinceCities.keySet());
+
+            provinceChoice.setOnAction(event -> {
+                String selectedProvince = provinceChoice.getValue();
+                updateDistrictCombobox(selectedProvince);
+            });
+
+            districtChoice.setOnAction(event -> {
+                String selectedDistrict = districtChoice.getValue();
+                updateWardCombobox(selectedDistrict);
+            });
+        });
+    }
+
+    @FXML
+    void filterProperty(ActionEvent event) {
+        data.put("province", provinceChoice.getValue());
+        data.put("district", districtChoice.getValue());
+        data.put("ward", wardChoice.getValue());
+
         loadAvailableProperty();
         setupPropertyList();
     }
@@ -40,7 +82,7 @@ public class PropertyView implements Initializable {
     private void loadAvailableProperty() {
         //Handle exceptions from the controller
         try {
-            List<Property> properties = propertyController.getPropertyByStatus(Property.propertyStatus.AVAILABLE);
+            List<Property> properties = propertyController.getPropertyByStatus(Property.propertyStatus.AVAILABLE, data);
             propertyList.setItems(FXCollections.observableList(properties));
         } catch (Exception e){
             System.err.println("Error loading properties: " + e.getMessage());
@@ -167,6 +209,30 @@ public class PropertyView implements Initializable {
             stage.show();
         } catch (IOException e) {
             System.err.println("Error showing property details: " + e.getMessage());
+        }
+    }
+
+
+
+    // Update cities data into combobox when province is selected
+    private void updateDistrictCombobox(String selectedProvince) {
+        if (selectedProvince != null) {
+            List<String> cities = AddressData.provinceCities.getOrDefault(selectedProvince, new ArrayList<>());
+            ObservableList<String> cityList = FXCollections.observableArrayList(cities);
+            districtChoice.setItems(cityList);
+        } else {
+            districtChoice.getItems().clear();
+        }
+    }
+
+    // Update wards data into combobox when city is selected
+    private void updateWardCombobox(String selectedCity) {
+        if (selectedCity != null) {
+            List<String> wards = AddressData.cityWards.getOrDefault(selectedCity, new ArrayList<>());
+            ObservableList<String> wardList = FXCollections.observableArrayList(wards);
+            wardChoice.setItems(wardList);
+        } else {
+            wardChoice.getItems().clear();
         }
     }
 }

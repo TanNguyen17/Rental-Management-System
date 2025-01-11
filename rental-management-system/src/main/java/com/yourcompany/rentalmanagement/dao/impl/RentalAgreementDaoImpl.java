@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,22 @@ public class RentalAgreementDaoImpl implements RentalManagementDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             query = session.createQuery("from RentalAgreement", RentalAgreement.class);
             return query.list();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return rentalAgreements;
+    }
+
+    @Override
+    public List<RentalAgreement> getActiveRentalAgreements(LocalDate today) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<RentalAgreement> query = session.createQuery(
+                    "FROM RentalAgreement WHERE startContractDate <= :today AND endContractDate >= :today", RentalAgreement.class);
+            query.setParameter("today", today);
+            rentalAgreements = query.list();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
