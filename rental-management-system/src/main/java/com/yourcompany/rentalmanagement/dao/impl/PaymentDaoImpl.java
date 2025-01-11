@@ -200,8 +200,8 @@ public class PaymentDaoImpl implements PaymentDao {
             // Update the list with actual results
             for (Object[] result : results) {
                 Integer month = (Integer) result[0];
-                Double totalPayment = (Double) result[1];
-                monthlyPayments.set(month - 1, totalPayment * 0.2); // Update the corresponding month index
+                Double totalPayment = (Double) result[1] * 0.2;
+                monthlyPayments.set(month - 1, totalPayment); // Update the corresponding month index
             }
 
             // Debugging: Print the list

@@ -14,6 +14,7 @@ import javafx.scene.chart.*;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.geometry.Side;
 
 import java.net.URL;
 import java.util.*;
@@ -56,17 +57,20 @@ public class HostDashboardViewController implements Initializable {
     private TableView<Property> propertyTable;
 
     private void initializeLineChart() {
-        String[] months = {"January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"};
-        // Set up the axes
+        String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
         xAxis = new CategoryAxis();
-        xAxis.setCategories(FXCollections.observableArrayList(
-                months
-        ));
+        xAxis.setCategories(FXCollections.observableArrayList(months));
         xAxis.setLabel("Month");
+        xAxis.setSide(Side.BOTTOM); // Ensure the label is at the bottom
+        xAxis.lookup(".axis-label").setTranslateX(150);
 
         yAxis = new NumberAxis();
         yAxis.setLabel("Income ($)");
+        yAxis.setSide(Side.TOP);
+
+
 
         // Create the LineChart
         lineChart.setTitle("Monthly Revenue Overview");
@@ -143,9 +147,9 @@ public class HostDashboardViewController implements Initializable {
         title.setCellValueFactory(new PropertyValueFactory<>("title"));
         status.setCellValueFactory(new PropertyValueFactory<>("status"));
         totalIncome.setCellValueFactory(cellData -> new SimpleDoubleProperty(
-                incomeByProperty.getOrDefault(cellData.getValue().getId(), 0.0)).asObject());
+                Math.round(incomeByProperty.getOrDefault(cellData.getValue().getId(), 0.0) * 100.0) / 100.0).asObject());
         stayLength.setCellValueFactory(cellData -> new SimpleDoubleProperty(
-                averageStayByProperty.getOrDefault(cellData.getValue().getId(), 0.0)).asObject());
+                Math.round(averageStayByProperty.getOrDefault(cellData.getValue().getId(), 0.0) * 100.0) / 100.0).asObject());
         propertyTable.setItems(properties);
     }
 

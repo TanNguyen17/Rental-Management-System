@@ -480,7 +480,7 @@ public class PropertyDaoImpl implements PropertyDao {
             List<Object[]> residentialResults = residentialQuery.getResultList();
             for (Object[] result : residentialResults) {
                 Long propertyId = (Long) result[0];
-                Double totalIncome = (Double) result[1];
+                Double totalIncome = (Double) result[1] * 0.2;
                 incomeByProperty.put(propertyId, totalIncome);
             }
 
@@ -488,7 +488,7 @@ public class PropertyDaoImpl implements PropertyDao {
             List<Object[]> commercialResults = commercialQuery.getResultList();
             for (Object[] result : commercialResults) {
                 Long propertyId = (Long) result[0];
-                Double totalIncome = (Double) result[1];
+                Double totalIncome = (Double) result[1] * 0.2;
                 incomeByProperty.put(propertyId, totalIncome);
             }
         } catch (Exception e) {
