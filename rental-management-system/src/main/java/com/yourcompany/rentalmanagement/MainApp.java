@@ -20,6 +20,14 @@ public class MainApp extends Application {
     private FXMLLoader loader;
     @Override
     public void start(Stage primaryStage) {
+
+        new Thread(() -> {
+            // Load address data
+            AddressData.fetchProvinceData();
+            System.out.println("Province Data fetched: ");
+
+        }).start();
+
         try {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             if (sessionFactory != null) {
@@ -35,6 +43,8 @@ public class MainApp extends Application {
                 if (userSession.getCurrentUser().getRole() == UserRole.TENANT) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/TenantView.fxml"));
                 } else if (userSession.getCurrentUser().getRole() == UserRole.OWNER) {
+                    loader = new FXMLLoader(getClass().getResource("/fxml/OwnerView.fxml"));
+                } else if (userSession.getCurrentUser().getRole() == UserRole.HOST) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/ViewRentalProperties.fxml"));
                 }
             } else {

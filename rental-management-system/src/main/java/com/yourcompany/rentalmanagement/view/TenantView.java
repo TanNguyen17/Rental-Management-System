@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement.view;
 
+import com.yourcompany.rentalmanagement.util.UserSession;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +17,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TenantView implements Initializable {
+
+    private UserSession userSession = UserSession.getInstance();
+
     @FXML
     private BorderPane borderPane;
 
@@ -55,6 +60,12 @@ public class TenantView implements Initializable {
     void btnRentalAgreement(ActionEvent event) throws IOException {
         TableView rentalAgreementView = FXMLLoader.load(getClass().getResource("/fxml/RentalAgreementView.fxml"));
         borderPane.setCenter(rentalAgreementView);
+    }
+
+    @FXML
+    void logout(ActionEvent event) throws IOException {
+        userSession.clearSession();
+        Platform.exit();
     }
 
     @Override

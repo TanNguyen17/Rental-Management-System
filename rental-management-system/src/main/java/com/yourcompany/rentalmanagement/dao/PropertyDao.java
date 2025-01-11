@@ -34,6 +34,8 @@ public interface PropertyDao {
 
     public List<Property> getPropertiesByStatus(Property.propertyStatus status);
 
+    public List<Property> getPropertiesAvailableForRenting(Property.propertyStatus status);
+
     public List<Property> getPropertiesAvailableForRenting(Property.propertyStatus status, Map<String, Object> filter);
 
     public List<CommercialProperty> getAllCommercialProperties();

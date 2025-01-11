@@ -73,6 +73,7 @@ public class RentalAgreementCreationView implements Initializable {
         hostInfo = ((List<Host>) data.get("hosts"));
         ownerInfo = ((Owner) data.get("owner"));
         propertyInfo = ((Property) data.get("property"));
+
         for (Host host : hostInfo) {
             hostNames.add(host.getUsername());
         }

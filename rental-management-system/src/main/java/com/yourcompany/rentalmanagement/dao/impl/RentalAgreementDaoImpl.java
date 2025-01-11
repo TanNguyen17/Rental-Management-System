@@ -59,7 +59,7 @@ public class RentalAgreementDaoImpl implements RentalManagementDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             if (role.equals(UserRole.TENANT)) {
                 query = session.createQuery("from RentalAgreement", RentalAgreement.class);
-                query = session.createQuery("SELECT rA from RentalAgreement JOIN rA.tenants t WHERE t.id = :id", RentalAgreement.class);
+                query = session.createQuery("SELECT rA from RentalAgreement rA LEFT JOIN FETCH rA.tenants t WHERE t.id = :id", RentalAgreement.class);
                 query.setParameter("id", userId);
             }
             rentalAgreements = query.list();

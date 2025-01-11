@@ -15,36 +15,37 @@
                   <Insets left="20.0" right="20.0" top="30.0" />
                </VBox.margin>
             </Label>
-            <VBox alignment="CENTER" spacing="15.0">
+            <VBox alignment="CENTER" spacing="20.0">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
                <children>
-                  <Button fx:id="homeTab" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnHome" prefHeight="30.0" text="Home">
+                  <Button fx:id="homeTab" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnHome" prefHeight="45.0" text="Home">
                      <VBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="rentalAgreementTab" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnRentalAgreement" prefHeight="30.0" text="Rental Agreement">
+                  <Button fx:id="rentalAgreementTab" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnRentalAgreement" prefHeight="45.0" text="Rental Agreement">
                      <VBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="paymentTab" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnPayment" prefHeight="30.0" text="Payment">
+                  <Button fx:id="paymentTab" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnPayment" prefHeight="45.0" text="Payment">
                      <VBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="profileTab" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnProfile" prefHeight="30.0" text="Profile">
+                  <Button fx:id="profileTab" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnProfile" prefHeight="45.0" text="Profile">
                      <VBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </VBox.margin>
                   </Button>
+                  <Button fx:id="logout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#logout" prefHeight="45.0" text="Logout" />
                </children>
             </VBox>
          </children>
          <BorderPane.margin>
-            <Insets right="40.0" />
+            <Insets />
          </BorderPane.margin>    
       </VBox>
    </left>
