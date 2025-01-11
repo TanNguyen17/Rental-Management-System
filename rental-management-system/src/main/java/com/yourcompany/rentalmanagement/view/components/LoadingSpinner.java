@@ -1,47 +1,67 @@
 package com.yourcompany.rentalmanagement.view.components;
 
-import javafx.geometry.Pos;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 public class LoadingSpinner extends StackPane {
 
-    public Runnable show;
-    public Runnable hide;
+    @FXML
+    private Region blocker;
+
+    @FXML
+    private ProgressIndicator spinner;
 
     public LoadingSpinner() {
-        getStyleClass().add("loading-spinner");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/components/LoadingSpinner.fxml"));
+            loader.setRoot(this);
+            loader.setController(this);
+            loader.load();
 
-        ProgressIndicator spinner = new ProgressIndicator();
-        spinner.setProgress(-1);
-        spinner.setPrefSize(50, 50);
+            // Add CSS class
+            getStyleClass().add("loading-spinner");
 
-        Rectangle overlay = new Rectangle();
-        overlay.setFill(Color.rgb(255, 255, 255, 0.8));
-        overlay.widthProperty().bind(widthProperty());
-        overlay.heightProperty().bind(heightProperty());
+            // Make sure it's on top but initially hidden
+            setVisible(false);
+            setMouseTransparent(false); // Block mouse events when visible
 
-        getChildren().addAll(overlay, spinner);
-        setAlignment(Pos.CENTER);
+            // Make it fill the parent
+            setMaxWidth(Double.MAX_VALUE);
+            setMaxHeight(Double.MAX_VALUE);
 
-        setVisible(false);
-        setMouseTransparent(true);
+            // Ensure blocker fills the space
+            if (blocker != null) {
+                blocker.setMaxWidth(Double.MAX_VALUE);
+                blocker.setMaxHeight(Double.MAX_VALUE);
+            }
 
-        show = () -> setVisible(true);
-        hide = () -> setVisible(false);
-    }
-
-    public void show() {
-        if (show != null) {
-            show.run();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load LoadingSpinner.fxml", e);
         }
     }
 
+    public void show() {
+        setVisible(true);
+        setMouseTransparent(false);
+    }
+
     public void hide() {
-        if (hide != null) {
-            hide.run();
+        setVisible(false);
+        setMouseTransparent(true);
+    }
+
+    @FXML
+    private void initialize() {
+        // Any additional initialization after FXML loading
+        if (blocker != null) {
+            blocker.setStyle("-fx-background-color: rgba(0, 0, 0, 0.4);");
+        }
+        if (spinner != null) {
+            spinner.setMaxWidth(100);
+            spinner.setMaxHeight(100);
         }
     }
 }

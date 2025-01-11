@@ -3,9 +3,9 @@ package com.yourcompany.rentalmanagement.view;
 import java.io.IOException;
 
 import com.yourcompany.rentalmanagement.controller.LoginController;
-import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.model.Manager;
 import com.yourcompany.rentalmanagement.model.Owner;
+import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.UserSession;
@@ -96,28 +96,23 @@ public class LoginViewController {
 
     @FXML
     private void handleSignup() {
-        // Clear previous error messages
         messageLabel.setText("");
 
-        // Validate username
         if (signupUsername.getText().length() < 3) {
             showErrorMessage("Username must be at least 3 characters");
             return;
         }
 
-        // Validate password
         if (signupPassword.getText().length() < 6) {
             showErrorMessage("Password must be at least 6 characters");
             return;
         }
 
-        // Validate email
         if (!signupEmail.getText().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             showErrorMessage("Please enter a valid email address");
             return;
         }
 
-        // Validate role selection
         if (roleComboBox.getValue() == null) {
             showErrorMessage("Please select a role");
             return;
@@ -150,7 +145,6 @@ public class LoginViewController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewRentalProperties.fxml"));
                 Scene scene = new Scene(loader.load());
 
-                // Add CSS
                 scene.getStylesheets().addAll(
                         getClass().getResource("/css/common.css").toExternalForm(),
                         getClass().getResource("/css/property-list.css").toExternalForm()

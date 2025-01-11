@@ -4,11 +4,11 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "Rental_Agreement", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
+@Table(name = "Rental_Agreement", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"id"})})
 public class RentalAgreement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,7 +73,7 @@ public class RentalAgreement {
         this.owner = owner;
     }
 
-    public String getOwnerName(){
+    public String getOwnerName() {
         return this.owner.getUsername();
     }
 
@@ -81,7 +81,7 @@ public class RentalAgreement {
         return host;
     }
 
-    public String getHostName(){
+    public String getHostName() {
         return this.host.getUsername();
     }
 

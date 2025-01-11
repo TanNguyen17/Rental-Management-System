@@ -40,7 +40,6 @@
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/PaymentsView.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/Host.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/util/CloudinaryService.java
-/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/impl/TenantDaoImp.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/controller/SideMenuController.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/UserDao.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/impl/TenantDaoImpl.java
@@ -49,13 +48,11 @@
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/RentalManagementDao.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/components/Toast.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/RentalAgreementCreationView.java
-/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/impl/RentalAgreementDaoImp.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/MainApp.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/Manager.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/CommercialProperty.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/util/TokenStorage.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/impl/PaymentDaoImpl.java
-/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/impl/HostDaoImp.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/ProfileView.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/controller/LoginController.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/model/User.java

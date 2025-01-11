@@ -11,14 +11,14 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PaymentDaoImpl implements PaymentDao {
+
     private Transaction transaction;
     private List<Payment> payments;
     private Payment payment;
+    Map<String, Double> monthlyPayments;
     private Query<Payment> query;
     public static final int PAGE_SIZE = 10;
 
@@ -122,7 +122,6 @@ public class PaymentDaoImpl implements PaymentDao {
         return payments;
     }
 
-
     @Override
     public Tenant getTenant(long paymentId) {
         Tenant tenant = null;
@@ -140,7 +139,6 @@ public class PaymentDaoImpl implements PaymentDao {
         }
         return tenant;
     }
-
 
     @Override
     public Long getPaymentCount(Map<String, String> filterValue) {
@@ -172,4 +170,52 @@ public class PaymentDaoImpl implements PaymentDao {
         return count;
     }
 
+    public List<Double> getMonthlyPayment(long id, String type) {
+        List<Double> monthlyPayments = new ArrayList<>(Collections.nCopies(12, 0.0)); // Initialize with 12 zeros
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            String hql;
+
+            // Modify the HQL query based on the type
+            if ("expected".equalsIgnoreCase(type)) {
+                hql = "SELECT MONTH(p.dueDate) AS month, SUM(p.amount) AS totalPayment " +
+                        "FROM Payment p " +
+                        "JOIN p.rentalAgreement ra " +
+                        "WHERE ra.host.id = :hostId " +
+                        "GROUP BY MONTH(p.dueDate) " +
+                        "ORDER BY MONTH(p.dueDate)";
+            } else if ("actual".equalsIgnoreCase(type)) {
+                hql = "SELECT MONTH(p.dueDate) AS month, SUM(p.amount) AS totalPayment " +
+                        "FROM Payment p " +
+                        "JOIN p.rentalAgreement ra " +
+                        "WHERE ra.host.id = :hostId AND p.status = 'PAID' " +
+                        "GROUP BY MONTH(p.dueDate) " +
+                        "ORDER BY MONTH(p.dueDate)";
+            } else {
+                throw new IllegalArgumentException("Invalid payment type. Must be 'expected' or 'actual'.");
+            }
+
+            Query query = session.createQuery(hql);
+            query.setParameter("hostId", id);
+            List<Object[]> results = query.getResultList();
+
+            // Update the list with actual results
+            for (Object[] result : results) {
+                Integer month = (Integer) result[0];
+                Double totalPayment = (Double) result[1] * 0.2;
+                monthlyPayments.set(month - 1, totalPayment); // Update the corresponding month index
+            }
+
+            // Debugging: Print the list
+            for (int i = 0; i < monthlyPayments.size(); i++) {
+                System.out.println("Month: " + (i + 1) + ", Total Payment: " + monthlyPayments.get(i));
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return monthlyPayments;
+    }
 }

@@ -4,7 +4,8 @@
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.layout.Region?>
 
-<fx:root type="javafx.scene.layout.StackPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21">
-    <Region fx:id="blocker" style="-fx-background-color: rgba(0, 0, 0, 0.4);"/>
-    <ProgressIndicator fx:id="spinner" maxWidth="100" maxHeight="100"/>
+<fx:root type="javafx.scene.layout.StackPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21"
+         styleClass="loading-spinner">
+    <Region fx:id="blocker"/>
+    <ProgressIndicator fx:id="spinner"/>
 </fx:root> 

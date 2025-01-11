@@ -6,369 +6,122 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.ProfileView">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="780.0" stylesheets="@../css/profile.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.ProfileView">
    <children>
-      <HBox prefHeight="720.0" prefWidth="780.0">
-         <children>
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="780.0">
-               <children>
-                  <HBox prefHeight="100.0" prefWidth="780.0">
-                     <children>
-                        <Pane prefHeight="73.0" prefWidth="885.0" />
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="780.0">
-                     <children>
-                        <HBox prefHeight="143.0" prefWidth="259.0">
-                           <children>
-                              <ImageView fx:id="profileImage" fitHeight="143.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                              <Button fx:id="uploadImageButton" mnemonicParsing="false" onAction="#handleUploadImage" prefHeight="25.0" prefWidth="195.0" text="Upload" />
-                           </children>
-                        </HBox>
-                        <VBox alignment="CENTER_LEFT" prefHeight="108.0" prefWidth="173.0">
-                           <children>
-                              <Text fx:id="username" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
-                                 <font>
-                                    <Font size="25.0" />
-                                 </font>
-                              </Text>
-                           </children>
-                        </VBox>
-                     </children>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <VBox.margin>
-                        <Insets left="20.0" right="20.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="740.0" tabClosingPolicy="UNAVAILABLE">
-                     <tabs>
-                        <Tab text="Profile">
-                           <content>
-                              <VBox prefHeight="449.0" prefWidth="897.0">
-                                 <children>
-                                    <HBox prefHeight="357.0" prefWidth="848.0" spacing="40.0">
-                                       <children>
-                                          <VBox prefHeight="357.0" prefWidth="437.0">
-                                             <children>
-                                                <VBox prefHeight="0.0" prefWidth="437.0">
-                                                   <children>
-                                                      <Label text="First Name">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <TextField fx:id="firstName" prefHeight="40.0" prefWidth="200.0">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                         <VBox.margin>
-                                                            <Insets right="100.0" />
-                                                         </VBox.margin>
-                                                      </TextField>
-                                                      <Text fx:id="errorFirstName" fill="RED" />
-                                                   </children>
-                                                </VBox>
-                                                <VBox prefHeight="0.0" prefWidth="337.0">
-                                                   <children>
-                                                      <Label text="Last Name">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <TextField fx:id="lastName" prefHeight="40.0" prefWidth="321.0">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                         <VBox.margin>
-                                                            <Insets right="100.0" />
-                                                         </VBox.margin>
-                                                      </TextField>
-                                                      <Text fx:id="errorLastName" fill="RED" />
-                                                   </children>
-                                                   <VBox.margin>
-                                                      <Insets />
-                                                   </VBox.margin>
-                                                </VBox>
-                                                <VBox prefHeight="29.0" prefWidth="437.0">
-                                                   <children>
-                                                      <Label text="Email">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <TextField fx:id="email" prefHeight="35.0" prefWidth="200.0">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                         <VBox.margin>
-                                                            <Insets right="100.0" />
-                                                         </VBox.margin>
-                                                      </TextField>
-                                                      <Text fx:id="errorEmail" fill="RED" />
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                          </VBox>
-                                          <VBox prefHeight="357.0" prefWidth="499.0">
-                                             <children>
-                                                <VBox prefHeight="117.0" prefWidth="499.0">
-                                                   <children>
-                                                      <Label text="Phone Number">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <TextField fx:id="phoneNumber" prefHeight="35.0" prefWidth="378.0">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                         <VBox.margin>
-                                                            <Insets right="200.0" />
-                                                         </VBox.margin>
-                                                      </TextField>
-                                                      <Text fx:id="errorPhoneNumber" fill="RED" />
-                                                   </children>
-                                                </VBox>
-                                                <VBox prefHeight="122.0" prefWidth="499.0">
-                                                   <children>
-                                                      <Label text="Date of Birth">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <DatePicker fx:id="dateOfBirth" prefHeight="40.0" prefWidth="345.0" />
-                                                      <Text fx:id="errorPhoneNumber1" fill="RED" />
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets top="20.0" />
-                                       </VBox.margin>
-                                    </HBox>
-                                    <HBox prefHeight="46.0" prefWidth="880.0">
-                                       <children>
-                                          <Button fx:id="updateProfileButton" mnemonicParsing="false" onAction="#updateProfile" text="Update">
-                                             <font>
-                                                <Font size="20.0" />
-                                             </font>
-                                             <HBox.margin>
-                                                <Insets bottom="100.0" />
-                                             </HBox.margin>
-                                          </Button>
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets top="40.0" />
-                                       </VBox.margin>
-                                    </HBox>
-                                 </children>
-                              </VBox>
-                           </content>
-                        </Tab>
-                        <Tab text="Address">
-                           <content>
-                              <VBox prefHeight="200.0" prefWidth="100.0">
-                                 <children>
-                                    <HBox prefHeight="531.0" prefWidth="1037.0" spacing="40.0">
-                                       <children>
-                                          <VBox prefHeight="236.0" prefWidth="366.0">
-                                             <children>
-                                                <VBox prefHeight="122.0" prefWidth="499.0">
-                                                   <children>
-                                                      <Label text="Street Number">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <TextField fx:id="streetNumber" prefHeight="40.0" prefWidth="366.0">
-                                                         <VBox.margin>
-                                                            <Insets right="100.0" />
-                                                         </VBox.margin>
-                                                      </TextField>
-                                                      <Text fx:id="errorStreetNumber" fill="RED" />
-                                                   </children>
-                                                </VBox>
-                                                <VBox prefHeight="122.0" prefWidth="499.0">
-                                                   <children>
-                                                      <Label text="Street Name">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <TextField fx:id="streetName" prefHeight="40.0" prefWidth="366.0">
-                                                         <VBox.margin>
-                                                            <Insets right="100.0" />
-                                                         </VBox.margin>
-                                                      </TextField>
-                                                      <Text fx:id="errorStreetName" fill="RED" />
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                          </VBox>
-                                          <VBox prefHeight="449.0" prefWidth="291.0">
-                                             <children>
-                                                <VBox prefHeight="122.0" prefWidth="499.0">
-                                                   <children>
-                                                      <Label text="Province">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <ChoiceBox fx:id="provinceChoice" prefHeight="35.0" prefWidth="150.0" />
-                                                      <Text fx:id="provinceChoiceError" fill="RED" />
-                                                   </children>
-                                                </VBox>
-                                                <VBox prefHeight="122.0" prefWidth="499.0">
-                                                   <children>
-                                                      <Label text="City">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <ChoiceBox fx:id="cityChoice" prefHeight="35.0" prefWidth="150.0" />
-                                                      <Text fx:id="cityChoiceError" fill="RED" />
-                                                   </children>
-                                                </VBox>
-                                                <VBox prefHeight="122.0" prefWidth="499.0">
-                                                   <children>
-                                                      <Label text="Ward">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <ChoiceBox fx:id="wardChoice" prefHeight="35.0" prefWidth="150.0" />
-                                                      <Text fx:id="wardChoiceError" fill="RED" />
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets top="20.0" />
-                                       </VBox.margin>
-                                    </HBox>
-                                    <HBox prefHeight="46.0" prefWidth="880.0">
-                                       <children>
-                                          <Button fx:id="updateAddressButton" mnemonicParsing="false" onAction="#updateAddress" text="Update">
-                                             <font>
-                                                <Font size="20.0" />
-                                             </font>
-                                             <HBox.margin>
-                                                <Insets bottom="100.0" />
-                                             </HBox.margin>
-                                          </Button>
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
-                           </content>
-                        </Tab>
-                        <Tab text="Password">
-                           <content>
-                              <VBox prefHeight="200.0" prefWidth="100.0">
-                                 <children>
-                                    <HBox prefHeight="531.0" prefWidth="1037.0" spacing="40.0">
-                                       <children>
-                                          <VBox prefHeight="236.0" prefWidth="366.0">
-                                             <children>
-                                                <VBox prefHeight="122.0" prefWidth="499.0">
-                                                   <children>
-                                                      <Label text="Enter Current Password">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <HBox prefHeight="23.0" prefWidth="366.0">
-                                                         <children>
-                                                            <MFXPasswordField fx:id="currentPassword" prefHeight="28.0" prefWidth="270.0" />
-                                                         </children>
-                                                      </HBox>
-                                                      <Text fx:id="errorCurrentPassword" fill="RED" />
-                                                   </children>
-                                                </VBox>
-                                                <VBox prefHeight="122.0" prefWidth="499.0">
-                                                   <children>
-                                                      <Label text="Enter New Password">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="366.0" spacing="10.0">
-                                                         <children>
-                                                            <MFXPasswordField fx:id="newPassword" prefHeight="49.0" prefWidth="270.0" />
-                                                         </children>
-                                                      </HBox>
-                                                      <Text fx:id="errorNewPassword" fill="RED" />
-                                                   </children>
-                                                </VBox>
-                                                <VBox prefHeight="122.0" prefWidth="499.0">
-                                                   <children>
-                                                      <Label text="Confirm New Password">
-                                                         <font>
-                                                            <Font size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <HBox prefHeight="38.0" prefWidth="366.0">
-                                                         <children>
-                                                            <MFXPasswordField fx:id="confirmPassword" prefHeight="35.0" prefWidth="270.0">
-                                                               <HBox.margin>
-                                                                  <Insets bottom="20.0" />
-                                                               </HBox.margin>
-                                                            </MFXPasswordField>
-                                                         </children>
-                                                      </HBox>
-                                                      <Text fx:id="errorConfirmPassword" fill="RED" />
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                          </VBox>
-                                          <VBox prefHeight="449.0" prefWidth="291.0" />
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets top="20.0" />
-                                       </VBox.margin>
-                                    </HBox>
-                                    <HBox prefHeight="46.0" prefWidth="880.0">
-                                       <children>
-                                          <Button fx:id="updatePasswordButton" mnemonicParsing="false" onAction="#updatePassword" text="Update">
-                                             <font>
-                                                <Font size="20.0" />
-                                             </font>
-                                             <HBox.margin>
-                                                <Insets bottom="90.0" />
-                                             </HBox.margin>
-                                          </Button>
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
-                           </content>
-                        </Tab>
-                     </tabs>
-                     <VBox.margin>
-                        <Insets left="20.0" />
-                     </VBox.margin>
-                  </TabPane>
-               </children>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
+      <VBox spacing="20" styleClass="profile-container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <!-- Top Section with Image and Basic Info -->
+         <HBox spacing="20" alignment="CENTER">
+            <!-- Left side - Username -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS">
+               <Text fx:id="username" styleClass="username-text" />
             </VBox>
-         </children>
-      </HBox>
+            
+            <!-- Right side - Image -->
+            <VBox styleClass="image-container" alignment="CENTER" spacing="10">
+               <ImageView fx:id="profileImage" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="profile-image" />
+               <Button fx:id="uploadImageButton" text="Upload" styleClass="upload-button" onAction="#handleUploadImage" />
+            </VBox>
+         </HBox>
+
+         <!-- Tab Section -->
+         <TabPane styleClass="tab-pane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+            <!-- Profile Tab -->
+            <Tab text="Profile">
+               <ScrollPane fitToWidth="true" styleClass="profile-scroll-pane">
+                  <VBox styleClass="form-section">
+                     <HBox styleClass="form-row">
+                        <VBox styleClass="form-column">
+                           <Label text="First Name" styleClass="field-label" />
+                           <TextField fx:id="firstName" promptText="Enter first name" />
+                           <Text fx:id="errorFirstName" styleClass="error-text" />
+                           
+                           <Label text="Last Name" styleClass="field-label" />
+                           <TextField fx:id="lastName" promptText="Enter last name" />
+                           <Text fx:id="errorLastName" styleClass="error-text" />
+                           
+                           <Label text="Email" styleClass="field-label" />
+                           <TextField fx:id="email" promptText="Enter email" />
+                           <Text fx:id="errorEmail" styleClass="error-text" />
+                        </VBox>
+                        
+                        <VBox styleClass="form-column">
+                           <Label text="Phone Number" styleClass="field-label" />
+                           <TextField fx:id="phoneNumber" promptText="Enter phone number" />
+                           <Text fx:id="errorPhoneNumber" styleClass="error-text" />
+                           
+                           <Label text="Date of Birth" styleClass="field-label" />
+                           <DatePicker fx:id="dateOfBirth" />
+                        </VBox>
+                     </HBox>
+                     <Button fx:id="updateProfileButton" text="Update" onAction="#updateProfile" />
+                  </VBox>
+               </ScrollPane>
+            </Tab>
+
+            <!-- Address Tab -->
+            <Tab text="Address">
+               <ScrollPane fitToWidth="true" styleClass="profile-scroll-pane">
+                  <VBox styleClass="form-section">
+                     <HBox styleClass="form-row">
+                        <VBox styleClass="form-column">
+                           <Label text="Street Number" styleClass="field-label" />
+                           <TextField fx:id="streetNumber" promptText="Enter street number" />
+                           <Text fx:id="errorStreetNumber" styleClass="error-text" />
+                           
+                           <Label text="Street Name" styleClass="field-label" />
+                           <TextField fx:id="streetName" promptText="Enter street name" />
+                           <Text fx:id="errorStreetName" styleClass="error-text" />
+                        </VBox>
+                        
+                        <VBox styleClass="form-column">
+                           <Label text="Province" styleClass="field-label" />
+                           <ChoiceBox fx:id="provinceChoice" />
+                           
+                           <Label text="City" styleClass="field-label" />
+                           <ChoiceBox fx:id="cityChoice" />
+                           
+                           <Label text="Ward" styleClass="field-label" />
+                           <ChoiceBox fx:id="wardChoice" />
+                        </VBox>
+                     </HBox>
+                     <Button fx:id="updateAddressButton" text="Update" onAction="#updateAddress" />
+                  </VBox>
+               </ScrollPane>
+            </Tab>
+
+            <!-- Password Tab -->
+            <Tab text="Password">
+               <ScrollPane fitToWidth="true" styleClass="profile-scroll-pane">
+                  <VBox styleClass="form-section">
+                     <VBox styleClass="form-column">
+                        <Label text="Current Password" styleClass="field-label" />
+                        <MFXPasswordField fx:id="currentPassword" />
+                        <Text fx:id="errorCurrentPassword" styleClass="error-text" />
+                        
+                        <Label text="New Password" styleClass="field-label" />
+                        <MFXPasswordField fx:id="newPassword" />
+                        <Text fx:id="errorNewPassword" styleClass="error-text" />
+                        
+                        <Label text="Confirm Password" styleClass="field-label" />
+                        <MFXPasswordField fx:id="confirmPassword" />
+                        <Text fx:id="errorConfirmPassword" styleClass="error-text" />
+                     </VBox>
+                     <Button fx:id="updatePasswordButton" text="Update" onAction="#updatePassword" />
+                  </VBox>
+               </ScrollPane>
+            </Tab>
+         </TabPane>
+      </VBox>
    </children>
 </AnchorPane>

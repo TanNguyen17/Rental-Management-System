@@ -2,7 +2,6 @@ package com.yourcompany.rentalmanagement.controller;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
 import com.yourcompany.rentalmanagement.model.Payment;
@@ -11,6 +10,7 @@ import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.model.UserRole;
 
 public class PaymentController {
+
     PaymentDaoImpl paymentDao = new PaymentDaoImpl();
     List<Payment> payments;
     private static final int PAGE_SIZE = 10;
