@@ -38,8 +38,16 @@
     </HBox>
     
     <!-- Property List in ScrollPane -->
-    <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true" styleClass="property-scroll">
-        <ListView fx:id="propertyList" styleClass="property-list"/>
+    <ScrollPane fx:id="propertyScrollPane" 
+               VBox.vgrow="ALWAYS" 
+               fitToWidth="true" 
+               styleClass="property-scroll"
+               fitToHeight="true">
+        <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
+            <ListView fx:id="propertyList" 
+                     styleClass="property-list" 
+                     VBox.vgrow="ALWAYS"/>
+        </VBox>
     </ScrollPane>
     
     <!-- Pagination -->
