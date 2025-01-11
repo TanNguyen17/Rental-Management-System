@@ -53,7 +53,7 @@
                       <TableColumn fx:id="id" editable="false" prefWidth="82.00006103515625" text=" ID" />
                       <TableColumn fx:id="title" editable="false" prefWidth="211.333251953125" text="Property Title" />
                         <TableColumn fx:id="status" prefWidth="163.333251953125" text="Status" />
-                        <TableColumn fx:id="occupancyRate" editable="false" prefWidth="185.333251953125" text="Occupancy Rate by Property" />
+                        <TableColumn fx:id="totalIncome" editable="false" prefWidth="185.333251953125" text="Total Income ($)" />
                         <TableColumn fx:id="stayLength" editable="false" prefWidth="184.666748046875" text="Average Length of Stay (Days)" />
                     </columns>
                      <columnResizePolicy>

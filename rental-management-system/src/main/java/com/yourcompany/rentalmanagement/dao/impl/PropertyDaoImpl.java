@@ -445,4 +445,56 @@ public class PropertyDaoImpl implements PropertyDao {
         }
         return stayDurationsByProperty;
     }
+
+    public Map<Long, Double> calculateTotalIncomeByProperty(long hostId) {
+        Map<Long, Double> incomeByProperty = new HashMap<>();
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // Query for Residential Properties
+            Query<Object[]> residentialQuery = session.createQuery(
+                    "SELECT rp.id, SUM(p.amount) " +
+                            "FROM Payment p " +
+                            "JOIN p.rentalAgreement ra " +
+                            "JOIN ra.residentialProperty rp " +
+                            "JOIN rp.hosts h " +
+                            "WHERE h.id = :hostId AND p.status = 'PAID' " +
+                            "GROUP BY rp.id",
+                    Object[].class
+            );
+            residentialQuery.setParameter("hostId", hostId);
+
+            // Query for Commercial Properties
+            Query<Object[]> commercialQuery = session.createQuery(
+                    "SELECT cp.id, SUM(p.amount) " +
+                            "FROM Payment p " +
+                            "JOIN p.rentalAgreement ra " +
+                            "JOIN ra.commercialProperty cp " +
+                            "JOIN cp.hosts h " +
+                            "WHERE h.id = :hostId AND p.status = 'PAID' " +
+                            "GROUP BY cp.id",
+                    Object[].class
+            );
+            commercialQuery.setParameter("hostId", hostId);
+
+            // Process Residential Results
+            List<Object[]> residentialResults = residentialQuery.getResultList();
+            for (Object[] result : residentialResults) {
+                Long propertyId = (Long) result[0];
+                Double totalIncome = (Double) result[1];
+                incomeByProperty.put(propertyId, totalIncome);
+            }
+
+            // Process Commercial Results
+            List<Object[]> commercialResults = commercialQuery.getResultList();
+            for (Object[] result : commercialResults) {
+                Long propertyId = (Long) result[0];
+                Double totalIncome = (Double) result[1];
+                incomeByProperty.put(propertyId, totalIncome);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return incomeByProperty;
+    }
 }

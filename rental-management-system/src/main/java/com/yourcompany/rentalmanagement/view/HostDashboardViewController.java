@@ -43,7 +43,7 @@ public class HostDashboardViewController implements Initializable {
     private TableColumn<Property, String> title;
 
     @FXML
-    private TableColumn<Property, Double> occupancyRate;
+    private TableColumn<Property, Double> totalIncome;
 
     @FXML
     private TableColumn<Property, Double> stayLength;
@@ -124,6 +124,7 @@ public class HostDashboardViewController implements Initializable {
 
         // Retrieve stay durations grouped by property
         Map<Long, List<Long>> stayDurationsByProperty = propertyDaoImpl.getStayDurationsByProperty(1); // change to HostID later
+        Map<Long, Double> incomeByProperty = propertyDaoImpl.calculateTotalIncomeByProperty(1);
 
         // Calculate the average stay length for each property
         Map<Long, Double> averageStayByProperty = new HashMap<>();
@@ -140,10 +141,11 @@ public class HostDashboardViewController implements Initializable {
                 new SimpleLongProperty(propertyTable.getItems().indexOf(cellData.getValue()) + 1).asObject()
         );
         title.setCellValueFactory(new PropertyValueFactory<>("title"));
-        occupancyRate.setCellValueFactory(new PropertyValueFactory<>("price"));
+        status.setCellValueFactory(new PropertyValueFactory<>("status"));
+        totalIncome.setCellValueFactory(cellData -> new SimpleDoubleProperty(
+                incomeByProperty.getOrDefault(cellData.getValue().getId(), 0.0)).asObject());
         stayLength.setCellValueFactory(cellData -> new SimpleDoubleProperty(
                 averageStayByProperty.getOrDefault(cellData.getValue().getId(), 0.0)).asObject());
-        status.setCellValueFactory(new PropertyValueFactory<>("status"));
         propertyTable.setItems(properties);
     }
 
