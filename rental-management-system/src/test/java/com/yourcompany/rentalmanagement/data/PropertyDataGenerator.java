@@ -217,7 +217,8 @@ public class PropertyDataGenerator {
         address.setNumber(String.valueOf(1 + random.nextInt(999))); // Street number 1-999
         address.setStreet("Main Street");
         address.setCity(CITIES[random.nextInt(CITIES.length)]);
-        //address.setState("State " + (random.nextInt(50) + 1)); // State 1-50, change later, just put state for now for testing
+        address.setWard("Ward " + (random.nextInt(50) + 1));
+        address.setDistrict("District " + (random.nextInt(50) + 1));
         return address;
     }
 }

@@ -9,24 +9,19 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="720.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.PaymentsView">
+<AnchorPane prefHeight="720.0" prefWidth="780.0" 
+    stylesheets="@../css/payment.css"
+    xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.PaymentsView">
     <children>
         <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="NEVER">
+                <HBox alignment="CENTER" spacing="10.0" styleClass="filter-container" VBox.vgrow="NEVER">
                     <padding>
                         <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                     </padding>
                     <children>
                         <ComboBox fx:id="methodOption" prefWidth="150.0" promptText="Method" HBox.hgrow="NEVER" />
                         <ComboBox fx:id="statusOption" prefWidth="150.0" promptText="Status" HBox.hgrow="NEVER" />
-                    </children>
-                </HBox>
-                <HBox alignment="CENTER" VBox.vgrow="NEVER">
-                    <padding>
-                        <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-                    </padding>
-                    <children>
                         <MFXButton fx:id="findButton" buttonType="RAISED" onAction="#filterPayment" text="Find" HBox.hgrow="NEVER" />
                     </children>
                 </HBox>
