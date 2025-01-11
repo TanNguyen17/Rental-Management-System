@@ -19,18 +19,19 @@ public class OwnerView implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        initializeSideMenu();
+    }
+
+    private void initializeSideMenu() {
         try {
-            System.out.println("Loading SideMenu.fxml...");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SideMenu.fxml"));
             VBox sideMenu = loader.load();
             SideMenuView sideMenuView = loader.getController();
             sideMenuView.setBorderPane(borderPane);
-            sideMenuView.initialize(url, resourceBundle);
             borderPane.setLeft(sideMenu);
             System.out.println("BorderPane set in SideMenuView.");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
 }

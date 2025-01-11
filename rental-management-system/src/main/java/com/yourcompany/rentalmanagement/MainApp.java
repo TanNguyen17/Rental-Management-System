@@ -45,7 +45,7 @@ public class MainApp extends Application {
                 } else if (userSession.getCurrentUser().getRole() == UserRole.OWNER) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/OwnerView.fxml"));
                 } else if (userSession.getCurrentUser().getRole() == UserRole.HOST) {
-                    loader = new FXMLLoader(getClass().getResource("/fxml/ViewRentalProperties.fxml"));
+                    loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
                 }
             } else {
                 loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));

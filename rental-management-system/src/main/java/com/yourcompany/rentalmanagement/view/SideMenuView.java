@@ -17,9 +17,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class SideMenuView implements Initializable {
 
@@ -51,41 +49,58 @@ public class SideMenuView implements Initializable {
     }
 
     private void configureMenu() {
-        menuConfig.put(UserRole.OWNER, Map.of(
+        menuConfig.put(UserRole.OWNER, new LinkedHashMap<>(Map.of(
+                "Profile", "/fxml/ProfileView.fxml",
                 "Home", "/fxml/ViewRentalProperties.fxml",
-                "Rental Agreements", "/fxml/RentalAgreementListView.fxml",
-                "Profile", "/fxml/ProfileView.fxml"
-        ));
-        menuConfig.put(UserRole.TENANT, Map.of(
+                "Rental Agreements", "/fxml/RentalAgreementListView.fxml"
+        )));
+        menuConfig.put(UserRole.TENANT, new LinkedHashMap<>(Map.of(
+                "Profile", "/fxml/ProfileView.fxml",
                 "Home", "/fxml/PropertiesView.fxml",
                 "Rental Agreements", "/fxml/RentalAgreementListView.fxml",
-                "Payments", "/fxml/PaymentView.fxml",
-                "Profile", "/fxml/ProfileView.fxml"
-        ));
-        menuConfig.put(UserRole.HOST, Map.of(
+                "Payments", "/fxml/PaymentsView.fxml"
+        )));
+        menuConfig.put(UserRole.HOST, new LinkedHashMap<>(Map.of(
+                "Profile", "/fxml/ProfileView.fxml",
                 "Rental Agreements", "/fxml/RentalAgreementListView.fxml",
-                "Payments", "/fxml/PaymentView.fxml",
-                "Profile", "/fxml/ProfileView.fxml"
-        ));
-        menuConfig.put(UserRole.MANAGER, Map.of(
-                "Dashboard", "/fxml/ManagerDashBoard.fxml",
-                "Profile", "/fxml/ProfileView.fxml"
-        ));
+                "Payments", "/fxml/PaymentsView.fxml"
+        )));
+        menuConfig.put(UserRole.MANAGER, new LinkedHashMap<>(Map.of(
+                "Profile", "/fxml/ProfileView.fxml",
+                "Dashboard", "/fxml/ManagerDashBoard.fxml"
+        )));
     }
 
     private void populateMenu() {
         if (userSession.getCurrentUser() == null) return;
 
         UserRole role = userSession.getCurrentUser().getRole();
-        Map<String, String> roleMenu = menuConfig.getOrDefault(role, new HashMap<>());
+        Map<String, String> roleMenu = menuConfig.getOrDefault(role, new LinkedHashMap<>());
 
-        navBar.getChildren().clear(); // Clear existing buttons
-        for (Map.Entry<String, String> entry : roleMenu.entrySet()) {
-            Button button = new Button(entry.getKey());
-            button.setPrefWidth(180);
-            button.setPrefHeight(45);
-            button.setOnAction(event -> loadView(entry.getValue()));
-            navBar.getChildren().add(button);
+        navBar.getChildren().clear();
+
+        List<String> buttonOrder = new ArrayList<>();
+
+        if (role.equals(UserRole.OWNER)) {
+            buttonOrder.addAll(Arrays.asList("Home", "Rental Agreements", "Profile"));
+        } else if (role.equals(UserRole.TENANT)) {
+            buttonOrder.addAll(Arrays.asList("Home", "Rental Agreements", "Payments", "Profile"));
+        } else if (role.equals(UserRole.HOST)) {
+            buttonOrder.addAll(Arrays.asList("Rental Agreements", "Payments", "Profile"));
+        } else if (role.equals(UserRole.MANAGER)) {
+            buttonOrder.addAll(Arrays.asList("Dashboard", "Profile"));
+        }
+
+
+        for (String buttonName : buttonOrder) {
+            if (roleMenu.containsKey(buttonName)) {
+                String fxmlPath = roleMenu.get(buttonName);
+                Button button = new Button(buttonName);
+                button.setPrefWidth(180);
+                button.setPrefHeight(45);
+                button.setOnAction(event -> loadView(fxmlPath));
+                navBar.getChildren().add(button);
+            }
         }
         navBar.getChildren().add(logOut);
     }
