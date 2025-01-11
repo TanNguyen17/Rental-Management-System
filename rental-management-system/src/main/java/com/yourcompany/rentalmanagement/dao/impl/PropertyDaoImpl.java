@@ -628,14 +628,14 @@ public class PropertyDaoImpl implements PropertyDao {
             // HQL query to fetch property IDs and contract dates
             Query<Object[]> query = session.createQuery(
                     "SELECT CASE WHEN rp.id IS NOT NULL THEN rp.id ELSE cp.id END AS propertyId, " +
-                            "ra.contractDate, ra.endContractDate " +
+                            "ra.startContractDate, ra.endContractDate " +
                             "FROM RentalAgreement ra " +
                             "LEFT JOIN ra.residentialProperty rp " +
                             "LEFT JOIN ra.commercialProperty cp " +
                             "LEFT JOIN rp.hosts r_h " +
                             "LEFT JOIN cp.hosts c_h " +
                             "WHERE (r_h.id = :hostId OR c_h.id = :hostId) " +
-                            "AND ra.contractDate IS NOT NULL " +
+                            "AND ra.startContractDate IS NOT NULL " +
                             "AND ra.endContractDate IS NOT NULL",
                     Object[].class
             );

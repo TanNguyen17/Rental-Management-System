@@ -4,6 +4,7 @@ import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.util.UserSession;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.FXCollections;
@@ -17,6 +18,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.geometry.Side;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -76,8 +78,6 @@ public class HostDashboardViewController implements Initializable {
         yAxis = new NumberAxis();
         yAxis.setLabel("Income ($)");
         yAxis.setSide(Side.TOP);
-
-
 
         // Create the LineChart
         lineChart.setTitle("Monthly Revenue Overview");
@@ -162,25 +162,10 @@ public class HostDashboardViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        initializeSideMenu();
-        new Thread(() -> {
-
-        }).start();
-        initializeTableData();
-        initializePieChart();
         initializeLineChart();
+        initializePieChart();
+        initializeTableData();
     }
 
-    private void initializeSideMenu() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SideMenu.fxml"));
-            VBox sideMenu = loader.load();
-            SideMenuView sideMenuView = loader.getController();
-            sideMenuView.setBorderPane(borderPane);
-            borderPane.setLeft(sideMenu);
-            System.out.println("BorderPane set in SideMenuView.");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 }

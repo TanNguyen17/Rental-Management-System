@@ -50,21 +50,21 @@ public class SideMenuView implements Initializable {
         configureMenu();
         populateMenu();
 
-        // Show initial view based on user role
-        Platform.runLater(() -> {
-            UserRole role = userSession.getCurrentUser().getRole();
-            String initialView = switch (role) {
-                case OWNER, TENANT ->
-                    "/fxml/ViewRentalProperties.fxml";
-                case HOST ->
-                    "/fxml/RentalAgreementListView.fxml";
-                case MANAGER ->
-                    "/fxml/ManagerDashBoard.fxml";
-                default ->
-                    throw new IllegalStateException("Unexpected role: " + role);
-            };
-            loadView(initialView);
-        });
+//        // Show initial view based on user role
+//        Platform.runLater(() -> {
+//            UserRole role = userSession.getCurrentUser().getRole();
+//            String initialView = switch (role) {
+//                case OWNER, TENANT ->
+//                    "/fxml/ViewRentalProperties.fxml";
+//                case HOST ->
+//                    "/fxml/RentalAgreementListView.fxml";
+//                case MANAGER ->
+//                    "/fxml/ManagerDashBoard.fxml";
+//                default ->
+//                    throw new IllegalStateException("Unexpected role: " + role);
+//            };
+//            loadView(initialView);
+//        });
     }
 
     private void configureMenu() {
@@ -80,9 +80,11 @@ public class SideMenuView implements Initializable {
                 "Payments", "/fxml/PaymentsView.fxml"
         )));
         menuConfig.put(UserRole.HOST, new LinkedHashMap<>(Map.of(
-                "Profile", "/fxml/ProfileView.fxml",
+                "Dashboard", "/fxml/HostDashboardView.fxml",
+                "Property", "/fxml/ViewRentalProperties.fxml",
                 "Rental Agreements", "/fxml/RentalAgreementListView.fxml",
-                "Payments", "/fxml/PaymentsView.fxml"
+                "Payments", "/fxml/PaymentsView.fxml",
+                "Profile", "/fxml/ProfileView.fxml"
         )));
         menuConfig.put(UserRole.MANAGER, new LinkedHashMap<>(Map.of(
                 "Profile", "/fxml/ProfileView.fxml",
@@ -107,7 +109,7 @@ public class SideMenuView implements Initializable {
         } else if (role.equals(UserRole.TENANT)) {
             buttonOrder.addAll(Arrays.asList("Home", "Rental Agreements", "Payments", "Profile"));
         } else if (role.equals(UserRole.HOST)) {
-            buttonOrder.addAll(Arrays.asList("Rental Agreements", "Payments", "Profile"));
+            buttonOrder.addAll(Arrays.asList("Dashboard","Property","Rental Agreements", "Payments", "Profile"));
         } else if (role.equals(UserRole.MANAGER)) {
             buttonOrder.addAll(Arrays.asList("Dashboard", "Profile"));
         }
@@ -143,6 +145,8 @@ public class SideMenuView implements Initializable {
 //            profile.setOnMouseClicked(event -> loadView("/fxml/ProfileView.fxml"));
 //        }
 //        if (userSession.getCurrentUser().getRole().equals(UserRole.HOST)) {
+//            dashboard.setOnMouseClicked(event -> loadView("/fxml/HostDashBoard.fxml"));
+//            property.setOnMouseClicked(event -> loadView("/fxml/PropertyView.fxml"));
 //            rentalAgreement.setOnMouseClicked(event -> loadView("/fxml/RentalAgreementListView.fxml"));
 //            payment.setOnMouseClicked(event -> loadView("/fxml/PaymentView.fxml"));
 //            profile.setOnMouseClicked(event -> loadView("/fxml/ProfileView.fxml"));

@@ -45,12 +45,13 @@ public class MainApp extends Application {
                 } else if (userSession.getCurrentUser().getRole() == UserRole.OWNER) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/OwnerView.fxml"));
                 } else if (userSession.getCurrentUser().getRole() == UserRole.HOST) {
-                    loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
+                    loader = new FXMLLoader(getClass().getResource("/fxml/HostView.fxml"));
                 }
             } else {
                 loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
             }
-            // If no valid stored session --> show login view
+             //If no valid stored session --> show login view
+            //loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
             Scene scene = new Scene(loader.load());
             scene.getStylesheets().addAll(
                     getClass().getResource("/css/property-list.css").toExternalForm(),
