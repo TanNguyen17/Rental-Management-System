@@ -23,7 +23,7 @@ public class AuthService {
     private static Dotenv dotenv = Dotenv.load();
     private static final String secret = dotenv.get("JWT_SECRET");
     private static byte[] decodedKey = Base64.getDecoder().decode(secret);
-//    private static final SecretKey JWT_SECRET = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    //    private static final SecretKey JWT_SECRET = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private static final SecretKey JWT_SECRET = Keys.hmacShaKeyFor(decodedKey);
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
@@ -54,7 +54,7 @@ public class AuthService {
 
     private <T extends User> T findUserByUsername(Session session, Class<T> userClass, String username) {
         Query<T> query = session.createQuery(
-                "FROM " + userClass.getSimpleName() + " WHERE :username = :username ",
+                "FROM " + userClass.getSimpleName() + " WHERE username = :username ",
                 userClass
         );
         query.setParameter("username", username);
@@ -105,7 +105,7 @@ public class AuthService {
                     newUser = new Manager();
                 }
                 default ->
-                    throw new RuntimeException("Invalid role");
+                        throw new RuntimeException("Invalid role");
             }
 
             newUser.setUsername(username);
@@ -154,15 +154,15 @@ public class AuthService {
                 // Find user based on role
                 Class<? extends User> userClass = switch (role) {
                     case TENANT ->
-                        Tenant.class;
+                            Tenant.class;
                     case HOST ->
-                        Host.class;
+                            Host.class;
                     case OWNER ->
-                        Owner.class;
+                            Owner.class;
                     case MANAGER ->
-                        Manager.class;
+                            Manager.class;
                     default ->
-                        throw new RuntimeException("Invalid role in token");
+                            throw new RuntimeException("Invalid role in token");
                 };
                 return findUserByUsername(session, userClass, username);
             }

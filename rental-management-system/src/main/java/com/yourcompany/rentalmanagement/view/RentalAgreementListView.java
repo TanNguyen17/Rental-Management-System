@@ -65,7 +65,7 @@ public class RentalAgreementListView implements Initializable {
         initializeColumn();
         initializeViewMoreColumn();
         initializeDeleteColumn();
-        rentalAgreements = FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(UserRole.MANAGER, 1));
+        loadingData();
         rentalAgreementTableView.setItems(rentalAgreements);
         addNewBtn.setOnMouseClicked(e -> {
             openAddNewDataForm();
