@@ -229,7 +229,8 @@ public class ProfileView implements Initializable {
         String streetNameText = streetName.getText();
         String streetNumberText = streetNumber.getText();
         String province = provinceChoice.getValue();
-        String city = districtChoice.getValue();
+        String district = districtChoice.getValue();
+        String ward = wardChoice.getValue();
 
         if (streetNameText == null) {
             errorStreetName.setText("Please enter street name");
@@ -244,7 +245,8 @@ public class ProfileView implements Initializable {
             data.put("streetName", streetNameText);
             data.put("streetNumber", streetNumberText);
             data.put("province", province);
-            data.put("city", city);
+            data.put("district", district);
+            data.put("ward", ward);
             userController.updateAddress(currentUser.getId(), data, currentUser.getRole());
         }
 

@@ -54,6 +54,22 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
     }
 
     @Override
+    public List<RentalAgreement> getActiveRentalAgreements(LocalDate today) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<RentalAgreement> query = session.createQuery(
+                    "FROM RentalAgreement WHERE startContractDate <= :today AND endContractDate >= :today", RentalAgreement.class);
+            query.setParameter("today", today);
+            rentalAgreements = query.list();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return rentalAgreements;
+    }
+
+    @Override
     public void loadData() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             rentalAgreements = session.createQuery("from RentalAgreement ", RentalAgreement.class).list();
@@ -241,6 +257,7 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<RentalAgreement> query;
             if (role.equals(UserRole.TENANT)) {
+                query = session.createQuery("SELECT rA from RentalAgreement rA LEFT JOIN FETCH Tenant t ON t.id = :id", RentalAgreement.class);
                 // Query to fetch rental agreements for tenants
                 query = session.createQuery(
                         "SELECT rA FROM RentalAgreement rA JOIN rA.tenants t WHERE t.id = :id",
@@ -253,15 +270,16 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
             }
             rentalAgreements = query.list();
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             e.printStackTrace();
         }
         return rentalAgreements;
     }
 
-
-
     @Override
-    public Map<String, Object> createRentalAgreement(RentalAgreement rentalAgreement, long tenantId, Property property,long ownerId, long hostId, List<Long > subTenantIds){
+    public Map<String, Object> createRentalAgreement(RentalAgreement rentalAgreement, long tenantId, Property property, long ownerId, long hostId, List<Long> subTenantIds) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             List<Tenant> subTenants = new ArrayList<>();
@@ -372,22 +390,6 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
             result.put("message", e.getMessage());
         }
         return result;
-    }
-
-    @Override
-    public List<RentalAgreement> getActiveRentalAgreements(LocalDate today) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<RentalAgreement> query = session.createQuery(
-                    "FROM RentalAgreement WHERE startContractDate <= :today AND endContractDate >= :today", RentalAgreement.class);
-            query.setParameter("today", today);
-            rentalAgreements = query.list();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return rentalAgreements;
     }
 
 }

@@ -23,10 +23,11 @@ public class TenantView implements Initializable {
     private UserSession userSession = UserSession.getInstance();
 
     @FXML
-    private BorderPane borderPane;
+    private BorderPane tenantBorderPane;
 
     @FXML
-    private BorderPane tenantBorderPane;
+    private BorderPane borderPane;
+
 
     @FXML
     private Button homeTab;
