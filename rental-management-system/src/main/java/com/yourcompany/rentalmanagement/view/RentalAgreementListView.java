@@ -70,6 +70,7 @@ public class RentalAgreementListView implements Initializable {
     }
 
     private void loadingData() {
+        System.out.println("loading data");
         rentalAgreements.setAll(rentalAgreementController.getAllRentalAgreements(
                 userSession.getCurrentUser().getRole(),
                 userSession.getCurrentUser().getId()

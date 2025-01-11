@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -22,7 +23,7 @@ public class TenantView implements Initializable {
     private UserSession userSession = UserSession.getInstance();
 
     @FXML
-    private BorderPane borderPane;
+    private BorderPane tenantBorderPane;
 
 
     @Override
@@ -33,10 +34,15 @@ public class TenantView implements Initializable {
     private void initializeSideMenu() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SideMenu.fxml"));
+            FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/fxml/PropertiesView.fxml"));
+
             VBox sideMenu = loader.load();
+            Node main = mainLoader.load();
+
             SideMenuView sideMenuView = loader.getController();
-            sideMenuView.setBorderPane(borderPane);
-            borderPane.setLeft(sideMenu);
+            tenantBorderPane.setLeft(sideMenu);
+            tenantBorderPane.setCenter(main);
+            sideMenuView.setBorderPane(tenantBorderPane);
             System.out.println("BorderPane set in SideMenuView.");
         } catch (IOException e) {
             throw new RuntimeException(e);

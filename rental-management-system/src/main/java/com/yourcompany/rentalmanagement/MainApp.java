@@ -1,5 +1,6 @@
 package com.yourcompany.rentalmanagement;
 
+import com.yourcompany.rentalmanagement.service.PaymentScheduler;
 import org.hibernate.SessionFactory;
 
 import com.yourcompany.rentalmanagement.model.UserRole;
@@ -16,11 +17,12 @@ import javafx.stage.Stage;
 public class MainApp extends Application {
 
     private LoginViewController loginViewController = new LoginViewController();
+    private PaymentScheduler paymentScheduler = new PaymentScheduler();
     private FXMLLoader loader;
 
     @Override
     public void start(Stage primaryStage) {
-
+        paymentScheduler.startPaymentGeneration();
         new Thread(() -> {
             // Load address data
             AddressData.fetchProvinceData();
