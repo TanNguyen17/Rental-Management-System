@@ -38,6 +38,8 @@ public class HibernateUtil {
 
                 System.out.println("Hibernate SessionFactory initialized successfully");
 
+                registerEventListeners(sessionFactory);
+
             } catch (Exception e) {
                 e.printStackTrace();
                 System.err.println("SessionFactory creation failed: " + e.getMessage());

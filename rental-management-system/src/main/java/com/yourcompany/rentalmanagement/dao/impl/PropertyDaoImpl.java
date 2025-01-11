@@ -305,11 +305,6 @@ public class PropertyDaoImpl implements PropertyDao {
     }
 
     @Override
-    public List<Property> getPropertiesByStatus(Property.propertyStatus status) {
-        return List.of();
-    }
-
-    @Override
     public List<Property> getPropertiesAvailableForRenting(Property.propertyStatus status) {
         String cacheKey = "available_" + status;
         if (propertyCache.containsKey(cacheKey) && isCacheValid()) {
@@ -549,10 +544,10 @@ public class PropertyDaoImpl implements PropertyDao {
     @Override
     public long getTotalPropertyCount(long ownerId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT COUNT(p) FROM Property p WHERE p.owner.id = :ownerId";
-            return session.createQuery(hql, Long.class)
-                    .setParameter("ownerId", ownerId)
-                    .uniqueResult();
+            String residentialHql = "SELECT COUNT(p) FROM ResidentialProperty p WHERE p.owner.id = :ownerId";
+            String commercialHql = "SELECT COUNT(p) FROM CommercialProperty p WHERE p.owner.id = :ownerId";
+            return session.createQuery(residentialHql, Long.class).setParameter("ownerId", ownerId).uniqueResult() + session.createQuery(commercialHql, Long.class).setParameter("ownerId", ownerId).uniqueResult();
+
         }
     }
 
@@ -608,14 +603,14 @@ public class PropertyDaoImpl implements PropertyDao {
             // HQL query to fetch property IDs and contract dates
             Query<Object[]> query = session.createQuery(
                     "SELECT CASE WHEN rp.id IS NOT NULL THEN rp.id ELSE cp.id END AS propertyId, " +
-                            "ra.contractDate, ra.endContractDate " +
+                            "ra.startContractDate, ra.endContractDate " +
                             "FROM RentalAgreement ra " +
                             "LEFT JOIN ra.residentialProperty rp " +
                             "LEFT JOIN ra.commercialProperty cp " +
                             "LEFT JOIN rp.hosts r_h " +
                             "LEFT JOIN cp.hosts c_h " +
                             "WHERE (r_h.id = :hostId OR c_h.id = :hostId) " +
-                            "AND ra.contractDate IS NOT NULL " +
+                            "AND ra.startContractDate IS NOT NULL " +
                             "AND ra.endContractDate IS NOT NULL",
                     Object[].class
             );
@@ -692,5 +687,9 @@ public class PropertyDaoImpl implements PropertyDao {
         }
 
         return incomeByProperty;
+    }
+
+    public List<Property> getPropertiesByStatus(Property.propertyStatus status){
+        return null;
     }
 }

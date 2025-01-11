@@ -19,8 +19,8 @@ public class PaymentController {
 
     }
 
-    public boolean createPayment(Payment payment, long rentalAgreementId, long tenantId) {
-        data = paymentDao.createPayment(payment, rentalAgreementId, tenantId);
+    public boolean createPayment(Payment payment, long rentalAgreementId) {
+        data = paymentDao.createPayment(payment, rentalAgreementId);
         if (data.get("status") == "failed") {
             return false;
         }
@@ -31,15 +31,15 @@ public class PaymentController {
         return paymentDao.loadDataByRole(pageNumber, filterValue, null, 1);
     }
 
-    public List<Payment> getPaymentsOfTenant(int pageNumber, Map<String, String> filterValue, UserRole userRole, long tenantId) {
+    public List<Payment> getPaymentsByRole(int pageNumber, Map<String, String> filterValue, UserRole userRole, long tenantId) {
         return paymentDao.loadDataByRole(pageNumber, filterValue, userRole, tenantId);
     }
 
     public boolean shouldGeneratePayment(RentalAgreement rentalAgreement, LocalDate today) {
         Payment latestPayment = paymentDao.getLatestPayment(rentalAgreement, today);
-        if (latestPayment == null) return false;
+        if (latestPayment == null) return true;
 
-        LocalDate nextDueDate = latestPayment.getDueDate();
+        LocalDate nextDueDate = latestPayment.getDueDate().plusMonths(1);
         return today.isEqual(nextDueDate) || today.isAfter(nextDueDate);
     }
 
@@ -49,5 +49,13 @@ public class PaymentController {
 
     public long getPaymentCount(Map<String, String> filterValue) {
         return paymentDao.getPaymentCount(filterValue);
+    }
+
+    public boolean changePaymentStatus(long paymentId) {
+        data = paymentDao.updatePaymentStatus(paymentId);
+        if (data.get("status") == "failed") {
+            return false;
+        }
+        return true;
     }
 }

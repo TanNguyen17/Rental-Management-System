@@ -171,4 +171,9 @@ public abstract class Property {
     }
 
     public abstract List<Host> getHosts();
+
+    @Override
+    public String toString(){
+        return this.getTitle();
+    }
 }

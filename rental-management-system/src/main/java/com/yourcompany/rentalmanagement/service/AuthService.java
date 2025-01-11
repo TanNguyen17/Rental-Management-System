@@ -54,7 +54,7 @@ public class AuthService {
 
     private <T extends User> T findUserByUsername(Session session, Class<T> userClass, String username) {
         Query<T> query = session.createQuery(
-                "FROM " + userClass.getSimpleName() + " WHERE username = :username ",
+                "FROM " + userClass.getSimpleName() + " WHERE :username = :username ",
                 userClass
         );
         query.setParameter("username", username);
