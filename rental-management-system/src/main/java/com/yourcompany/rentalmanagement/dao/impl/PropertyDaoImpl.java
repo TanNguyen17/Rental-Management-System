@@ -11,17 +11,19 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.function.Consumer;
 
+import com.yourcompany.rentalmanagement.model.*;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Predicate;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import com.yourcompany.rentalmanagement.dao.PropertyDao;
-import com.yourcompany.rentalmanagement.model.CommercialProperty;
-import com.yourcompany.rentalmanagement.model.Host;
-import com.yourcompany.rentalmanagement.model.Owner;
-import com.yourcompany.rentalmanagement.model.Property;
-import com.yourcompany.rentalmanagement.model.ResidentialProperty;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
 import javafx.application.Platform;
@@ -32,6 +34,7 @@ public class PropertyDaoImpl implements PropertyDao {
     private Property property = null;
     private Map<String, Object> data = new HashMap<>();
     private List<Host> hosts = new ArrayList<>();
+    private Transaction transaction;
 
     // Add cache for properties
     private static Map<String, List<Property>> propertyCache = new HashMap<>();
@@ -87,12 +90,9 @@ public class PropertyDaoImpl implements PropertyDao {
     public Map<String, Object> getCommercialPropertyById(long id) {
         CommercialProperty commercialProperty = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            commercialProperty = session.get(CommercialProperty.class, id);
-            if (property != null) {
-                Hibernate.initialize(commercialProperty.getOwner());
-                commercialProperty.getHosts();
-                Hibernate.initialize(commercialProperty.getHosts());
+            property = session.get(CommercialProperty.class, id);
 
+            if (property != null) {
                 Query<Host> hostQuery = session.createQuery(
                         "SELECT h FROM Host h JOIN h.commercialProperties rp WHERE rp.id = :id", Host.class);
                 hostQuery.setParameter("id", id);
@@ -342,6 +342,80 @@ public class PropertyDaoImpl implements PropertyDao {
 
             return properties;
         }
+    }
+
+    @Override
+    public List<Property> getPropertiesAvailableForRenting(Property.propertyStatus status, Map<String, Object> filter) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<ResidentialProperty> residentialQuery = criteriaBuilder.createQuery(ResidentialProperty.class);
+            CriteriaQuery<CommercialProperty> commercialQuery = criteriaBuilder.createQuery(CommercialProperty.class);
+
+            Root<ResidentialProperty> residentialPropertyRoot = residentialQuery.from(ResidentialProperty.class);
+            Root<CommercialProperty> commercialPropertyRoot = commercialQuery.from(CommercialProperty.class);
+
+            List<Predicate> residentialPredicates = new ArrayList<>();
+            List<Predicate> commercialPredicates = new ArrayList<>();
+
+            Join<ResidentialProperty, Address> residentialPropertyAddressJoin = residentialPropertyRoot.join("address");
+            Join<CommercialProperty, Address> commercialPropertyAddressJoin = commercialPropertyRoot.join("address");
+
+            if (filter != null) {
+                String province = (String) filter.get("province");
+                String district = (String) filter.get("district");
+                String ward = (String) filter.get("ward");
+
+                Predicate predicate = null;
+
+                if (province != null) {
+                    residentialPredicates.add(criteriaBuilder.equal(residentialPropertyAddressJoin.get("city"), province));
+                    commercialPredicates.add(criteriaBuilder.equal(commercialPropertyAddressJoin.get("city"), province));
+                }
+
+                if (district != null) {
+                    residentialPredicates.add(criteriaBuilder.equal(commercialPropertyAddressJoin.get("district"), district));
+                    commercialPredicates.add(criteriaBuilder.equal(residentialPropertyAddressJoin.get("district"), district));
+                }
+
+                if (ward != null) {
+                    residentialPredicates.add(criteriaBuilder.equal(commercialPropertyAddressJoin.get("ward"), ward));
+                    commercialPredicates.add(criteriaBuilder.equal(residentialPropertyAddressJoin.get("ward"), ward));
+                }
+            }
+
+            if (!residentialPredicates.isEmpty()) {
+                residentialQuery.where(residentialPredicates.toArray(new Predicate[residentialPredicates.size()]));
+            }
+            if (!commercialPredicates.isEmpty()) {
+                commercialQuery.where(commercialPredicates.toArray(new Predicate[commercialPredicates.size()]));
+            }
+
+            TypedQuery<CommercialProperty> commercialPropertyQuery = session.createQuery(commercialQuery);
+            TypedQuery<ResidentialProperty> residentialPropertyQuery = session.createQuery(residentialQuery);
+
+            properties.addAll(commercialPropertyQuery.getResultList());
+            properties.addAll(residentialPropertyQuery.getResultList());
+
+//            Query<ResidentialProperty> residentialPropertyQuery = session.createQuery(
+//                    "SELECT rp FROM ResidentialProperty rp JOIN rp.hosts h WHERE status = :status", ResidentialProperty.class);
+//            residentialPropertyQuery.setParameter("status", status);
+//
+//            Query<CommercialProperty> commercialPropertyQuery = session.createQuery(
+//                    "SELECT cp FROM CommercialProperty cp JOIN cp.hosts h WHERE status = :status", CommercialProperty.class);
+//            commercialPropertyQuery.setParameter("status", status);
+//
+//            properties.addAll(residentialPropertyQuery.list());
+//            properties.addAll(commercialPropertyQuery.list());
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return properties;
     }
 
     @Override

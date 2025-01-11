@@ -2,6 +2,7 @@ package com.yourcompany.rentalmanagement.dao.impl;
 
 import com.yourcompany.rentalmanagement.dao.PaymentDao;
 import com.yourcompany.rentalmanagement.model.Payment;
+import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
@@ -11,16 +12,21 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.*;
 
 public class PaymentDaoImpl implements PaymentDao {
-
     private Transaction transaction;
     private List<Payment> payments;
     private Payment payment;
     Map<String, Double> monthlyPayments;
     private Query<Payment> query;
     public static final int PAGE_SIZE = 10;
+    private Map<String, String> data = new HashMap<>();
 
     public PaymentDaoImpl() {
         transaction = null;
@@ -62,6 +68,31 @@ public class PaymentDaoImpl implements PaymentDao {
             e.printStackTrace();
         }
         return payments;
+    }
+
+    @Override
+    public Map<String, String> createPayment(Payment payment, long rentalAgreementId, long tenantId) {
+        Payment lastPayment = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            RentalAgreement rentalAgreement = session.get(RentalAgreement.class, rentalAgreementId);
+            Tenant tenant = session.get(Tenant.class, tenantId);
+
+            payment.setRentalAgreement(rentalAgreement);
+            payment.setTenant(tenant);
+
+            session.persist(payment);
+            transaction.commit();
+            data.put("status", "success");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            data.put("status", "failed");
+        }
+        return data;
     }
 
     @Override
@@ -122,6 +153,7 @@ public class PaymentDaoImpl implements PaymentDao {
         return payments;
     }
 
+
     @Override
     public Tenant getTenant(long paymentId) {
         Tenant tenant = null;
@@ -139,6 +171,25 @@ public class PaymentDaoImpl implements PaymentDao {
         }
         return tenant;
     }
+
+    @Override
+    public Payment getLatestPayment(RentalAgreement rentalAgreement, LocalDate today) {
+        Payment lastPayment = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Payment> query = session.createQuery("SELECT p FROM Payment p WHERE rentalAgreement = :agreement ORDER BY dueDate DESC", Payment.class);
+            query.setParameter("agreement", rentalAgreement);
+            query.setMaxResults(1);
+            lastPayment = query.uniqueResult();
+
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return lastPayment;
+    }
+
 
     @Override
     public Long getPaymentCount(Map<String, String> filterValue) {

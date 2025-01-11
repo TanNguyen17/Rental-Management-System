@@ -4,6 +4,7 @@ import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.model.UserRole;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -29,4 +30,5 @@ public interface RentalAgreementDao {
 
     RentalAgreement getRentalAgreementById(long id);
 
+    List<RentalAgreement> getActiveRentalAgreements(LocalDate today);
 }

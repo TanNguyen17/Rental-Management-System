@@ -450,7 +450,7 @@ public class PropertyFormController {
             wardField.setText(address.getWard());
             districtField.setText(address.getDistrict());
             cityField.setText(address.getCity());
-            
+
 
         }
 

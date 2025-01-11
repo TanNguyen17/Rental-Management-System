@@ -18,7 +18,6 @@ import jakarta.persistence.OneToOne;
 
 @MappedSuperclass
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false, length = 10)

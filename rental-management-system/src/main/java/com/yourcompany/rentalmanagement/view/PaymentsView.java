@@ -2,7 +2,6 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.PaymentController;
 import com.yourcompany.rentalmanagement.model.Payment;
-import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.AlertUtils;
 import com.yourcompany.rentalmanagement.util.UserSession;
@@ -41,7 +40,8 @@ public class PaymentsView implements Initializable {
     private ObservableList<Payment> payments = FXCollections.observableArrayList();
     private Map<Integer, List<Payment>> pageCache = new HashMap<>();
     private Map<String, String> filter = new HashMap<>();
-    private User currentUser = UserSession.getInstance().getCurrentUser();
+    private UserSession userSession = UserSession.getInstance();
+//    private User currentUser = UserSession.getInstance().getCurrentUser();
 
     private int currentPageIndex = 1;
     private boolean isLoading = false;
@@ -174,7 +174,7 @@ public class PaymentsView implements Initializable {
 
                         viewIcon.setStyle(
                                 "-fx-cursor: hand ;"
-                                + "-glyph-size:20px;"
+                                        + "-glyph-size:20px;"
                         );
 
                         viewIcon.setOnMouseClicked(event -> {
@@ -221,7 +221,7 @@ public class PaymentsView implements Initializable {
         stage.show();
     }
 
-//    private void handleSendEmail() {
+    //    private void handleSendEmail() {
 //        payment = paymentTable.getSelectionModel().getSelectedItem();
 //        if (payment == null) return;
 //
@@ -288,7 +288,7 @@ public class PaymentsView implements Initializable {
         }
         isLoading = true;
         new Thread(() -> {
-            List<Payment> paymentList = paymentController.getPaymentsOfTenant(page, filter, UserRole.TENANT, currentUser.getId());
+            List<Payment> paymentList = paymentController.getPaymentsOfTenant(page, filter, UserRole.TENANT, userSession.getCurrentUser().getId());
 
             Platform.runLater(() -> {
                 if (!paymentList.isEmpty()) {

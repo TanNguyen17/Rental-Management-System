@@ -1,6 +1,5 @@
 package com.yourcompany.rentalmanagement.service;
 
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
@@ -8,20 +7,14 @@ import java.util.Date;
 
 import javax.crypto.SecretKey;
 
+import com.yourcompany.rentalmanagement.model.*;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import com.yourcompany.rentalmanagement.model.Host;
-import com.yourcompany.rentalmanagement.model.Manager;
-import com.yourcompany.rentalmanagement.model.Owner;
-import com.yourcompany.rentalmanagement.model.Tenant;
-import com.yourcompany.rentalmanagement.model.User;
-import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +54,7 @@ public class AuthService {
 
     private <T extends User> T findUserByUsername(Session session, Class<T> userClass, String username) {
         Query<T> query = session.createQuery(
-                "FROM " + userClass.getSimpleName() + " WHERE username = :username ",
+                "FROM " + userClass.getSimpleName() + " WHERE :username = :username ",
                 userClass
         );
         query.setParameter("username", username);

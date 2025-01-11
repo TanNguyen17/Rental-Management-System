@@ -1,0 +1,56 @@
+.side-menu {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 0);
+    -fx-min-width: 250;
+    -fx-pref-width: 250;
+    -fx-max-width: 250;
+}
+
+.role-combo {
+    -fx-background-color: #DCE8F8;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+    -fx-pref-height: 40;
+}
+
+.nav-container {
+    -fx-padding: 0;
+}
+
+.menu-button {
+    -fx-background-color: #DCE8F8;
+    -fx-text-fill: #1E3058;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 12 16;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-min-height: 45;
+    -fx-cursor: hand;
+}
+
+.menu-button:hover {
+    -fx-background-color: #E8EFF9;
+}
+
+.menu-button:pressed,
+.menu-button:focused {
+    -fx-background-color: #1E3058;
+    -fx-text-fill: white;
+}
+
+.logout-button {
+    -fx-background-color: #FFE8E8;
+    -fx-text-fill: #D32F2F;
+}
+
+.logout-button:hover {
+    -fx-background-color: #FFD5D5;
+}
+
+.logout-button:pressed {
+    -fx-background-color: #D32F2F;
+    -fx-text-fill: white;
+}

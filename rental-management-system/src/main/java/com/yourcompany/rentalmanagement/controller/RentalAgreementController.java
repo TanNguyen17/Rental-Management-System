@@ -7,6 +7,7 @@ import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.view.RentalAgreementCreationView;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,10 @@ public class RentalAgreementController {
         else {
             return rentalAgreementDao.getAllRentalAgreements();
         }
+    }
+
+    public List<RentalAgreement> getActiveRentalAgreements(LocalDate today) {
+        return rentalAgreementDao.getActiveRentalAgreements(today);
     }
 
     public void createRentalAgreement(RentalAgreement rentalAgreement, long tenantId, Property propertyId, long ownerId, long hostId, List<Long> subTenantIds) {

@@ -374,4 +374,20 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
         return result;
     }
 
+    @Override
+    public List<RentalAgreement> getActiveRentalAgreements(LocalDate today) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<RentalAgreement> query = session.createQuery(
+                    "FROM RentalAgreement WHERE startContractDate <= :today AND endContractDate >= :today", RentalAgreement.class);
+            query.setParameter("today", today);
+            rentalAgreements = query.list();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return rentalAgreements;
+    }
+
 }
