@@ -173,21 +173,53 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
     }
 
     @Override
-    public Map<String, Object> deleteRentalAgreementById(long id) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+    public Map<String, Object> deleteRentalAgreementById(long rentalAgreementId) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = null;
+
+        try {
             transaction = session.beginTransaction();
 
-            rentalAgreement = session.get(RentalAgreement.class, id);
+            // Find the Payment referencing this RentalAgreement
+            Payment payment = session.createQuery(
+                            "FROM Payment p WHERE p.rentalAgreement.id = :rentalAgreementId", Payment.class)
+                    .setParameter("rentalAgreementId", rentalAgreementId)
+                    .uniqueResult();
 
-            if (rentalAgreement != null){
-                // rentalAgreement.getHost().setRentalAgreements(rentalAgreement.getHost().getRentalAgreements()
-                // .remove(rentalAgreement));
-                session.remove(rentalAgreement);
+            // Delete the Payment first
+            if (payment != null) {
+                session.remove(payment);
+                System.out.println("Associated Payment deleted.");
             }
 
-            transaction.commit();
-            result.put("status", "success");
-            result.put("message", "Address updated successfully");
+
+            // Retrieve the RentalAgreement
+            RentalAgreement rentalAgreement = session.get(RentalAgreement.class, rentalAgreementId);
+            if (rentalAgreement != null) {
+
+                // Handle @OneToOne associations
+                if (rentalAgreement.getCommercialProperty() != null) {
+                    rentalAgreement.getCommercialProperty().setRentalAgreement(null);
+                }
+                if (rentalAgreement.getResidentialProperty() != null) {
+                    rentalAgreement.getResidentialProperty().setRentalAgreement(null);
+                }
+
+                // Handle @ManyToMany associations
+                for (Tenant tenant : rentalAgreement.getTenants()) {
+                    tenant.getRentalAgreements().removeIf(ra -> ra.getId() == rentalAgreementId);
+                }
+                rentalAgreement.getTenants().clear();
+
+                // Delete the RentalAgreement
+                session.remove(rentalAgreement);
+
+                transaction.commit();
+                result.put("status", "success");
+                result.put("message", "Rental agreement delete successfully");
+            } else {
+                System.out.println("RentalAgreement not found with ID: " + rentalAgreementId);
+            }
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -195,11 +227,12 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
             e.printStackTrace();
             result.put("status", "failed");
             result.put("message", e.getMessage());
+        } finally {
+            session.close();
         }
-
-        System.out.println("Row deleted!");
         return result;
     }
+
 
 
     @Override
@@ -227,49 +260,118 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
 
 
 
-            @Override
-            public Map<String, Object> createRentalAgreement(RentalAgreement rentalAgreement, long tenantId, Property property,long ownerId, long hostId, List<Long > subTenantIds){
-                try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-                    transaction = session.beginTransaction();
-                    List<Tenant> subTenants = new ArrayList<>();
+    @Override
+    public Map<String, Object> createRentalAgreement(RentalAgreement rentalAgreement, long tenantId, Property property,long ownerId, long hostId, List<Long > subTenantIds){
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            List<Tenant> subTenants = new ArrayList<>();
 
-                    for (Long id : subTenantIds) {
-                        subTenants.add(session.get(Tenant.class, id));
-                    }
+            for (Long id : subTenantIds) {
+                subTenants.add(session.get(Tenant.class, id));
+            }
 
-                    Tenant tenant = session.get(Tenant.class, tenantId);
-                    Owner owner = session.get(Owner.class, ownerId);
-                    Host host = session.get(Host.class, hostId);
+            Tenant tenant = session.get(Tenant.class, tenantId);
+            Owner owner = session.get(Owner.class, ownerId);
+            Host host = session.get(Host.class, hostId);
 
-                    rentalAgreement.setOwner(owner);
-                    rentalAgreement.setHost(host);
+            rentalAgreement.setOwner(owner);
+            rentalAgreement.setHost(host);
 
-                    tenant.addRentalAgreement(rentalAgreement);
-                    for (Tenant subTenant : subTenants) {
-                        subTenant.addRentalAgreement(rentalAgreement);
-                    }
+            tenant.addRentalAgreement(rentalAgreement);
+            for (Tenant subTenant : subTenants) {
+                subTenant.addRentalAgreement(rentalAgreement);
+            }
 
-                    property.setRentalAgreement(rentalAgreement);
-                    property.setStatus(Property.propertyStatus.RENTED);
+            property.setRentalAgreement(rentalAgreement);
+            property.setStatus(Property.propertyStatus.RENTED);
 
-                    session.persist(rentalAgreement);
-                    transaction.commit();
+            session.persist(rentalAgreement);
+            transaction.commit();
 
-                    data.put("rentalAgreement", rentalAgreement);
-                    data.put("status", "success");
-                } catch (Exception e) {
-                    e.printStackTrace();
+            data.put("rentalAgreement", rentalAgreement);
+            data.put("status", "success");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+
+    @Override
+    public Map<String, Object> createRentalAgreement(Map<String, Object> data){
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+            transaction = session.beginTransaction();
+
+            rentalAgreement = new RentalAgreement();
+
+            // For property
+            if (data.get("property") != null){
+                if (data.get("property").getClass() == com.yourcompany.rentalmanagement.model.CommercialProperty.class) {
+                    rentalAgreement.setCommercialProperty((CommercialProperty) data.get("property"));
+                } else {
+                    rentalAgreement.setResidentialProperty((ResidentialProperty) data.get("property"));
                 }
-                return data;
+
+                Property property = (Property) data.get("property");
+                property.setRentalAgreement(rentalAgreement);
+                property.setStatus(Property.propertyStatus.RENTED);
+            }
+
+            // For status
+            if (data.get("status") != null) {
+                rentalAgreement.setStatus((RentalAgreement.rentalAgreementStatus) data.get("status"));
+            } else {
+                rentalAgreement.setStatus(RentalAgreement.rentalAgreementStatus.NEW);
             }
 
 
-    public static void main(String[] args) {
-        RentalAgreementDaoImpl test = new RentalAgreementDaoImpl();
-        List<RentalAgreement> db = test.getAllRentalAgreements();
-        System.out.println("======================");
-        for (RentalAgreement rentalAgreement : db) {
-            System.out.println(rentalAgreement.getTenants());
+            // For host
+            if (data.get("host") != null) {
+                Host hostInput = (Host) data.get("host");
+                long hostId = hostInput.getId();
+                Host host = session.get(Host.class, hostId);
+                rentalAgreement.setHost(host);
+            } else {
+                rentalAgreement.setHost(null);
+            }
+
+            // For owner
+            if (data.get("owner") != null) {
+                Owner ownerInput = (Owner) data.get("owner");
+                long ownerId = ownerInput.getId();
+                Owner owner = session.get(Owner.class, ownerId);
+                rentalAgreement.setOwner(owner);
+            } else {
+                rentalAgreement.setOwner(null);
+            }
+
+            // For tenant
+            List<Tenant> subTenantsInput = (List<Tenant>) data.get("subTenants");
+            List<Tenant> subTenants = new ArrayList<>();
+            for (Tenant subTenant : subTenantsInput) {
+                long tenantId = subTenant.getId();
+                subTenants.add(session.get(Tenant.class, tenantId));
+            }
+
+            for (Tenant subTenant : subTenants){
+                subTenant.addRentalAgreement(rentalAgreement);
+            }
+
+            rentalAgreement.setStartContractDate((LocalDate) data.get("startDate"));
+            rentalAgreement.setEndContractDate((LocalDate) data.get("endDate"));
+            rentalAgreement.setRentingFee((Double) data.get("rentingFee"));
+            rentalAgreement.setTenants((List<Tenant>) data.get("subTenants"));
+
+            session.persist(rentalAgreement);
+            transaction.commit();
+
+            result.put("status", "success");
+            result.put("message", "New rental agreement added successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("status", "failed");
+            result.put("message", e.getMessage());
         }
+        return result;
     }
+
 }

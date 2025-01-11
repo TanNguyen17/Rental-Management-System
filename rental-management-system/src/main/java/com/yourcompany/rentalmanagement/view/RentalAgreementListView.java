@@ -61,6 +61,9 @@ public class RentalAgreementListView implements Initializable {
     @FXML
     TableColumn<RentalAgreement, Double> rentingFee = new TableColumn<>();
 
+    @FXML
+    Button addNewBtn = new Button();
+
     @Override
     public void initialize(URL url, ResourceBundle bundle){
         initializeColumn();
@@ -68,6 +71,9 @@ public class RentalAgreementListView implements Initializable {
         initializeDeleteColumn();
         rentalAgreements = FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(UserRole.MANAGER, 1));
         rentalAgreementTableView.setItems(rentalAgreements);
+        addNewBtn.setOnMouseClicked(e -> {
+            openAddNewDataForm();
+        });
     }
 
     private void loadingData() {
@@ -125,6 +131,25 @@ public class RentalAgreementListView implements Initializable {
         });
     }
 
+    private void openAddNewDataForm(){
+        try {
+            // Load the FXML file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RentalAgreementForm.fxml"));
+            VBox newRoot = loader.load();
+
+            RentalAgreementFormView controller = loader.getController();
+            controller.showAddNewDataForm();
+
+            // Create a new Stage (or replace the existing one)
+            Stage newStage = new Stage();
+            newStage.setTitle("Add Rental Agreement");
+            newStage.setScene(new Scene(newRoot, 400, 360));
+            newStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void openUpdateForm(long id) {
         try {
             // Load the FXML file
@@ -148,5 +173,7 @@ public class RentalAgreementListView implements Initializable {
     private void deleteRow(long id){
         rentalAgreementController.deleteRentalAgreementById(id);
     }
+
+
 
 }

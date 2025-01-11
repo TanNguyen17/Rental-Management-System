@@ -41,6 +41,11 @@ public class RentalAgreementController {
         }
     }
 
+
+    public void createRentalAgreement(Map<String, Object> data) {
+        rentalAgreementDao.createRentalAgreement(data);
+    }
+
     public void updateRentalAgreementById(long id, Map<String, Object> data){
         rentalAgreementDao.updateRentalAgreementById(id, data);
     }

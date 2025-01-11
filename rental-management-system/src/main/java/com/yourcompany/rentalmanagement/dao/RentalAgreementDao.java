@@ -14,6 +14,8 @@ public interface RentalAgreementDao {
 
     public Map<String, Object> createRentalAgreement(RentalAgreement rentalAgreement, long tenantId, Property property, long ownerId, long hostId, List<Long> subTenantIds);
 
+    public Map<String, Object> createRentalAgreement(Map<String, Object> data);
+
     void loadData();
 
     List<RentalAgreement> getRentalAgreementsById(long id);

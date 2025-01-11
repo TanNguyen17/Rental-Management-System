@@ -31,6 +31,7 @@ public class RentalAgreementFormView implements Initializable{
     UserController userController = new UserController();
     Map<String, Object> renderedData = new HashMap<>();
     private long rentalAgreementID;
+    boolean isAddingNewData;
 
     @FXML
     Label ownerShow = new Label();
@@ -69,10 +70,15 @@ public class RentalAgreementFormView implements Initializable{
         cancelButton.setOnMouseClicked(e -> {
             closeWindow(cancelButton);
         });
+
         updateButton.setOnMouseClicked(e -> {
-            updateInformation(1);
-//            System.out.println(contractedTimeInput.getValue().intValue());
+            if (isAddingNewData){
+                addInformation();
+            } else {
+                updateInformation(1); // How to pass id
+            }
         });
+
     }
 
     public void showRentalAgreementByIdForUpdate(long id){
@@ -127,9 +133,15 @@ public class RentalAgreementFormView implements Initializable{
             contractedTimeInput.setValue((int) ChronoUnit.MONTHS.between(currentStartDate, currentEndDate));
         }
 
+        updateButton.setOnMouseClicked(e -> {
+            System.out.println("You are updating new rental agreement!");
+            updateInformation(1); // How to pass id
+        });
     }
 
+
     public void updateInformation(long id){
+        checkAddingNewData(false);
         int monthsToAdd = contractedTimeInput.getValue();
         rentalAgreementID = id;
         Property newProperty = propertyInput.getValue();
@@ -153,5 +165,61 @@ public class RentalAgreementFormView implements Initializable{
 
         rentalAgreementController.updateRentalAgreementById(id, updatedData);
 
+    }
+
+    public void showAddNewDataForm() {
+        checkAddingNewData(true);
+        List<Property> otherProperties = propertyController.getPropertyList();
+        propertyInput.setItems(FXCollections.observableArrayList(otherProperties));
+        propertyInput.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            // Update the label text when the ComboBox value changes
+            if (newValue != null) {
+                ownerShow.setText("Owner: " + newValue.getOwner().toString());
+            }
+
+            List<Host> otherHosts = userController.getAllHosts();
+            hostInput.setItems(FXCollections.observableArrayList(otherHosts));
+
+            List<Tenant> otherTenants = userController.getTenants();
+            subTenantInput.getItems().addAll(FXCollections.observableArrayList(otherTenants));
+
+            statusInput.getItems().addAll(RentalAgreement.rentalAgreementStatus.NEW,
+                    RentalAgreement.rentalAgreementStatus.ACTIVE, RentalAgreement.rentalAgreementStatus.COMPLETED);
+
+            contractedTimeInput.setItems(FXCollections.observableArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12));
+        });
+
+        updateButton.setOnMouseClicked(e -> {
+            addInformation();
+            System.out.println("You are adding new rental agreement!");
+        });
+    }
+
+    public void addInformation(){
+        int monthsToAdd = contractedTimeInput.getValue();
+        Property newProperty = propertyInput.getValue();
+        List<Tenant> newSubTenants = subTenantInput.getCheckModel().getCheckedItems();
+        Host newHost = hostInput.getValue();
+        LocalDate newStartDate = LocalDate.now();
+        LocalDate newEndDate = ChronoUnit.MONTHS.addTo(newStartDate, monthsToAdd);
+        // LocalDate newEndDate = LocalDate.now();
+        double newRentingFee = monthsToAdd * propertyInput.getValue().getPrice() * 1.1;
+        RentalAgreement.rentalAgreementStatus newStatus = statusInput.getValue();
+
+        Map<String, Object> newData = new HashMap<>();
+        newData.put("property", newProperty);
+        newData.put("host", newHost);
+        newData.put("owner", newProperty.getOwner());
+        newData.put("subTenants", newSubTenants);
+        newData.put("startDate", newStartDate);
+        newData.put("endDate", newEndDate);
+        newData.put("rentingFee", newRentingFee);
+        newData.put("status", newStatus);
+
+        rentalAgreementController.createRentalAgreement(newData);
+    }
+
+    public void checkAddingNewData(boolean isAddNewData){
+        this.isAddingNewData = isAddNewData;
     }
 }

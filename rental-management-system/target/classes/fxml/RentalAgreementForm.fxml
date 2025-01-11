@@ -84,7 +84,7 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="68.0" prefWidth="182.0">
                <children>
-                  <Button fx:id="updateButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="177.0" text="UPDATE">
+                  <Button fx:id="updateButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="177.0" text="SAVE">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>

@@ -42,7 +42,7 @@ public class Host extends User {
     )
     private List<CommercialProperty> commercialProperties = new ArrayList<>();
 
-    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RentalAgreement> rentalAgreements = new ArrayList<>();
 
     public List<Owner> getOwners() {
