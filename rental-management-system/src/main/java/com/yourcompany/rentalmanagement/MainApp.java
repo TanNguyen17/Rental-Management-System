@@ -1,24 +1,24 @@
 package com.yourcompany.rentalmanagement;
 
-import com.yourcompany.rentalmanagement.model.UserRole;
-import com.yourcompany.rentalmanagement.service.PaymentScheduler;
-import com.yourcompany.rentalmanagement.util.AddressData;
-import com.yourcompany.rentalmanagement.util.UserSession;
 import org.hibernate.SessionFactory;
 
+import com.yourcompany.rentalmanagement.model.UserRole;
+import com.yourcompany.rentalmanagement.util.AddressData;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
+import com.yourcompany.rentalmanagement.util.UserSession;
 import com.yourcompany.rentalmanagement.view.LoginViewController;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
+
     private LoginViewController loginViewController = new LoginViewController();
     private PaymentScheduler paymentScheduler = new PaymentScheduler();
     private FXMLLoader loader;
+
     @Override
     public void start(Stage primaryStage) {
         paymentScheduler.startPaymentGeneration();
@@ -53,15 +53,22 @@ public class MainApp extends Application {
             }
             // If no valid stored session --> show login view
             Scene scene = new Scene(loader.load());
-            scene.getStylesheets().add(getClass().getResource("/css/property-list.css").toExternalForm());
+            scene.getStylesheets().addAll(
+                    getClass().getResource("/css/property-list.css").toExternalForm(),
+                    getClass().getResource("/css/side-menu.css").toExternalForm()
+            );
             primaryStage.setScene(scene);
             primaryStage.setTitle("Rental Management System - Login");
-            primaryStage.setWidth(1280);
-            primaryStage.setHeight(720);
+
+            // minimum dimensions
             primaryStage.setMinWidth(800);
             primaryStage.setMinHeight(600);
+
             primaryStage.setResizable(true);
-            primaryStage.setMaximized(false);
+
+            // default
+            primaryStage.setMaximized(true);
+
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();
