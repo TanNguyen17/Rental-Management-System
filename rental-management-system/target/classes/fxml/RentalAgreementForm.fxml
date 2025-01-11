@@ -58,7 +58,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <ComboBox fx:id="contractedTimeInput" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="267.0" promptText="6 months (default)" />
+            <ComboBox fx:id="contractedTimeInput" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="267.0" promptText="Choose renting period"/>
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="347.0" spacing="8.0">

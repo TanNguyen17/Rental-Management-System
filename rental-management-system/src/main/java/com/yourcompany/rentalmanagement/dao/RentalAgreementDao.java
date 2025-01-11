@@ -20,9 +20,9 @@ public interface RentalAgreementDao {
 
     void createRentalAgreement(RentalAgreement rentalAgreement);
 
-    void updateRentalAgreement(RentalAgreement rentalAgreement);
+    Map<String, Object> updateRentalAgreementById(long id, Map<String, Object> data);
 
-    void deleteRentalAgreement(RentalAgreement rentalAgreement);
+    Map<String, Object> deleteRentalAgreementById(long id);
 
 
     RentalAgreement getRentalAgreementById(long id);

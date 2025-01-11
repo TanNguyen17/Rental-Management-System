@@ -41,7 +41,10 @@ public class RentalAgreementListView implements Initializable {
     TableColumn<RentalAgreement, RentalAgreement.rentalAgreementStatus> status = new TableColumn<>();
 
     @FXML
-    TableColumn<RentalAgreement, LocalDate> contractedDate = new TableColumn<>();
+    TableColumn<RentalAgreement, LocalDate> startDate = new TableColumn<>();
+
+    @FXML
+    TableColumn<RentalAgreement, LocalDate> endDate = new TableColumn<>();
 
     @FXML
     TableColumn<RentalAgreement, Long> owner = new TableColumn<>();
@@ -63,17 +66,19 @@ public class RentalAgreementListView implements Initializable {
         initializeColumn();
         initializeViewMoreColumn();
         initializeDeleteColumn();
+        rentalAgreements = FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(UserRole.MANAGER, 1));
         rentalAgreementTableView.setItems(rentalAgreements);
     }
 
     private void loadingData() {
-        FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(userSession.getCurrentUser().getRole(), userSession.getCurrentUser().getId()));
+        rentalAgreements = FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(userSession.getCurrentUser().getRole(), userSession.getCurrentUser().getId()));
     }
 
     private void initializeColumn(){
         agreementId.setCellValueFactory(new PropertyValueFactory<>("id"));
         status.setCellValueFactory(new PropertyValueFactory<>("status"));
-        contractedDate.setCellValueFactory(new PropertyValueFactory<>("contractDate"));
+        startDate.setCellValueFactory(new PropertyValueFactory<>("startContractDate"));
+        endDate.setCellValueFactory(new PropertyValueFactory<>("endContractDate"));
         owner.setCellValueFactory(new PropertyValueFactory<>("ownerName"));
         host.setCellValueFactory(new PropertyValueFactory<>("hostName"));
         rentingFee.setCellValueFactory(new PropertyValueFactory<>("rentingFee"));
@@ -110,7 +115,8 @@ public class RentalAgreementListView implements Initializable {
                 if (!empty){
                     Button button = new Button("Delete");
                     button.setOnAction(e -> {
-                        System.out.println(this.getTableRow().getIndex());
+                        long raId = this.getTableView().getItems().get(getIndex()).getId();
+                        deleteRow(raId);
                     });
                     setText(null);
                     setGraphic(button);
@@ -137,6 +143,10 @@ public class RentalAgreementListView implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void deleteRow(long id){
+        rentalAgreementController.deleteRentalAgreementById(id);
     }
 
 }

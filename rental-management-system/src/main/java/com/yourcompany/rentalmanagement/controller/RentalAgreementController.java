@@ -41,6 +41,14 @@ public class RentalAgreementController {
         }
     }
 
+    public void updateRentalAgreementById(long id, Map<String, Object> data){
+        rentalAgreementDao.updateRentalAgreementById(id, data);
+    }
+
+    public void deleteRentalAgreementById(long id){
+        rentalAgreementDao.deleteRentalAgreementById(id);
+    }
+
     public RentalAgreement getRentalAgreementById(long id){
         return rentalAgreementDao.getRentalAgreementById(id);
     }

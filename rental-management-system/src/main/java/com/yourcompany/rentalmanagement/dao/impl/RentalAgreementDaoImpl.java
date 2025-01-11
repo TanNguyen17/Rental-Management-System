@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
     private RentalAgreement rentalAgreement;
     private Transaction transaction;
     Map<String, Object> data = new HashMap<>();
+    Map<String, Object> result = new HashMap<>();
 
     public RentalAgreementDaoImpl() {
         transaction = null;
@@ -119,12 +121,84 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
     }
 
     @Override
-    public void updateRentalAgreement(RentalAgreement rentalAgreement) {
+    public Map<String, Object> updateRentalAgreementById(long id, Map<String, Object> data) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+            transaction = session.beginTransaction();
 
+            rentalAgreement = session.get(RentalAgreement.class, 1);
+            System.out.println(rentalAgreement);
+
+            if (rentalAgreement != null){
+                if (data.get("property").getClass() == CommercialProperty.class){
+                    rentalAgreement.setCommercialProperty((CommercialProperty) data.get("property"));
+                    rentalAgreement.setResidentialProperty(null);
+                } else {
+                    rentalAgreement.setCommercialProperty(null);
+                    rentalAgreement.setResidentialProperty((ResidentialProperty) data.get("property"));
+                }
+            }
+
+            if (data.get("status") != null) {
+                rentalAgreement.setStatus((RentalAgreement.rentalAgreementStatus) data.get("status"));
+            } else {
+                rentalAgreement.setStatus(RentalAgreement.rentalAgreementStatus.NEW);
+            }
+
+            if (data.get("host") != null) {
+                rentalAgreement.setHost((Host) data.get("host"));
+            } else {
+                rentalAgreement.setHost(null);
+            }
+
+            if (data.get("owner") != null) {
+                rentalAgreement.setOwner((Owner) data.get("owner"));
+            } else {
+                rentalAgreement.setOwner(null);
+            }
+
+            rentalAgreement.setStartContractDate((LocalDate) data.get("startDate"));
+            rentalAgreement.setEndContractDate((LocalDate) data.get("endDate"));
+            rentalAgreement.setRentingFee((Double) data.get("rentingFee"));
+            rentalAgreement.setTenants((List<Tenant>) data.get("subTenants"));
+
+            transaction.commit();
+            result.put("status", "success");
+            result.put("message", "Address updated successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("status", "failed");
+            result.put("message", e.getMessage());
+        }
+        return result;
     }
 
     @Override
-    public void deleteRentalAgreement(RentalAgreement rentalAgreement) {
+    public Map<String, Object> deleteRentalAgreementById(long id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            rentalAgreement = session.get(RentalAgreement.class, id);
+
+            if (rentalAgreement != null){
+                // rentalAgreement.getHost().setRentalAgreements(rentalAgreement.getHost().getRentalAgreements()
+                // .remove(rentalAgreement));
+                session.remove(rentalAgreement);
+            }
+
+            transaction.commit();
+            result.put("status", "success");
+            result.put("message", "Address updated successfully");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            result.put("status", "failed");
+            result.put("message", e.getMessage());
+        }
+
+        System.out.println("Row deleted!");
+        return result;
     }
 
 
@@ -150,6 +224,7 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
         }
         return rentalAgreements;
     }
+
 
 
             @Override
