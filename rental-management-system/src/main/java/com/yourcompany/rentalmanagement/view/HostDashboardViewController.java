@@ -4,6 +4,7 @@ import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.util.UserSession;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,10 +49,8 @@ public class HostDashboardViewController implements Initializable {
     private TableColumn<Property, Double> stayLength;
 
     @FXML
-    private TableColumn<Property, Double> bookingRate;
+    private TableColumn<Property, String> status;
 
-    @FXML
-    private TableColumn<Property, Double> turnoverRate;
 
     @FXML
     private TableView<Property> propertyTable;
@@ -102,7 +101,7 @@ public class HostDashboardViewController implements Initializable {
     private void initializePieChart() {
         // Count properties by status
         Map<Property.propertyStatus, Integer> statusCounts = new HashMap<>();
-        properties = FXCollections.observableArrayList(propertyDaoImpl.getAllProperties());
+        properties = FXCollections.observableArrayList(propertyDaoImpl.getAllPropertiesByHostID(1));
         for (Property property : properties) {
             statusCounts.put(property.getStatus(), statusCounts.getOrDefault(property.getStatus(), 0) + 1);
         }
@@ -119,14 +118,32 @@ public class HostDashboardViewController implements Initializable {
     }
 
     private void initializeTableData(){
-        id.setCellValueFactory(cellData -> new SimpleLongProperty(properties.indexOf(cellData.getValue()) + 1).asObject());
-        title.setCellValueFactory(new PropertyValueFactory<Property, String>("title"));
-        occupancyRate.setCellValueFactory(new PropertyValueFactory<Property, Double>("price"));
-        stayLength.setCellValueFactory(new PropertyValueFactory<Property, Double>("price"));
-        bookingRate.setCellValueFactory(new PropertyValueFactory<Property, Double>("price"));
-        turnoverRate.setCellValueFactory(new PropertyValueFactory<Property, Double>("price"));
-        properties = FXCollections.observableArrayList(propertyDaoImpl.getAllProperties());
-        System.out.println(properties.size());
+        // Fetch all properties managed by the current host
+        properties = FXCollections.observableArrayList(propertyDaoImpl.getAllPropertiesByHostID(1));
+        //long hostId = userSession.getCurrentUser().getId();
+
+        // Retrieve stay durations grouped by property
+        Map<Long, List<Long>> stayDurationsByProperty = propertyDaoImpl.getStayDurationsByProperty(1); // change to HostID later
+
+        // Calculate the average stay length for each property
+        Map<Long, Double> averageStayByProperty = new HashMap<>();
+        stayDurationsByProperty.forEach((propertyId, durations) -> {
+            double averageStay = durations.stream()
+                    .mapToLong(Long::longValue)
+                    .average()
+                    .orElse(0.0);
+            averageStayByProperty.put(propertyId, averageStay);
+        });
+
+        // Bind data to the table
+        id.setCellValueFactory(cellData ->
+                new SimpleLongProperty(propertyTable.getItems().indexOf(cellData.getValue()) + 1).asObject()
+        );
+        title.setCellValueFactory(new PropertyValueFactory<>("title"));
+        occupancyRate.setCellValueFactory(new PropertyValueFactory<>("price"));
+        stayLength.setCellValueFactory(cellData -> new SimpleDoubleProperty(
+                averageStayByProperty.getOrDefault(cellData.getValue().getId(), 0.0)).asObject());
+        status.setCellValueFactory(new PropertyValueFactory<>("status"));
         propertyTable.setItems(properties);
     }
 

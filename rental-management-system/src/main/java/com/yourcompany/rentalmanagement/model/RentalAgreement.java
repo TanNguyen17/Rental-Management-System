@@ -22,6 +22,9 @@ public class RentalAgreement {
     @Column(name = "contractDate", nullable = false)
     private LocalDate contractDate;
 
+    @Column(name = "endContractDate", nullable = false)
+    private LocalDate endContractDate;
+
     @Column(name = "rentingFee", nullable = false)
     private double rentingFee;
 

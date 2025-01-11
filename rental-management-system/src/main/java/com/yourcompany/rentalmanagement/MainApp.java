@@ -1,6 +1,8 @@
 package com.yourcompany.rentalmanagement;
 
+import com.yourcompany.rentalmanagement.dao.impl.HostDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
+import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.UserSession;
@@ -59,5 +61,6 @@ public class MainApp extends Application {
 
     public static void main(String[] args) {
         launch(args);
+
     }
 }

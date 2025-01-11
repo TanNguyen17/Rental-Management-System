@@ -34,15 +34,17 @@ public class HibernateTest {
         Random random = new Random();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            List<Payment> payments = session.createQuery("FROM Payment", Payment.class).list();
+            //List<Payment> payments = session.createQuery("FROM Payment", Payment.class).list();
             //List<Owner> owners = session.createQuery("FROM Owner", Owner.class).list();
             //System.out.println(owners.size());
-//            List<Host> hosts = session.createQuery("FROM Host ", Host.class).list();
+            List<Host> hosts = session.createQuery("FROM Host ", Host.class).list();
 //            System.out.println(hosts.size());
 //            List<Tenant> tenants = session.createQuery("FROM Tenant ", Tenant.class).list();
 //            System.out.println(tenants.size());
 //            List<RentalAgreement> rentalAgreements = session.createQuery("FROM RentalAgreement", RentalAgreement.class).list();
-            for (int i = 0; i < 40; i++) {
+            List<CommercialProperty> commercialProperties = session.createQuery("FROM CommercialProperty ", CommercialProperty.class).list();
+            List<ResidentialProperty> residentialProperties = session.createQuery("FROM ResidentialProperty ", ResidentialProperty.class).list();
+            for (int i = 0; i < hosts.size(); i++) {
                 try {
 //                        Tenant tenant = new Tenant();
 //                        tenant.setUsername(FIRST_NAMES[i] + " " + LAST_NAMES[i]);
@@ -111,9 +113,11 @@ public class HibernateTest {
 //                    }
 //                    payment.setDueDate(generateRandomDueDate(random));
 
-                    payments.get(i).setDueDate(generateRandomDueDate(random));
+                    //payments.get(i).setDueDate(generateRandomDueDate(random));
                     // Persist rental agreement
-                    session.persist(payments.get(i));
+                    hosts.get(i).addCommercialProperty(commercialProperties.get(i));
+                    hosts.get(i).addResidentialProperty(residentialProperties.get(i));
+                    session.persist(hosts.get(i));
                 } catch (Exception e) {
                     System.err.println("Error while persisting payment at index " + ": " + e.getMessage());
                     e.printStackTrace();
