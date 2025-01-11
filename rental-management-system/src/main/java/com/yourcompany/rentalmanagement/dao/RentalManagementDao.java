@@ -11,6 +11,8 @@ import java.util.Map;
 public interface RentalManagementDao {
     public List<RentalAgreement> getAllRentalAgreements();
     public List<RentalAgreement> getActiveRentalAgreements(LocalDate today);
+
+    RentalAgreement getRentalAgreementById(long Id);
     public List<RentalAgreement> getRentalAgreementByRole(UserRole role, Long userId);
 
     public Map<String, Object> createRentalAgreement(RentalAgreement rentalAgreement, long tenantId, Property property, long ownerId, long hostId, List<Long> subTenantIds);

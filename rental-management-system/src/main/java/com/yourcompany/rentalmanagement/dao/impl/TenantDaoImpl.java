@@ -1,21 +1,20 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-
 import com.yourcompany.rentalmanagement.dao.UserDao;
 import com.yourcompany.rentalmanagement.model.Address;
 import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.TimeFormat;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TenantDaoImpl implements UserDao {
 
@@ -28,6 +27,14 @@ public class TenantDaoImpl implements UserDao {
         transaction = null;
         result = new HashMap<>();
         tenants = new ArrayList<>();
+    }
+
+    @Override
+    public void loadData(){}
+
+    @Override
+    public List<String> getAllUserName(){
+        return null;
     }
 
     @Override

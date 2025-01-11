@@ -2,8 +2,10 @@ package com.yourcompany.rentalmanagement.controller;
 
 import java.util.*;
 
+import com.yourcompany.rentalmanagement.dao.impl.HostDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.OwnerDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.TenantDaoImpl;
+import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.model.UserRole;
@@ -13,15 +15,21 @@ public class UserController {
 
     private OwnerDaoImpl ownerDao;
     private TenantDaoImpl tenantDao;
+    private HostDaoImpl hostDao;
     private ProfileView profileView;
     private Map<String, Object> result;
     private List<User> users;
 
     User user = new User();
 
+    public List<Host> getAllHosts(){
+        return hostDao.getAllHosts();
+    }
+
     public UserController() {
         this.ownerDao = new OwnerDaoImpl();
         this.tenantDao = new TenantDaoImpl();
+        this.hostDao = new HostDaoImpl();
         this.users = new ArrayList<>();
     }
 

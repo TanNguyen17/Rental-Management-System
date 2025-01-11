@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementListView">
     <center>
         <VBox fx:id="mainContent" prefHeight="720.0" prefWidth="1080.0" BorderPane.alignment="CENTER">
             <children>
-                <TabPane fx:id="dashboardPanel" prefHeight="720.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="dashboardTitle" prefHeight="17.0" prefWidth="971.0" text="Dashboard">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+                <TabPane fx:id="dashboardPanel" prefHeight="720.0" prefWidth="1080.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
                         <Tab fx:id="tenantTab" text="Tenant" />
                         <Tab fx:id="hostTab" text="Host" />
@@ -17,7 +29,7 @@
                         <Tab fx:id="paymentTab" text="Payment" />
                         <Tab fx:id="rentalAgreementTab" style="height: 720;" text="Rental Agreement">
                             <content>
-                                <fx:include maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="718.0" source="RentalAgreementView.fxml" />
+                                <fx:include source="rental-agreement-management/RentalAgreementView.fxml"/>
                             </content>
                         </Tab>
                     </tabs>
@@ -26,6 +38,6 @@
         </VBox>
     </center>
     <left>
-        <fx:include source="SideMenu.fxml" />
+        <fx:include source="../SideMenu.fxml" />
     </left>
 </BorderPane>

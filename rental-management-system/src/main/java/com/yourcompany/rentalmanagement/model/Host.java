@@ -1,22 +1,22 @@
 package com.yourcompany.rentalmanagement.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinTable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import static java.lang.System.*;
 
 @Entity
-@Table(name = "Host", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"id"})})
+@Table(name = "Host", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
 public class Host extends User {
-
     @ManyToMany(mappedBy = "hosts", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Owner> owners = new ArrayList<>();
 
@@ -42,7 +42,7 @@ public class Host extends User {
     )
     private List<CommercialProperty> commercialProperties = new ArrayList<>();
 
-    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RentalAgreement> rentalAgreements = new ArrayList<>();
 
     public List<Owner> getOwners() {
@@ -65,7 +65,7 @@ public class Host extends User {
         this.rentalAgreements = rentalAgreements;
     }
 
-    public List<CommercialProperty> getCommercialProperties() {
+    public  List<CommercialProperty> getCommercialProperties() {
         return commercialProperties;
     }
 
