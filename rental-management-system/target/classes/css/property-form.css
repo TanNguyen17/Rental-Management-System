@@ -42,17 +42,17 @@
     -fx-border-color: #1E3058;
 }
 
-/* Add specific style for numeric fields */
-.form-field:numeric {
-    -fx-alignment: CENTER-RIGHT;
-}
+/*!* Add specific style for numeric fields *!*/
+/*.form-field:numeric {*/
+/*    -fx-alignment: CENTER-RIGHT;*/
+/*}*/
 
-/* Remove spinner arrows from numeric fields */
-.form-field:numeric .increment-arrow-button,
-.form-field:numeric .decrement-arrow-button {
-    -fx-opacity: 0;
-    -fx-padding: 0;
-}
+/*!* Remove spinner arrows from numeric fields *!*/
+/*.form-field:numeric .increment-arrow-button,*/
+/*.form-field:numeric .decrement-arrow-button {*/
+/*    -fx-opacity: 0;*/
+/*    -fx-padding: 0;*/
+/*}*/
 
 /* Property Type Sections */
 .property-details-section {

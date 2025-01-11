@@ -29,7 +29,7 @@
                         <Tab fx:id="paymentTab" text="Payment" />
                         <Tab fx:id="rentalAgreementTab" style="height: 720;" text="Rental Agreement">
                             <content>
-                                <fx:include source="RentalAgreementView.fxml"/>
+                                <fx:include source="rental-agreement-management/RentalAgreementView.fxml"/>
                             </content>
                         </Tab>
                     </tabs>
@@ -38,6 +38,6 @@
         </VBox>
     </center>
     <left>
-        <fx:include source="SideMenu.fxml" />
+        <fx:include source="../SideMenu.fxml" />
     </left>
 </BorderPane>
