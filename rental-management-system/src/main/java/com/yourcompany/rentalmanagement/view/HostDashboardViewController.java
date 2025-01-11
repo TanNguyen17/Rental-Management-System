@@ -163,6 +163,9 @@ public class HostDashboardViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeSideMenu();
+        new Thread(() -> {
+
+        }).start();
         initializeTableData();
         initializePieChart();
         initializeLineChart();

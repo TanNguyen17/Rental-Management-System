@@ -61,8 +61,13 @@ public class PropertyView implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadAddress();
         setupLoadingSpinner();
-        loadAvailableProperty();
-        setupPropertyList();
+
+        new Thread(() -> {
+            loadAvailableProperty();
+            Platform.runLater(() -> {
+                setupPropertyList();
+            });
+        }).start();
     }
 
     private void setupLoadingSpinner() {
