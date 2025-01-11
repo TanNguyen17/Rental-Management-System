@@ -51,4 +51,5 @@ public class Tenant extends User {
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
     }
+
 }

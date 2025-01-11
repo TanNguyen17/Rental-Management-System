@@ -50,7 +50,7 @@ public class SideMenuView implements Initializable {
         configureMenu();
         populateMenu();
 
-//        // Show initial view based on user role
+        // Show initial view based on user role (No need)
 //        Platform.runLater(() -> {
 //            UserRole role = userSession.getCurrentUser().getRole();
 //            String initialView = switch (role) {
@@ -145,8 +145,6 @@ public class SideMenuView implements Initializable {
 //            profile.setOnMouseClicked(event -> loadView("/fxml/ProfileView.fxml"));
 //        }
 //        if (userSession.getCurrentUser().getRole().equals(UserRole.HOST)) {
-//            dashboard.setOnMouseClicked(event -> loadView("/fxml/HostDashBoard.fxml"));
-//            property.setOnMouseClicked(event -> loadView("/fxml/PropertyView.fxml"));
 //            rentalAgreement.setOnMouseClicked(event -> loadView("/fxml/RentalAgreementListView.fxml"));
 //            payment.setOnMouseClicked(event -> loadView("/fxml/PaymentView.fxml"));
 //            profile.setOnMouseClicked(event -> loadView("/fxml/ProfileView.fxml"));

@@ -1,6 +1,7 @@
 package com.yourcompany.rentalmanagement.dao;
 
 import java.util.List;
+
 import java.util.Map;
 
 public interface UserDao {
@@ -9,7 +10,9 @@ public interface UserDao {
 
     public <T extends Object> T getUserById(long id);
 
-    public long getTotalUsers();
+    void loadData();
+
+    public List<String> getAllUserName();
 
     public Map<String, Object> updateProfile(long id, Map<String, Object> profile);
 
@@ -18,4 +21,6 @@ public interface UserDao {
     public Map<String, Object> updateAddress(long id, Map<String, Object> address);
 
     public Map<String, Object> updatePassword(long id, String oldPassword, String newPassword);
+
+
 }

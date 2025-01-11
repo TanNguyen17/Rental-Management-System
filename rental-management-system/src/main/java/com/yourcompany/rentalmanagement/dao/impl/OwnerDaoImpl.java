@@ -17,8 +17,8 @@ import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.TimeFormat;
 
 public class OwnerDaoImpl implements UserDao {
-
     private List<Owner> owners = new ArrayList<>();
+    private List<String> ownerNames = new ArrayList<>();
     private Owner owner;
     private Transaction transaction;
     private Map<String, Object> result;
@@ -28,9 +28,14 @@ public class OwnerDaoImpl implements UserDao {
     }
 
     @Override
+    public void loadData(){}
+
+    @Override
     public List<Owner> loadAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             owners = session.createQuery("from Owner", Owner.class).list();
+            // owners.forEach(System.out::println);
+            transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -40,6 +45,26 @@ public class OwnerDaoImpl implements UserDao {
         return owners;
     }
 
+    public List<Owner> getOwners() {
+        return this.owners;
+    }
+
+    @Override
+    public List<String> getAllUserName() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Query<String> query = session.createQuery("select username from Owner ", String.class);
+            ownerNames = query.getResultList();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return ownerNames;
+    }
     @Override
     public long getTotalUsers() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {

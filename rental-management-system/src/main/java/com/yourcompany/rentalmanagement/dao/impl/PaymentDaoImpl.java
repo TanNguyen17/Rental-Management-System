@@ -1,10 +1,7 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
 import com.yourcompany.rentalmanagement.dao.PaymentDao;
-import com.yourcompany.rentalmanagement.model.Payment;
-import com.yourcompany.rentalmanagement.model.RentalAgreement;
-import com.yourcompany.rentalmanagement.model.Tenant;
-import com.yourcompany.rentalmanagement.model.UserRole;
+import com.yourcompany.rentalmanagement.model.*;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
@@ -71,20 +68,23 @@ public class PaymentDaoImpl implements PaymentDao {
     }
 
     @Override
-    public Map<String, String> createPayment(Payment payment, long rentalAgreementId, long tenantId) {
+    public Map<String, String> createPayment(Payment payment, long rentalAgreementId) {
         Payment lastPayment = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+            Query<RentalAgreement> query = session.createQuery("SELECT ra FROM RentalAgreement ra LEFT JOIN FETCH ra.tenants WHERE ra.id = :id", RentalAgreement.class);
+            query.setParameter("id", rentalAgreementId);
+            RentalAgreement rentalAgreement = query.getSingleResult();
+//            Tenant tenant = session.get(Tenant.class, tenantId);
+            if (rentalAgreement != null) {
+                System.out.println(rentalAgreement.getId());
+                payment.setRentalAgreement(rentalAgreement);
+                payment.setTenant(rentalAgreement.getTenants().get(0));
+                session.persist(payment);
+                data.put("status", "success");
+            }
 
-            RentalAgreement rentalAgreement = session.get(RentalAgreement.class, rentalAgreementId);
-            Tenant tenant = session.get(Tenant.class, tenantId);
-
-            payment.setRentalAgreement(rentalAgreement);
-            payment.setTenant(tenant);
-
-            session.persist(payment);
             transaction.commit();
-            data.put("status", "success");
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -128,6 +128,10 @@ public class PaymentDaoImpl implements PaymentDao {
                     predicates.add(criteriaBuilder.equal(tenant.get("id"), userId));
 //                    criteriaQuery.select(paymentRoot);
 //                    criteriaQuery.where(criteriaBuilder.equal(tenant.get("id"), userId));
+                } else if (userRole.equals(UserRole.HOST)) {
+                    Join<Payment, RentalAgreement> rentalAgreementJoin = paymentRoot.join("rentalAgreement", JoinType.INNER);
+                    Join<RentalAgreement, Host> rentalAgreementHostJoin = rentalAgreementJoin.join("host", JoinType.INNER);
+                    predicates.add(criteriaBuilder.equal(rentalAgreementHostJoin.get("id"), userId));
                 }
             }
 
@@ -176,8 +180,8 @@ public class PaymentDaoImpl implements PaymentDao {
     public Payment getLatestPayment(RentalAgreement rentalAgreement, LocalDate today) {
         Payment lastPayment = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Payment> query = session.createQuery("SELECT p FROM Payment WHERE rentalAgreement = :agreement ORDER BY dueDate DESC", Payment.class);
-            query.setParameter("agreement", rentalAgreement);
+            Query<Payment> query = session.createQuery("SELECT p FROM Payment p LEFT JOIN FETCH RentalAgreement rA ON rA.id = :agreement ORDER BY dueDate DESC", Payment.class);
+            query.setParameter("agreement", rentalAgreement.getId());
             query.setMaxResults(1);
             lastPayment = query.uniqueResult();
 
@@ -219,6 +223,33 @@ public class PaymentDaoImpl implements PaymentDao {
             e.printStackTrace();
         }
         return count;
+    }
+
+    @Override
+    public Map<String, String> updatePaymentStatus(long paymentId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Query<Payment> query = session.createQuery("SELECT p FROM Payment p WHERE p.id = :id", Payment.class);
+            query.setParameter("id", paymentId);
+            Payment payment = query.uniqueResult();
+
+            if (payment != null) {
+                System.out.println(payment.getId());
+                payment.setStatus(Payment.paymentStatus.PAID);
+                session.persist(payment);
+            } else {
+                System.out.println("None");
+            }
+            transaction.commit();
+            data.put("status", "success");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            data.put("status", "failed");
+        }
+        return data;
     }
 
     public List<Double> getMonthlyPayment(long id, String type) {

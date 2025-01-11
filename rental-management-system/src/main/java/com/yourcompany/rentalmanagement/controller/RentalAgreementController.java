@@ -1,5 +1,6 @@
 package com.yourcompany.rentalmanagement.controller;
 
+import com.yourcompany.rentalmanagement.dao.RentalAgreementDao;
 import com.yourcompany.rentalmanagement.dao.impl.RentalAgreementDaoImpl;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
@@ -24,7 +25,7 @@ public class RentalAgreementController {
 
     public List<RentalAgreement> getAllRentalAgreements(UserRole userRole, long userId) {
         if (userRole.equals(UserRole.TENANT)) {
-            return rentalAgreementDao.getRentalAgreementByRole(userRole, userId);
+            return rentalAgreementDao.getRentalAgreementsByRole(userRole, userId);
         }
         else {
             return rentalAgreementDao.getAllRentalAgreements();
@@ -43,5 +44,22 @@ public class RentalAgreementController {
         } else {
             rentalAgreementCreationView.showSuccessAlert("Rental Agreement Creation", "Rental Agreement failed to create.");
         }
+    }
+
+
+    public void createRentalAgreement(Map<String, Object> data) {
+        rentalAgreementDao.createRentalAgreement(data);
+    }
+
+    public void updateRentalAgreementById(long id, Map<String, Object> data){
+        rentalAgreementDao.updateRentalAgreementById(id, data);
+    }
+
+    public void deleteRentalAgreementById(long id){
+        rentalAgreementDao.deleteRentalAgreementById(id);
+    }
+
+    public RentalAgreement getRentalAgreementById(long id){
+        return rentalAgreementDao.getRentalAgreementById(id);
     }
 }
