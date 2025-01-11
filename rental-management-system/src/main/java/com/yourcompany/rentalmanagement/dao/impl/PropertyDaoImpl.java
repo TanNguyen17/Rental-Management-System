@@ -477,6 +477,26 @@ public class PropertyDaoImpl implements PropertyDao {
         }
     }
 
+    public long getTotalPropertyCount() {
+        long residentialCount = 0;
+        long commercialCount = 0;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // Count Residential Properties
+            Query<Long> residentialQuery = session.createQuery("SELECT COUNT(r) FROM ResidentialProperty r", Long.class);
+            residentialCount = residentialQuery.uniqueResult() != null ? residentialQuery.uniqueResult() : 0L;
+
+            // Count Commercial Properties
+            Query<Long> commercialQuery = session.createQuery("SELECT COUNT(c) FROM CommercialProperty c", Long.class);
+            commercialCount = commercialQuery.uniqueResult() != null ? commercialQuery.uniqueResult() : 0L;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Return the total count
+        return residentialCount + commercialCount;
+    }
+
     public List<ResidentialProperty> getResidentialPropertiesByOwner(long ownerId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery(
@@ -613,5 +633,25 @@ public class PropertyDaoImpl implements PropertyDao {
         }
 
         return incomeByProperty;
+    }
+
+    public long getTotalCommercialPropertyCount() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Long> query = session.createQuery("select count(*) from CommercialProperty ");
+            return query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public long getTotalResidentialPropertyCount() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Long> query = session.createQuery("select count(*) from ResidentialProperty ");
+            return query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

@@ -91,12 +91,64 @@ public class RentalAgreementDaoImpl implements RentalManagementDao {
         return data;
     }
 
-//    public static void main(String[] args) {
-//        RentalManagementDao test = new RentalAgreementDaoImpl();
-//        List<RentalAgreement> db = test.getAllRentalAgreements();
-//        System.out.println("======================");
-//        for (RentalAgreement rentalAgreement : db){
-//            System.out.println(rentalAgreement.getTenants());
-//        }
-//    }
+    public Map<Integer, Long> getYearlyRentalAgreements(String type) {
+        Map<Integer, Long> yearlyRentalCounts = new HashMap<>();
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Object[]> query;
+            if (type.equalsIgnoreCase("residential")) {
+                query = session.createQuery(
+                        "SELECT YEAR(ra.startContractDate), COUNT(ra) " +
+                                "FROM RentalAgreement ra JOIN ra.residentialProperty " +
+                                "WHERE ra.startContractDate IS NOT NULL " +
+                                "GROUP BY YEAR(ra.startContractDate) " +
+                                "ORDER BY YEAR(ra.startContractDate)",
+                        Object[].class
+                );
+            } else if (type.equalsIgnoreCase("commercial")) {
+                query = session.createQuery(
+                        "SELECT YEAR(ra.startContractDate), COUNT(ra) " +
+                                "FROM RentalAgreement ra JOIN ra.commercialProperty " +
+                                "WHERE ra.startContractDate IS NOT NULL " +
+                                "GROUP BY YEAR(ra.startContractDate) " +
+                                "ORDER BY YEAR(ra.startContractDate)",
+                        Object[].class
+                );
+            } else {
+                throw new IllegalArgumentException("Invalid type. Must be 'residential' or 'commercial'.");
+            }
+
+            // Process query results
+            List<Object[]> results = query.getResultList();
+            for (Object[] result : results) {
+                int year = (Integer) result[0]; // Extract the year
+                long count = (Long) result[1]; // Extract the count
+                yearlyRentalCounts.put(year, count);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return yearlyRentalCounts;
+    }
+
+    public void printMonthlyRentalCounts(String type) {
+        // Call the getMonthlyRentalAgreements method to get the data
+        Map<Integer, Long> yearlyRentalCounts = getYearlyRentalAgreements(type);
+
+        // Print the type for clarity
+        System.out.println("Yearly Rental Counts for " + type + " properties:");
+
+        // Iterate and print each month with its rental count
+        yearlyRentalCounts.forEach((year, count) ->
+                System.out.println(year + ": " + count + " agreements")
+        );
+    }
+
+    public static void main(String[] args) {
+        RentalAgreementDaoImpl dao = new RentalAgreementDaoImpl();
+        dao.printMonthlyRentalCounts("commercial");
+        dao.printMonthlyRentalCounts("residential");
+    }
 }

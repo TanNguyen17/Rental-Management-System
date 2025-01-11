@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="720.0" maxWidth="1280.0" minHeight="600.0" minWidth="800.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com/yourcompany/rentalmanagement/view/StatisticalReportController.java">
+    <left>
+        <fx:include source="SideMenu.fxml" />
+    </left>
+    <center>
+      <VBox prefHeight="200.0" prefWidth="1080.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Text fx:id="title" strokeType="OUTSIDE" strokeWidth="0.0" text="Overall Statistic" />
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Text fx:id="property" strokeType="OUTSIDE" strokeWidth="0.0" text="Property" />
+                              <Text fx:id="totalProperty" strokeType="OUTSIDE" strokeWidth="0.0" text="20" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Text fx:id="host" strokeType="OUTSIDE" strokeWidth="0.0" text="Host" />
+                              <Text fx:id="totalHost" strokeType="OUTSIDE" strokeWidth="0.0" text="20" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Text fx:id="owner" strokeType="OUTSIDE" strokeWidth="0.0" text="Owner" />
+                              <Text fx:id="totalOwner" strokeType="OUTSIDE" strokeWidth="0.0" text="20" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" layoutX="210.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Text fx:id="tenant" strokeType="OUTSIDE" strokeWidth="0.0" text="Tenant" />
+                              <Text fx:id="totalTenant" strokeType="OUTSIDE" strokeWidth="0.0" text="20" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" layoutX="310.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Text fx:id="revenue" strokeType="OUTSIDE" strokeWidth="0.0" text="Revenue" />
+                              <Text fx:id="totalRevenue" strokeType="OUTSIDE" strokeWidth="0.0" text="20" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" layoutX="410.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Text fx:id="profit" strokeType="OUTSIDE" strokeWidth="0.0" text="Profit" />
+                              <Text fx:id="totalProfit" strokeType="OUTSIDE" strokeWidth="0.0" text="20" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <LineChart fx:id="lineChart" title="Renting Trend" titleSide="BOTTOM">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" fx:id="xAsix" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis fx:id="yAsix" side="LEFT" />
+                    </yAxis>
+                  </LineChart>
+                  <PieChart fx:id="pieChart" prefHeight="150.0" prefWidth="254.0" title="Total Property" titleSide="BOTTOM" />
+               </children>
+            </HBox>
+         </children></VBox>
+   </center>
+</BorderPane>

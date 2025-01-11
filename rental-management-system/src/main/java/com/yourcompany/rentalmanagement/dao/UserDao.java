@@ -12,6 +12,8 @@ public interface UserDao {
 
     public <T extends Object> T getUserById(long id);
 
+    public long getTotalUsers();
+
     public Map<String, Object> updateProfile(long id, Map<String, Object> profile);
 
     public Map<String, Object> updateUserImage(long id, String imageLink);

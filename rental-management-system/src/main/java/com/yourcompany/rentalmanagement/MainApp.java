@@ -1,5 +1,8 @@
 package com.yourcompany.rentalmanagement;
 
+import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
+import com.yourcompany.rentalmanagement.model.UserRole;
+import com.yourcompany.rentalmanagement.util.UserSession;
 import org.hibernate.SessionFactory;
 
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
@@ -21,24 +24,24 @@ public class MainApp extends Application {
                 System.out.println("Hibernate initialized successfully!");
             }
             // Check stored token
-            // UserSession userSession = UserSession.getInstance();
-            // if (userSession.getCurrentUser() != null) {
-            //     System.out.println("Found stored session for user: "
-            //             + userSession.getCurrentUser().getUsername());
-
-            //     // Ae co j implement cai nay when ae tao main view nhe
-            //     if (userSession.getCurrentUser().getRole() == UserRole.TENANT) {
-            //         loader = new FXMLLoader(getClass().getResource("/fxml/TenantView.fxml"));
-            //     } else if (userSession.getCurrentUser().getRole() == UserRole.OWNER) {
-            //         loader = new FXMLLoader(getClass().getResource("/fxml/ViewRentalProperties.fxml"));
-            //     }
-            // } else {
-            //     loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
-            // }
+//             UserSession userSession = UserSession.getInstance();
+//             if (userSession.getCurrentUser() != null) {
+//                 System.out.println("Found stored session for user: "
+//                         + userSession.getCurrentUser().getUsername());
+//
+//                 // Ae co j implement cai nay when ae tao main view nhe
+//                 if (userSession.getCurrentUser().getRole() == UserRole.TENANT) {
+//                     loader = new FXMLLoader(getClass().getResource("/fxml/TenantView.fxml"));
+//                 } else if (userSession.getCurrentUser().getRole() == UserRole.OWNER) {
+//                     loader = new FXMLLoader(getClass().getResource("/fxml/ViewRentalProperties.fxml"));
+//                 } else if (userSession.getCurrentUser().getRole() == UserRole.HOST) {
+//                     loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
+//                 }
+//             } else {
+//                 loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
+//             }
             // comment for now
-
-            loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
-
+            loader = new FXMLLoader(getClass().getResource("/fxml/StatisticalReport.fxml"));
             // If no valid stored session --> show login view
             Scene scene = new Scene(loader.load());
             scene.getStylesheets().add(getClass().getResource("/css/property-list.css").toExternalForm());
@@ -58,5 +61,6 @@ public class MainApp extends Application {
 
     public static void main(String[] args) {
         launch(args);
+
     }
 }

@@ -12,7 +12,7 @@
 
 /* Tab Pane Styling */
 .login-tab-pane {
-    -fx-tab-min-width: 172px;
+    -fx-tab-min-width: 170px;
     -fx-tab-max-width: 250px;
     -fx-background-color: transparent;
     -fx-pref-width: 500;
@@ -33,7 +33,6 @@
     -fx-border-color: #1E3058;
 }
 
-/* Remove all tab buttons/controls */
 .login-tab-pane .control-buttons-tab {
     -fx-background-color: transparent;
     -fx-padding: 0;

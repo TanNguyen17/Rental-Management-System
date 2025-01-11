@@ -30,6 +30,8 @@ public class RentalAgreementController {
         }
     }
 
+
+
     public void createRentalAgreement(RentalAgreement rentalAgreement, long tenantId, Property propertyId, long ownerId, long hostId, List<Long> subTenantIds) {
         data = rentalAgreementDao.createRentalAgreement(rentalAgreement, tenantId, propertyId, ownerId, hostId, subTenantIds);
         rentalAgreementCreationView = new RentalAgreementCreationView();

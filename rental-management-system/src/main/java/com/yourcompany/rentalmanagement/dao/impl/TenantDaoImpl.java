@@ -64,6 +64,17 @@ public class TenantDaoImpl implements UserDao {
     }
 
     @Override
+    public long getTotalUsers() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Long> query = session.createQuery("select count(*) from Tenant");
+            return query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
     public Map<String, Object> updateProfile(long id, Map<String, Object> profile) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();

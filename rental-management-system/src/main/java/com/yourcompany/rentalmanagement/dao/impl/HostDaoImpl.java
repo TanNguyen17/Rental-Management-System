@@ -3,7 +3,6 @@ package com.yourcompany.rentalmanagement.dao.impl;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import com.yourcompany.rentalmanagement.dao.HostDao;
@@ -31,5 +30,16 @@ public class HostDaoImpl implements HostDao {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public long getTotalUsers() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Long> query = session.createQuery("select count(*) from Host");
+            return query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
