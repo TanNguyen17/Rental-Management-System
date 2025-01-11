@@ -105,33 +105,6 @@ public class SideMenuView implements Initializable {
         navBar.getChildren().add(logOut);
     }
 
-//    private void setButtionActions() {
-//        if (userSession.getCurrentUser().getRole().equals(UserRole.OWNER)) {
-//            roleComboBox.setValue("OWNER");
-//            report.setVisible(false);
-//            payment.setVisible(false);
-//            home.setOnMouseClicked(event -> loadView("/fxml/ViewRentalProperties.fxml"));
-//            rentalAgreement.setOnMouseClicked(event -> loadView("/fxml/RentalAgreementListView.fxml"));
-//            profile.setOnMouseClicked(event -> loadView("/fxml/ProfileView.fxml"));
-//        }
-//        if (userSession.getCurrentUser().getRole().equals(UserRole.TENANT)) {
-//            roleComboBox.setValue("TENANT");
-//            home.setOnMouseClicked(event -> loadView("/fxml/PropertiesView.fxml"));
-//            rentalAgreement.setOnMouseClicked(event -> loadView("/fxml/RentalAgreementListView.fxml"));
-//            payment.setOnMouseClicked(event -> loadView("/fxml/PaymentView.fxml"));
-//            profile.setOnMouseClicked(event -> loadView("/fxml/ProfileView.fxml"));
-//        }
-//        if (userSession.getCurrentUser().getRole().equals(UserRole.HOST)) {
-//            rentalAgreement.setOnMouseClicked(event -> loadView("/fxml/RentalAgreementListView.fxml"));
-//            payment.setOnMouseClicked(event -> loadView("/fxml/PaymentView.fxml"));
-//            profile.setOnMouseClicked(event -> loadView("/fxml/ProfileView.fxml"));
-//        }
-//        if (userSession.getCurrentUser().getRole().equals(UserRole.MANAGER)) {
-//            home.setOnMouseClicked(event -> loadView("/fxml/ManagerDashBoard.fxml"));
-//            profile.setOnMouseClicked(event -> loadView("/fxml/ProfileView.fxml"));
-//        }
-//    }
-
     private void loadView(String fxmlPath) {
         try {
             AnchorPane anchorPane = FXMLLoader.load(getClass().getResource(fxmlPath));

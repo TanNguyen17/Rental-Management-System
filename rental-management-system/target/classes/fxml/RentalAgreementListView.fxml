@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="836.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="720.0" prefWidth="921.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementListView">
    <children>
       <VBox spacing="10.0" stylesheets="@../css/rental-agreement.css">
          <children>
-            <TableView fx:id="rentalAgreementTableView" styleClass="table-view" VBox.vgrow="ALWAYS">
+            <TableView fx:id="rentalAgreementTableView" prefHeight="574.0" prefWidth="953.0" styleClass="table-view" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="agreementId" prefWidth="75.0" styleClass="table-column" text="ID" />
                   <TableColumn fx:id="status" prefWidth="100.0" styleClass="table-column-status" text="STATUS" />

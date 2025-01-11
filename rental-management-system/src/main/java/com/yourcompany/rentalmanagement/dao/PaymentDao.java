@@ -12,10 +12,11 @@ import java.util.Optional;
 
 public interface PaymentDao {
     public List<Payment> loadData(int pageNumber, Map<String, String> filterValue);
-    public Map<String, String> createPayment(Payment payment, long rentalAgreementId, long tenantId);
+    public Map<String, String> createPayment(Payment payment, long rentalAgreementId);
     public List<Payment> loadDataByRole(int pageNumber, Map<String, String> filterValue, UserRole userRole, long userId);
     public Tenant getTenant(long paymentId);
     public Payment getLatestPayment(RentalAgreement rentalAgreement, LocalDate today);
     public Long getPaymentCount(Map<String, String> filterValue);
+    public Map<String, String> updatePaymentStatus(long paymentId);
 }
 

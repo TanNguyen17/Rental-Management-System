@@ -2,8 +2,11 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.PaymentController;
 import com.yourcompany.rentalmanagement.model.Payment;
+import com.yourcompany.rentalmanagement.model.Tenant;
+import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.AlertUtils;
+import com.yourcompany.rentalmanagement.util.EmailUtil;
 import com.yourcompany.rentalmanagement.util.UserSession;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -25,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -41,6 +45,7 @@ public class PaymentsView implements Initializable {
     private Map<Integer, List<Payment>> pageCache = new HashMap<>();
     private Map<String, String> filter = new HashMap<>();
     private UserSession userSession = UserSession.getInstance();
+    private User currentUser = userSession.getCurrentUser();
 //    private User currentUser = UserSession.getInstance().getCurrentUser();
 
     private int currentPageIndex = 1;
@@ -169,23 +174,47 @@ public class PaymentsView implements Initializable {
                         FontAwesomeIconView viewIcon = new FontAwesomeIconView(FontAwesomeIcon.EYE);
                         viewIcon.getStyleClass().add("action-icon");
 
-                        FontAwesomeIconView payIcon = new FontAwesomeIconView(FontAwesomeIcon.MONEY);
-                        payIcon.getStyleClass().add("action-icon");
+                        FontAwesomeIconView payIcon = null;
+                        FontAwesomeIconView sendEmailIcon = null;
+
+                        if (currentUser.getRole().equals(UserRole.TENANT)) {
+                            payIcon = new FontAwesomeIconView(FontAwesomeIcon.MAIL_REPLY);
+                            payIcon.getStyleClass().add("action-icon");
+                        } else {
+                            sendEmailIcon = new FontAwesomeIconView(FontAwesomeIcon.MAIL_REPLY);
+                        }
+
 
                         viewIcon.setStyle(
                                 "-fx-cursor: hand ;"
                                         + "-glyph-size:20px;"
+                                + "-fx-color: #fff"
                         );
+                        payIcon.setStyle(
+                                "-fx-cursor: hand ;"
+                                        + "-glyph-size:20px;"
+                                        + "-fx-color: #fff"
+                        );
+
+                        HBox action = null;
 
                         viewIcon.setOnMouseClicked(event -> {
                             handleViewPayment();
                         });
 
-                        payIcon.setOnMouseClicked(event -> {
-                            handlePayment();
-                        });
+                        if (payIcon != null) {
+                            payIcon.setOnMouseClicked(event -> {
+                                handlePayment();
+                            });
+                            action = new HBox(viewIcon, payIcon);
+                        }
+                        if (sendEmailIcon != null) {
+                            sendEmailIcon.setOnMouseClicked(event -> {
+                                handleSendEmail();
+                            });
+                            action = new HBox(viewIcon, sendEmailIcon);
+                        }
 
-                        HBox action = new HBox(viewIcon, payIcon);
                         action.setStyle("-fx-alignment:center");
                         action.setSpacing(5);
                         setGraphic(action);
@@ -221,24 +250,26 @@ public class PaymentsView implements Initializable {
         stage.show();
     }
 
-    //    private void handleSendEmail() {
-//        payment = paymentTable.getSelectionModel().getSelectedItem();
-//        if (payment == null) return;
-//
-//        Tenant tenant = paymentController.getTenant(payment.getId());
-//        if (tenant == null || tenant.getEmail() == null || tenant.getEmail().isEmpty()) {
-//            // Handle case where tenant or email is not found
-//            System.out.println("Tenant or email not found for payment: " + payment.getId());
-//            return;
-//        }
-//        System.out.println(tenant.getEmail());
-//
-//        try {
-//            EmailUtil.sendEmail(tenant.getEmail(), "gagag", "gagaga");
-//        } catch (MessagingException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    private void handleSendEmail() {
+        payment = paymentTable.getSelectionModel().getSelectedItem();
+        if (payment == null) return;
+
+        Tenant tenant = paymentController.getTenant(payment.getId());
+        if (tenant == null || tenant.getEmail() == null || tenant.getEmail().isEmpty()) {
+            // Handle case where tenant or email is not found
+            System.out.println("Tenant or email not found for payment: " + payment.getId());
+            return;
+        }
+        System.out.println(tenant.getEmail());
+
+        try {
+            EmailUtil.sendEmail(tenant.getEmail(), "Payment Reminder from Rental Management System", "Hi this is" +
+                    "a reminder for your rental payment payment info " + payment.getReceipt() + "with fee of: " + payment.getAmount()
+                    + "due date " + payment.getDueDate());
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private void handlePayment() {
         payment = paymentTable.getSelectionModel().getSelectedItem();
         if (payment == null) {
@@ -248,8 +279,11 @@ public class PaymentsView implements Initializable {
         if (payment.getStatus().toString().toLowerCase().equals("paid")) {
             AlertUtils.showSuccessAlert("Payment is paid", "Your transaction has been paid");
         } else {
-            AlertUtils.showSuccessAlert("Payment is completed", "Your transaction has been completed successfully");
-            payment.setStatus(Payment.paymentStatus.PAID);
+            if (paymentController.changePaymentStatus(payment.getId())) {
+                AlertUtils.showSuccessAlert("Payment is completed", "Your transaction has been completed successfully");
+            } else {
+                AlertUtils.showErrorAlert("Payment is not completed", "Your transaction is not completed due to some error");
+            }
         }
     }
 
@@ -288,7 +322,7 @@ public class PaymentsView implements Initializable {
         }
         isLoading = true;
         new Thread(() -> {
-            List<Payment> paymentList = paymentController.getPaymentsOfTenant(page, filter, UserRole.TENANT, userSession.getCurrentUser().getId());
+            List<Payment> paymentList = paymentController.getPaymentsByRole(page, filter, currentUser.getRole(), currentUser.getId());
 
             Platform.runLater(() -> {
                 if (!paymentList.isEmpty()) {

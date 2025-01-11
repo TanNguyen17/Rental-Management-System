@@ -22,15 +22,19 @@ public class PaymentScheduler {
     public void startPaymentGeneration() {
         Runnable paymentGenerator = () -> {
             LocalDate today = LocalDate.now();
+            System.out.println(today);
             List<RentalAgreement> activeRentalAgreement = rentalAgreementController.getActiveRentalAgreements(today);
             for (RentalAgreement rentalAgreement : activeRentalAgreement) {
+
                 if (paymentController.shouldGeneratePayment(rentalAgreement, today)) {
                     // Create payment
                     Payment payment = createPayment(rentalAgreement, today);
-                    paymentController.createPayment(payment, rentalAgreement.getId(), rentalAgreement.getTenants().get(0).getId());
+                    paymentController.createPayment(payment, rentalAgreement.getId());
                 }
             }
         };
+
+        paymentGenerator.run();
 
         long initialDelay = calculateInitialDelay();
         scheduler.scheduleAtFixedRate(paymentGenerator, initialDelay, 24, TimeUnit.HOURS);
@@ -49,8 +53,6 @@ public class PaymentScheduler {
         payment.setAmount(agreement.getRentingFee());
         payment.setStatus(Payment.paymentStatus.UNPAID);
         payment.setDueDate(dueDate);
-//        payment.setTenant(agreement.getTenants().get(0));
-//        payment.setRentalAgreement(agreement);
         return payment;
     }
 }
