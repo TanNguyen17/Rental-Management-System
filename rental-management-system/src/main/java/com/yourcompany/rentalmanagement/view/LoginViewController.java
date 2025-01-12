@@ -179,6 +179,12 @@ public class LoginViewController {
                 stage.setTitle("Rental Management System");
                 stage.show();
             } else if (currentUser instanceof Manager) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ManagerView.fxml"));
+                Scene scene = new Scene(loader.load());
+                Stage stage = (Stage) messageLabel.getScene().getWindow();
+                stage.setScene(scene);
+                stage.setTitle("Rental Management System");
+                stage.show();
 
             } else if (currentUser instanceof Host) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
