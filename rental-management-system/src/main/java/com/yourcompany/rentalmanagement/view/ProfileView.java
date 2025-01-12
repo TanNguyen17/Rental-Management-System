@@ -13,7 +13,10 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.yourcompany.rentalmanagement.controller.UserController;
+import com.yourcompany.rentalmanagement.model.Payment;
+import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.model.User;
+import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.AddressData;
 import com.yourcompany.rentalmanagement.util.AlertUtils;
 import com.yourcompany.rentalmanagement.util.CloudinaryService;
@@ -26,20 +29,19 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
+import static com.yourcompany.rentalmanagement.model.Payment.*;
+
 
 public class ProfileView implements Initializable {
     private UserController userController;
     private CloudinaryService cloudinaryService = new CloudinaryService();
-    private User currentUser = UserSession.getInstance().getCurrentUser();
+    private Tenant currentUser = (Tenant) UserSession.getInstance().getCurrentUser();
 
     @FXML
     private Text username;
@@ -125,13 +127,19 @@ public class ProfileView implements Initializable {
     @FXML
     private Button updateAddressButton;
 
+    @FXML
+    private Label paymentText;
+
+    @FXML
+    private ComboBox<paymentMethod> paymentChoice;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         userController = new UserController();
         // Load User Data in Background
         new Thread(() -> {
             // Load user data
-            currentUser = userController.getUserProfile(currentUser.getId(), currentUser.getRole());
+            currentUser = (Tenant) userController.getUserProfile(currentUser.getId(), currentUser.getRole());
 
             // Update UI on JavaFX Application Thread
             Platform.runLater(() -> {
@@ -167,6 +175,16 @@ public class ProfileView implements Initializable {
 
         phoneNumber.setText(currentUser.getPhoneNumber() != null ? currentUser.getPhoneNumber() : "Phone Number");
         dateOfBirth.setValue(currentUser.getDob() != null ? currentUser.getDob() : LocalDate.of(2025, 1, 1));
+
+        paymentText.setVisible(false);
+        paymentChoice.setVisible(false);
+        if (currentUser.getRole().equals(UserRole.TENANT)) {
+            paymentText.setVisible(true);
+            paymentChoice.setVisible(true);
+            paymentChoice.setValue(currentUser.getPaymentMethod() != null ? currentUser.getPaymentMethod() : null);
+            ObservableList<Payment.paymentMethod> methodOptions = FXCollections.observableArrayList(Payment.paymentMethod.values());
+            paymentChoice.setItems(methodOptions);
+        }
     }
 
     // handle add current user address
@@ -220,6 +238,7 @@ public class ProfileView implements Initializable {
             data.put("email", emailText);
             data.put("phoneNumber", phoneNumberText);
             data.put("dob", date);
+            data.put("paymentMethod", paymentChoice.getValue());
             userController.updateProfile(currentUser.getId(), data, currentUser.getRole());
         }
     }

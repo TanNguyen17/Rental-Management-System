@@ -80,14 +80,16 @@ public class SideMenuView implements Initializable {
                 "Payments", "/fxml/PaymentsView.fxml"
         )));
         menuConfig.put(UserRole.HOST, new LinkedHashMap<>(Map.of(
-                "Profile", "/fxml/ProfileView.fxml",
+                "Dashboard", "/fxml/HostDashboardView.fxml",
+                "Property", "/fxml/ViewRentalProperties.fxml",
                 "Rental Agreements", "/fxml/RentalAgreementListView.fxml",
-                "Payments", "/fxml/PaymentsView.fxml"
+                "Payments", "/fxml/PaymentsView.fxml",
+                "Profile", "/fxml/ProfileView.fxml"
         )));
         menuConfig.put(UserRole.MANAGER, new LinkedHashMap<>(Map.of(
                 "Profile", "/fxml/ProfileView.fxml",
                 "Dashboard", "/fxml/manager/ManagerDashBoard.fxml",
-                "Statistical Report", "/fxml/manager/ManagerDashBoard.fxml"
+                "Statistical Report", "/fxml/manager/StatisticalReport.fxml"
         )));
     }
 
@@ -108,7 +110,7 @@ public class SideMenuView implements Initializable {
         } else if (role.equals(UserRole.TENANT)) {
             buttonOrder.addAll(Arrays.asList("Home", "Rental Agreements", "Payments", "Profile"));
         } else if (role.equals(UserRole.HOST)) {
-            buttonOrder.addAll(Arrays.asList("Rental Agreements", "Payments", "Profile"));
+            buttonOrder.addAll(Arrays.asList("Dashboard","Property","Rental Agreements", "Payments", "Profile"));
         } else if (role.equals(UserRole.MANAGER)) {
             buttonOrder.addAll(Arrays.asList("Dashboard", "Profile"));
         }

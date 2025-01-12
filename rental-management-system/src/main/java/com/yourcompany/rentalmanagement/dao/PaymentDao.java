@@ -8,7 +8,6 @@ import com.yourcompany.rentalmanagement.model.UserRole;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public interface PaymentDao {
     public List<Payment> loadData(int pageNumber, Map<String, String> filterValue);
@@ -18,5 +17,6 @@ public interface PaymentDao {
     public Payment getLatestPayment(RentalAgreement rentalAgreement, LocalDate today);
     public Long getPaymentCount(Map<String, String> filterValue);
     public Map<String, String> updatePaymentStatus(long paymentId);
+    public List<Payment> getAllPaidPayments(Payment.paymentStatus status);
 }
 

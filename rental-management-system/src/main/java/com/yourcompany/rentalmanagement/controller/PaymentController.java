@@ -1,5 +1,6 @@
 package com.yourcompany.rentalmanagement.controller;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -57,5 +58,14 @@ public class PaymentController {
             return false;
         }
         return true;
+    }
+    public String getTotalIncome() {
+        List<Payment> payments = paymentDao.getAllPaidPayments(Payment.paymentStatus.PAID);
+        double totalIncome = 0;
+        for (Payment payment : payments) {
+            totalIncome += payment.getAmount();
+        }
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        return decimalFormat.format(totalIncome);
     }
 }

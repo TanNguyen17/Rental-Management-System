@@ -78,6 +78,18 @@ public class OwnerDaoImpl implements UserDao {
     }
 
 
+
+    @Override
+    public long getTotalUsers() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Long> query = session.createQuery("select count(*) from Owner");
+            return query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     @Override
     public Map<String, Object> updateProfile(long id, Map<String, Object> profile) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -155,7 +167,6 @@ public class OwnerDaoImpl implements UserDao {
             if (owner != null) {
                 Address address = owner.getAddress();
                 address.setCity(data.get("province").toString());
-                address.setCity(data.get("city").toString());
                 address.setNumber(data.get("streetNumber").toString());
                 address.setStreet(data.get("streetName").toString());
                 address.setWard(data.get("ward").toString());

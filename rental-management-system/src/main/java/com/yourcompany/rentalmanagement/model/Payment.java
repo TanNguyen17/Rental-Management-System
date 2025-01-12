@@ -28,17 +28,18 @@ public class Payment {
     @Column(name = "receipt", nullable = false, unique = true, updatable = false)
     private String receipt;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "method", nullable = false)
-    private String method;
+    private paymentMethod method;
 
     @Column(name = "amount", nullable = false, length = 10)
     private double amount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private paymentStatus status;
 
-    @Column(name = "dueDate")
+    @Column(name = "dueDate", nullable = false)
     private LocalDate dueDate;
 
     @ManyToOne(targetEntity = Tenant.class)
@@ -81,11 +82,11 @@ public class Payment {
         this.receipt = receipt;
     }
 
-    public String getMethod() {
+    public paymentMethod getMethod() {
         return method;
     }
 
-    public void setMethod(String method) {
+    public void setMethod(paymentMethod method) {
         this.method = method;
     }
 
@@ -116,5 +117,11 @@ public class Payment {
     public enum paymentStatus {
         PAID,
         UNPAID,
+    }
+
+    public enum paymentMethod {
+        CARD,
+        CASH,
+        ONLINE_WALLET
     }
 }

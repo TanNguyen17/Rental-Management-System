@@ -3,14 +3,7 @@ package com.yourcompany.rentalmanagement.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Tenant", uniqueConstraints = {
@@ -32,6 +25,10 @@ public class Tenant extends User {
     @OneToMany(mappedBy = "tenant", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private List<Payment> payments = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "paymentMethod")
+    private Payment.paymentMethod paymentMethod;
+
     public List<RentalAgreement> getRentalAgreements() {
         return rentalAgreements;
     }
@@ -52,4 +49,11 @@ public class Tenant extends User {
         this.payments = payments;
     }
 
+    public Payment.paymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(Payment.paymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
 }

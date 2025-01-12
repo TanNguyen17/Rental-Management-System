@@ -24,12 +24,13 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         new Thread(() -> {
             paymentScheduler.startPaymentGeneration();
-        });
+            System.out.println("Payment generation started");
+        }).start();
+
         new Thread(() -> {
             // Load address data
             AddressData.fetchProvinceData();
             System.out.println("Province Data fetched: ");
-
         }).start();
 
         try {
@@ -49,7 +50,7 @@ public class MainApp extends Application {
                 } else if (userSession.getCurrentUser().getRole() == UserRole.OWNER) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/OwnerView.fxml"));
                 } else if (userSession.getCurrentUser().getRole() == UserRole.HOST) {
-                    loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
+                    loader = new FXMLLoader(getClass().getResource("/fxml/HostView.fxml"));
                 }  else if (userSession.getCurrentUser().getRole() == UserRole.MANAGER) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/ManagerView.fxml"));
                 }

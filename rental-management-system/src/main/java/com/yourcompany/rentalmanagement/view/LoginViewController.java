@@ -158,7 +158,7 @@ public class LoginViewController {
         try {
             User currentUser = UserSession.getInstance().getCurrentUser();
 
-            if (currentUser instanceof Owner || currentUser instanceof Manager) {
+            if (currentUser instanceof Owner) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OwnerView.fxml"));
                 Scene scene = new Scene(loader.load());
 
@@ -187,7 +187,7 @@ public class LoginViewController {
                 stage.show();
 
             } else if (currentUser instanceof Host) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HostView.fxml"));
                 Scene scene = new Scene(loader.load());
                 Stage stage = (Stage) messageLabel.getScene().getWindow();
                 stage.setScene(scene);

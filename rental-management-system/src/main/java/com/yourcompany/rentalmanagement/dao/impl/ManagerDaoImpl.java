@@ -1,19 +1,23 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.yourcompany.rentalmanagement.model.User;
+import com.yourcompany.rentalmanagement.model.*;
+import com.yourcompany.rentalmanagement.util.TimeFormat;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import com.yourcompany.rentalmanagement.dao.ManagerDao;
-import com.yourcompany.rentalmanagement.model.Manager;
-import com.yourcompany.rentalmanagement.model.Payment;
-import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
 public class ManagerDaoImpl implements ManagerDao {
+    Map<String, Object> result = new HashMap<String, Object>();
+    Manager manager = null;
+    Transaction transaction = null;
 
     @Override
     public void create(Manager manager) {
@@ -161,5 +165,126 @@ public class ManagerDaoImpl implements ManagerDao {
                 // Validate payment relationships
             }
         }
+    }
+    @Override
+    public Map<String, Object> updateProfile(long id, Map<String, Object> profile) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            manager = session.get(Manager.class, id);
+
+            if (manager != null) {
+                manager.setUsername((String) profile.get("username"));
+                manager.setDob(TimeFormat.stringToDate((String) profile.get("dob")));
+                manager.setDob(LocalDate.parse((String) profile.get("dob")));
+                manager.setEmail((String) profile.get("email"));
+                manager.setPhoneNumber(profile.get("phoneNumber").toString());
+            }
+            transaction.commit();
+            result.put("status", "success");
+            result.put("message", "Address updated successfully");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            result.put("status", "failed");
+            result.put("message", e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> updateUserImage(long id, String imageLink) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            manager = session.get(Manager.class, id);
+
+            if (manager != null) {
+                manager.setProfileImage(imageLink);
+                session.persist(manager);
+            }
+            transaction.commit();
+            result.put("status", "success");
+            result.put("message", "Image updated successfully");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            result.put("status", "failed");
+            result.put("message", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> updateAddress(long id, Map<String, Object> data) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Query<Manager> query = session.createQuery("SELECT m from Manager m where m.id = :id", Manager.class);
+            query.setParameter("id", id);
+            manager = query.uniqueResult();
+
+            if (manager != null) {
+                if (manager.getAddress() != null) {
+                    Address address = manager.getAddress();
+                    address.setCity(data.get("province").toString());
+                    address.setDistrict(data.get("district").toString());
+                    address.setWard(data.get("ward").toString());
+                    address.setNumber(data.get("streetNumber").toString());
+                    address.setStreet(data.get("streetNam" +
+                            "e").toString());
+                } else {
+                    Address address = new Address();
+                    address.setCity(data.get("province").toString());
+                    address.setDistrict(data.get("district").toString());
+                    address.setWard(data.get("ward").toString());
+                    address.setNumber(data.get("streetNumber").toString());
+                    address.setStreet(data.get("streetName").toString());
+                    manager.setAddress(address);
+                }
+            }
+
+            transaction.commit();
+            result.put("status", "success");
+            result.put("message", "Address updated successfully");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            result.put("status", "failed");
+            result.put("message", e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> updatePassword(long id, String oldPassword, String newPassword) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            manager = session.get(Manager.class, id);
+            if (manager.checkPassword(oldPassword)) {
+                manager.setPassword(newPassword);
+            } else {
+                result.put("status", "failed");
+                result.put("message", "Password does not match");
+                return result;
+            }
+            transaction.commit();
+            result.put("status", "success");
+            result.put("message", "Password changed successfully");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            result.put("status", "failed");
+            result.put("message", e.getMessage());
+        }
+        return result;
     }
 }

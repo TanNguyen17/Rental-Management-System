@@ -75,9 +75,10 @@ public class PaymentDaoImpl implements PaymentDao {
             Query<RentalAgreement> query = session.createQuery("SELECT ra FROM RentalAgreement ra LEFT JOIN FETCH ra.tenants WHERE ra.id = :id", RentalAgreement.class);
             query.setParameter("id", rentalAgreementId);
             RentalAgreement rentalAgreement = query.getSingleResult();
-//            Tenant tenant = session.get(Tenant.class, tenantId);
+            Tenant tenant = rentalAgreement.getTenants().get(0);
             if (rentalAgreement != null) {
                 System.out.println(rentalAgreement.getId());
+                payment.setMethod(tenant.getPaymentMethod() != null ? tenant.getPaymentMethod() : Payment.paymentMethod.CASH);
                 payment.setRentalAgreement(rentalAgreement);
                 payment.setTenant(rentalAgreement.getTenants().get(0));
                 session.persist(payment);
@@ -250,6 +251,28 @@ public class PaymentDaoImpl implements PaymentDao {
             data.put("status", "failed");
         }
         return data;
+    }
+
+    @Override
+    public List<Payment> getAllPaidPayments(Payment.paymentStatus status) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            try {
+                Query<Payment> query = session.createQuery("from Payment where status = :status", Payment.class);
+                query.setParameter("status", status);
+                payments = query.list();
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                throw e; // Re-throw the exception to allow higher-level handling
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return payments;
     }
 
     public List<Double> getMonthlyPayment(long id, String type) {

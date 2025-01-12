@@ -14,6 +14,8 @@ public interface UserDao {
 
     void loadData();
 
+    public long getTotalUsers();
+
     public List<String> getAllUserName();
 
     public Map<String, Object> updateProfile(long id, Map<String, Object> profile);

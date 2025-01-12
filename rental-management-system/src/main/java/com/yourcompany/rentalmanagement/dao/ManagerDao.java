@@ -1,6 +1,7 @@
 package com.yourcompany.rentalmanagement.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.yourcompany.rentalmanagement.model.Manager;
 import com.yourcompany.rentalmanagement.model.Payment;
@@ -42,4 +43,12 @@ public interface ManagerDao {
     void softDeleteEntity(Object entity);
 
     void validateDataConsistency();
+
+    Map<String, Object> updateProfile(long id, Map<String, Object> profile);
+
+    Map<String, Object> updateUserImage(long id, String imageLink);
+
+    Map<String, Object> updateAddress(long id, Map<String, Object> data);
+
+    Map<String, Object> updatePassword(long id, String oldPassword, String newPassword);
 }

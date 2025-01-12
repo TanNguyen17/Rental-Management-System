@@ -89,9 +89,9 @@ public class PaymentDataGenerator {
                 // Create one payment per agreement
                 Payment payment = new Payment();
                 payment.setReceipt(generateReceipt());
-                payment.setMethod(PAYMENT_METHODS[random.nextInt(PAYMENT_METHODS.length)]);
+                payment.setMethod(Payment.paymentMethod.CASH);
                 payment.setAmount(rentalAgreement.getRentingFee());
-                payment.setStatus(PAYMENT_STATUSES[random.nextInt(PAYMENT_STATUSES.length)]);
+                payment.setStatus(Payment.paymentStatus.PAID);
                 payment.setDueDate(generateRandomDate(random));
                 payment.setTenant(tenant);
                 payment.setRentalAgreement(rentalAgreement);
