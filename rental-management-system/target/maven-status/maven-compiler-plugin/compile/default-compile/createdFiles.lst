@@ -18,6 +18,7 @@ com/yourcompany/rentalmanagement/view/ProfileView.class
 com/yourcompany/rentalmanagement/view/RentalAgreementManagementView$1.class
 com/yourcompany/rentalmanagement/view/CommercialPropertyManagementView.class
 com/yourcompany/rentalmanagement/view/PaymentManagementView$1.class
+com/yourcompany/rentalmanagement/view/ManagerView.class
 com/yourcompany/rentalmanagement/controller/CommercialPropertyController.class
 com/yourcompany/rentalmanagement/view/UserManagementView$1.class
 com/yourcompany/rentalmanagement/view/OwnerView.class

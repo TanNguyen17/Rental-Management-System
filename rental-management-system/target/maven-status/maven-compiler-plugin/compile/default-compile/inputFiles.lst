@@ -47,6 +47,7 @@
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/util/CloudinaryService.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/CommercialPropertyManagementView.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/controller/SideMenuController.java
+/Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/view/ManagerView.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/UserDao.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/dao/impl/TenantDaoImpl.java
 /Users/Admin/Desktop/GitHub Repositories/further-programming-assignment-2-build-a-backend-FTECH/rental-management-system/src/main/java/com/yourcompany/rentalmanagement/util/HibernateUtil.java

@@ -18,7 +18,7 @@ public class MainApp extends Application {
 
     private LoginViewController loginViewController = new LoginViewController();
     private PaymentScheduler paymentScheduler = new PaymentScheduler();
-    private FXMLLoader loader;
+    private FXMLLoader loader = new FXMLLoader();
 
     @Override
     public void start(Stage primaryStage) {
@@ -50,6 +50,8 @@ public class MainApp extends Application {
                     loader = new FXMLLoader(getClass().getResource("/fxml/OwnerView.fxml"));
                 } else if (userSession.getCurrentUser().getRole() == UserRole.HOST) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
+                }  else if (userSession.getCurrentUser().getRole() == UserRole.MANAGER) {
+                    loader = new FXMLLoader(getClass().getResource("/fxml/ManagerView.fxml"));
                 }
             } else {
                 loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));

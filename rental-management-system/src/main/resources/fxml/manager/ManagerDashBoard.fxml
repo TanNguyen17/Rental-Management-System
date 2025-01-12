@@ -8,9 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementManagementView">
-    <center>
-        <VBox fx:id="mainContent" prefHeight="720.0" prefWidth="1080.0" BorderPane.alignment="CENTER">
+        <VBox fx:id="mainContent" prefHeight="720.0" prefWidth="1080.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementManagementView">
             <children>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
                <children>
@@ -52,8 +50,3 @@
                 </TabPane>
             </children>
         </VBox>
-    </center>
-    <left>
-        <fx:include source="../SideMenu.fxml" />
-    </left>
-</BorderPane>
