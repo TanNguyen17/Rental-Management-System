@@ -47,28 +47,89 @@ public class ProfileView implements Initializable {
     private UserSession userSession = UserSession.getInstance();
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        loadUserData();
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        userController = new UserController();
+        // Load User Data in Background
+        new Thread(() -> {
+            // Load user data
+            currentUser = userController.getUserProfile(currentUser.getId(), currentUser.getRole());
+
+            // Update UI on JavaFX Application Thread
+            Platform.runLater(() -> {
+                if (currentUser != null) {
+                    initialProfile();
+                }
+            });
+        }).start();
+            // Load address data
+            Platform.runLater(() -> {
+                initialAddress();
+                provinceChoice.setOnAction(event -> {
+                    String selectedProvince = provinceChoice.getValue();
+                    updateDistrictCombobox(selectedProvince);
+                });
+
+                districtChoice.setOnAction(event -> {
+                    String selectedCity = districtChoice.getValue();
+                    updateWardCombobox(selectedCity);
+                });
+            });
     }
 
-    private void loadUserData() {
-        if (userSession.getCurrentUser() != null) {
-            username.setText(userSession.getCurrentUser().getUsername());
-            phoneNumber.setText(userSession.getCurrentUser().getPhoneNumber());
-            email.setText(userSession.getCurrentUser().getEmail());
-            // Set date of birth if available
-            if (userSession.getCurrentUser().getDob() != null) {
-                dateOfBirth.setValue(userSession.getCurrentUser().getDob());
-            }
-            // Load address data if available
-            if (userSession.getCurrentUser().getAddress() != null) {
-                Address address = userSession.getCurrentUser().getAddress();
-                number.setText(address.getNumber());
-                street.setText(address.getStreet());
-                ward.setText(address.getWard());
-                district.setText(address.getDistrict());
-                city.setText(address.getCity());
-            }
+    private void initialProfile() {
+        System.out.println(currentUser.getUsername());
+        username.setText(currentUser.getUsername());
+
+        Image image = new Image(currentUser.getProfileImage() != null ? currentUser.getProfileImage() : "https://res.cloudinary.com/dqydgahsj/image/upload/v1736670115/zguznvwm7ib3exi1g1ko.png");
+        profileImage.setImage(image);
+
+        firstName.setPromptText(currentUser.getUsername() != null ? currentUser.getUsername() : "First Name");
+        lastName.setPromptText(currentUser.getUsername() != null ? currentUser.getUsername() : "Last Name");
+        email.setText(currentUser.getEmail() != null ? currentUser.getEmail() : "Email");
+
+        phoneNumber.setText(currentUser.getPhoneNumber() != null ? currentUser.getPhoneNumber() : "Phone Number");
+        dateOfBirth.setValue(currentUser.getDob() != null ? currentUser.getDob() : LocalDate.of(2025, 1, 1));
+
+        paymentText.setVisible(false);
+        paymentChoice.setVisible(false);
+
+        if (currentUser.getRole() != null && currentUser.getRole().equals(UserRole.TENANT)) {
+            Tenant tenantUser = (Tenant) currentUser;
+            paymentText.setVisible(true);
+            paymentChoice.setVisible(true);
+            paymentChoice.setValue(tenantUser.getPaymentMethod() != null ? tenantUser.getPaymentMethod() : null);
+            ObservableList<Payment.paymentMethod> methodOptions = FXCollections.observableArrayList(Payment.paymentMethod.values());
+            paymentChoice.setItems(methodOptions);
+        }
+    }
+
+    // handle add current user address
+    private void initialAddress() {
+        provinceChoice.getItems().addAll(AddressData.provinceCities.keySet());
+        if (currentUser.getAddress() != null) {
+            streetName.setText(currentUser.getAddress().getStreet());
+            streetNumber.setText(currentUser.getAddress().getNumber());
+
+            if (provinceChoice.getItems().contains(currentUser.getAddress().getCity())) {
+                provinceChoice.setValue(currentUser.getAddress().getCity());
+                updateDistrictCombobox(currentUser.getAddress().getCity());
+
+                //Populate city choice and set its value
+                if (districtChoice.getItems().contains(currentUser.getAddress().getCity())) {
+                    districtChoice.setValue(currentUser.getAddress().getCity());
+                    updateDistrictCombobox(currentUser.getAddress().getCity());
+
+                    if (wardChoice.getItems().contains(currentUser.getAddress().getWard())) {
+                        wardChoice.setValue(currentUser.getAddress().getWard());
+                        updateWardCombobox(currentUser.getAddress().getWard());
+                    }
+
+                } else {
+                    System.err.println("City/Province not found in ComboBox: " + currentUser.getAddress().getCity());
+                }          }
+        } else {
+            streetName.setText("Street");
+            streetNumber.setText("Street Number");
         }
     }
 
