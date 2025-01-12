@@ -179,10 +179,14 @@ public class ManagerDaoImpl implements ManagerDao {
                 manager.setDob(LocalDate.parse((String) profile.get("dob")));
                 manager.setEmail((String) profile.get("email"));
                 manager.setPhoneNumber(profile.get("phoneNumber").toString());
+                result.put("status", "success");
+                result.put("message", "Address updated successfully");
+            } else {
+                result.put("status", "failed");
+                result.put("message", "Manager not found");
             }
             transaction.commit();
-            result.put("status", "success");
-            result.put("message", "Address updated successfully");
+
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -204,10 +208,13 @@ public class ManagerDaoImpl implements ManagerDao {
             if (manager != null) {
                 manager.setProfileImage(imageLink);
                 session.persist(manager);
+                result.put("status", "success");
+                result.put("message", "Image updated successfully");
+            }
+            else {
+                result.put("status", "failed");
             }
             transaction.commit();
-            result.put("status", "success");
-            result.put("message", "Image updated successfully");
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();

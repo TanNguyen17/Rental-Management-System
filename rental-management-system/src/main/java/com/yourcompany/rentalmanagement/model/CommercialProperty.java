@@ -15,7 +15,6 @@ import jakarta.persistence.UniqueConstraint;
 @Table(name = "Commercial_Property", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"id"})})
 public class CommercialProperty extends Property {
-
     @Column(name = "business_type", nullable = false)
     private String businessType;
 

@@ -16,8 +16,6 @@ public interface UserDao {
 
     public long getTotalUsers();
 
-    public List<String> getAllUserName();
-
     public Map<String, Object> updateProfile(long id, Map<String, Object> profile);
 
     public Map<String, Object> updateUserImage(long id, String imageLink);

@@ -34,9 +34,18 @@ public class TenantDaoImpl implements UserDao {
     @Override
     public void loadData(){}
 
-    @Override
-    public List<String> getAllUserName(){
-        return null;
+    public Map<String, Object> createTenant(Tenant tenant) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+            session.persist(tenant);
+            session.getTransaction().commit();
+            result.put("status", "success");
+        } catch (Exception e) {
+            result.put("status", "failed");
+            e.printStackTrace();
+            throw e;
+        }
+        return result;
     }
 
     public List<Tenant> getAllTenants() {
@@ -99,6 +108,7 @@ public class TenantDaoImpl implements UserDao {
             transaction = session.beginTransaction();
 
             tenant = session.get(Tenant.class, id);
+            System.out.println(tenant);
 
             if (tenant != null) {
                 tenant.setUsername((String) profile.get("username"));
@@ -107,10 +117,13 @@ public class TenantDaoImpl implements UserDao {
                 tenant.setEmail((String) profile.get("email"));
                 tenant.setPhoneNumber(profile.get("phoneNumber").toString());
                 tenant.setPaymentMethod((Payment.paymentMethod) profile.get("paymentMethod"));
+                transaction.commit();
+                result.put("status", "success");
+                result.put("message", "Address updated successfully");
+            } else {
+                result.put("status", "failed");
+                result.put("message", "Tenant not found");
             }
-            transaction.commit();
-            result.put("status", "success");
-            result.put("message", "Address updated successfully");
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -132,10 +145,14 @@ public class TenantDaoImpl implements UserDao {
             if (tenant != null) {
                 tenant.setProfileImage(imageLink);
                 session.persist(tenant);
+                transaction.commit();
+                result.put("status", "success");
+                result.put("message", "Image updated successfully");
+            } else {
+                result.put("status", "failed");
+                result.put("message", "Tenant not found");
             }
-            transaction.commit();
-            result.put("status", "success");
-            result.put("message", "Image updated successfully");
+            return result;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -162,8 +179,7 @@ public class TenantDaoImpl implements UserDao {
                     address.setDistrict(data.get("district").toString());
                     address.setWard(data.get("ward").toString());
                     address.setNumber(data.get("streetNumber").toString());
-                    address.setStreet(data.get("streetNam" +
-                            "e").toString());
+                    address.setStreet(data.get("streetName").toString());
                 } else {
                     Address address = new Address();
                     address.setCity(data.get("province").toString());
@@ -173,11 +189,13 @@ public class TenantDaoImpl implements UserDao {
                     address.setStreet(data.get("streetName").toString());
                     tenant.setAddress(address);
                 }
+                transaction.commit();
+                result.put("status", "success");
+                result.put("message", "Address updated successfully");
+            } else {
+                result.put("status", "failed");
+                result.put("message", "Tenant not found");
             }
-
-            transaction.commit();
-            result.put("status", "success");
-            result.put("message", "Address updated successfully");
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -195,7 +213,10 @@ public class TenantDaoImpl implements UserDao {
             transaction = session.beginTransaction();
 
             tenant = session.get(Tenant.class, id);
+
             if (tenant.checkPassword(oldPassword)) {
+                System.out.println("after");
+                System.out.println(tenant.checkPassword(oldPassword));
                 tenant.setPassword(newPassword);
             } else {
                 result.put("status", "failed");

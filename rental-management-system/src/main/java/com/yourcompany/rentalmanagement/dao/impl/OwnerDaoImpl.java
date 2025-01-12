@@ -50,22 +50,6 @@ public class OwnerDaoImpl implements UserDao {
         return this.owners;
     }
 
-    @Override
-    public List<String> getAllUserName() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-
-            Query<String> query = session.createQuery("select username from Owner ", String.class);
-            ownerNames = query.getResultList();
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return ownerNames;
-    }
 
     public List<Owner> getAllOwners() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
