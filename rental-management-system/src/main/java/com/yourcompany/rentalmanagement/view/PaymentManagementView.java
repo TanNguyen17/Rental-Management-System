@@ -31,17 +31,14 @@ import javafx.util.Callback;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PaymentManagementView implements Initializable {
 
     private PaymentController paymentController = new PaymentController();
-    private ObservableList<Payment> payments = FXCollections.observableArrayList();
+    private List<Payment> payments = new ArrayList<>();
     private Map<Integer, List<Payment>> pageCache = new HashMap<>();
     private Map<String, String> filter = new HashMap<>();
     private UserSession userSession = UserSession.getInstance();
@@ -93,7 +90,7 @@ public class PaymentManagementView implements Initializable {
         initializeColumn();
         initializeActionColumn();
 
-        paymentTable.setItems(payments);
+        paymentTable.setItems(FXCollections.observableArrayList(payments));
         paymentTable.setMaxHeight(300);
         loadPayments(currentPageIndex);
 
@@ -327,7 +324,7 @@ public class PaymentManagementView implements Initializable {
             Platform.runLater(() -> {
                 if (!paymentList.isEmpty()) {
                     payments.addAll(paymentList);
-                    paymentTable.setItems(payments);
+                    paymentTable.setItems(FXCollections.observableArrayList(payments));
                 } else {
                     allDataLoaded = true;
                     if (page > 1) {

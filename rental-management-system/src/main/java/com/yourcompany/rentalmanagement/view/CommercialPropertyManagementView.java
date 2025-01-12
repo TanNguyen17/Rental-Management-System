@@ -14,11 +14,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class CommercialPropertyManagementView implements Initializable {
-    ObservableList<CommercialProperty> commercialProperties;
+    List<CommercialProperty> commercialProperties = new ArrayList<>();
     CommercialPropertyController commercialPropertyController = new CommercialPropertyController();
 
 
@@ -61,19 +62,8 @@ public class CommercialPropertyManagementView implements Initializable {
         initializeViewMoreColumn();
         initializeDeleteColumn();
 
-        new Thread(() -> {
-            List<CommercialProperty> allCommercialProperties = commercialPropertyController.getAllCommercialProperties();
-            Platform.runLater(() -> {
-                if (!allCommercialProperties.isEmpty()) {
-                    commercialProperties.addAll(allCommercialProperties);
-                    commercialPropertyTableView.setItems(commercialProperties);
-                }
-            });
-        }).start();
-
-//        commercialProperties =
-//                FXCollections.observableArrayList(commercialPropertyController.getAllCommercialProperties());
-//        commercialPropertyTableView.setItems(commercialProperties);
+        commercialProperties = commercialPropertyController.getAllCommercialProperties();
+        commercialPropertyTableView.setItems(FXCollections.observableArrayList(commercialProperties));
     }
 
     private void initializeColumn(){
