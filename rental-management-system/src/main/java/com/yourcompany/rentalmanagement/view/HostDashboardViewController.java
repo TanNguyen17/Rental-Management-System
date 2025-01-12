@@ -201,7 +201,7 @@ public class HostDashboardViewController implements Initializable {
             long hostId = userSession.getCurrentUser().getId();
             expectedRevenue = paymentDaoImpl.getMonthlyPayment(hostId, "expected");
             actualRevenue = paymentDaoImpl.getMonthlyPayment(hostId, "actual");
-            properties = FXCollections.observableArrayList(propertyDaoImpl.getAllPropertiesByHostID(hostId));
+            properties = FXCollections.observableArrayList(propertyDaoImpl.getPropertiesByHostID(hostId));
             stayDurationsByProperty = propertyDaoImpl.getStayDurationsByProperty(hostId);
             incomeByProperty = propertyDaoImpl.calculateTotalIncomeByProperty(hostId);
 
