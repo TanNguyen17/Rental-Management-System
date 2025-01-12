@@ -90,7 +90,8 @@ public class LoginViewController {
     @FXML
     private void handleLogin() {
         if (loginUsername.getText().isEmpty() || loginPassword.getText().isEmpty()) {
-            showErrorMessage("Please fill in all fields");
+            Stage stage = (Stage) messageLabel.getScene().getWindow();
+            Toast.showError(stage, "Please fill in all fields");
             return;
         }
 
@@ -196,13 +197,13 @@ public class LoginViewController {
     }
 
     public void showSuccessMessage(String message) {
-        messageLabel.setStyle("-fx-text-fill: green;");
-        messageLabel.setText(message);
+        Stage stage = (Stage) messageLabel.getScene().getWindow();
+        Toast.showSuccess(stage, message);
     }
 
     public void showErrorMessage(String message) {
-        messageLabel.setStyle("-fx-text-fill: red;");
-        messageLabel.setText(message);
+        Stage stage = (Stage) messageLabel.getScene().getWindow();
+        Toast.showError(stage, message);
     }
 
     public void clearFields() {
