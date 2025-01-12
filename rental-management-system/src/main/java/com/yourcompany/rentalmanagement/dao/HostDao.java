@@ -12,5 +12,4 @@ public interface HostDao {
 
     Host getHostById(long id);
 
-    List<String> getAllUserName();
 }
