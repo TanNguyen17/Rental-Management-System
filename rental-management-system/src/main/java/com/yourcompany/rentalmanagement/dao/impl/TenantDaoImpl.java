@@ -22,7 +22,7 @@ public class TenantDaoImpl implements UserDao {
     private List<Tenant> tenants;
     private Tenant tenant;
     private Transaction transaction;
-    private Map<String, Object> result;
+    private final Map<String, Object> result;
 
     public TenantDaoImpl() {
         transaction = null;
