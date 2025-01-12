@@ -12,9 +12,9 @@ import javafx.scene.image.ImageView;
 
 public class RentalAgreementFormController {
     private RentalAgreementDaoImpl rentalAgreementDaoImpl = new RentalAgreementDaoImpl();
-    private TenantDaoImpl tenantDaoImp = new TenantDaoImpl();
-    private HostDaoImpl hostDaoImp = new HostDaoImpl();
-    private OwnerDaoImpl ownerDaoImp = new OwnerDaoImpl();
+    private TenantDaoImpl tenantDaoImpl = new TenantDaoImpl();
+    private HostDaoImpl hostDaoImpl = new HostDaoImpl();
+    private OwnerDaoImpl ownerDaoImpl = new OwnerDaoImpl();
     @FXML
     private ComboBox<String> tenantField;
 
@@ -53,13 +53,13 @@ public class RentalAgreementFormController {
 
     @FXML
     public void initialize() {
-        ObservableList<String> tenants = FXCollections.observableArrayList(tenantDaoImp.getAllUserName());
+        ObservableList<String> tenants = FXCollections.observableArrayList(tenantDaoImpl.getAllUserName());
         tenantField.setItems(tenants);
 
-        ObservableList<String> owners = FXCollections.observableArrayList(ownerDaoImp.getAllUserName());
+        ObservableList<String> owners = FXCollections.observableArrayList(ownerDaoImpl.getAllUserName());
         ownerField.setItems(owners);
 
-        ObservableList<String> hosts = FXCollections.observableArrayList(hostDaoImp.getAllUserName());
+        ObservableList<String> hosts = FXCollections.observableArrayList(hostDaoImpl.getAllUserName());
         hostField.setItems(hosts);
         // Populate the status ComboBox
 

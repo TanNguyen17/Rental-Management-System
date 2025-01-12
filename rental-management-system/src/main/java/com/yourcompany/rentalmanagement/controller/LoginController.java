@@ -21,14 +21,7 @@ public class LoginController {
             if (user != null) {
                 String token = authService.generateToken(user);
                 UserSession.getInstance().setCurrentUser(user, token);
-                String successMessage = String.format(
-                        "Successfully logged in as %s (Role: %s, ID: %d)",
-                        user.getUsername(),
-                        user.getRole(),
-                        user.getId()
-                );
-                System.out.println(successMessage);
-                viewController.showSuccessMessage(successMessage);
+                viewController.showSuccessMessage("Login successful!");
                 viewController.navigateToMainView();
             } else {
                 viewController.showErrorMessage("Invalid credentials");

@@ -1,9 +1,9 @@
 package com.yourcompany.rentalmanagement;
 
-import com.yourcompany.rentalmanagement.service.PaymentScheduler;
 import org.hibernate.SessionFactory;
 
 import com.yourcompany.rentalmanagement.model.UserRole;
+import com.yourcompany.rentalmanagement.service.PaymentScheduler;
 import com.yourcompany.rentalmanagement.util.AddressData;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.UserSession;
@@ -60,7 +60,10 @@ public class MainApp extends Application {
             Scene scene = new Scene(loader.load());
             scene.getStylesheets().addAll(
                     getClass().getResource("/css/property-list.css").toExternalForm(),
-                    getClass().getResource("/css/side-menu.css").toExternalForm()
+                    getClass().getResource("/css/side-menu.css").toExternalForm(),
+                    getClass().getResource("/css/property-form.css").toExternalForm(),
+                    getClass().getResource("/css/components/loading-spinner.css").toExternalForm(),
+                    getClass().getResource("/css/components/toast.css").toExternalForm()
             );
             primaryStage.setScene(scene);
             primaryStage.setTitle("Rental Management System - Login");
