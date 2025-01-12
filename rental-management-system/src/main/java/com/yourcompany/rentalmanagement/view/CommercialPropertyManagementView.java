@@ -1,10 +1,8 @@
 package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.CommercialPropertyController;
-import com.yourcompany.rentalmanagement.model.Address;
-import com.yourcompany.rentalmanagement.model.Owner;
-import com.yourcompany.rentalmanagement.model.Property;
-import com.yourcompany.rentalmanagement.model.CommercialProperty;
+import com.yourcompany.rentalmanagement.model.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,6 +14,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class CommercialPropertyManagementView implements Initializable {
@@ -61,9 +60,20 @@ public class CommercialPropertyManagementView implements Initializable {
         initializeColumn();
         initializeViewMoreColumn();
         initializeDeleteColumn();
-        commercialProperties =
-                FXCollections.observableArrayList(commercialPropertyController.getAllCommercialProperties());
-        commercialPropertyTableView.setItems(commercialProperties);
+
+        new Thread(() -> {
+            List<CommercialProperty> allCommercialProperties = commercialPropertyController.getAllCommercialProperties();
+            Platform.runLater(() -> {
+                if (!allCommercialProperties.isEmpty()) {
+                    commercialProperties.addAll(allCommercialProperties);
+                    commercialPropertyTableView.setItems(commercialProperties);
+                }
+            });
+        }).start();
+
+//        commercialProperties =
+//                FXCollections.observableArrayList(commercialPropertyController.getAllCommercialProperties());
+//        commercialPropertyTableView.setItems(commercialProperties);
     }
 
     private void initializeColumn(){
