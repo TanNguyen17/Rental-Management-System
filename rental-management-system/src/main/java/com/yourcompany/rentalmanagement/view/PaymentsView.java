@@ -180,6 +180,11 @@ public class PaymentsView implements Initializable {
                         if (currentUser.getRole().equals(UserRole.TENANT)) {
                             payIcon = new FontAwesomeIconView(FontAwesomeIcon.MONEY);
                             payIcon.getStyleClass().add("action-icon");
+                            payIcon.setStyle(
+                                    "-fx-cursor: hand ;"
+                                            + "-glyph-size:20px;"
+                                            + "-fx-color: #fff"
+                            );
                         } else {
                             sendEmailIcon = new FontAwesomeIconView(FontAwesomeIcon.MAIL_REPLY);
                         }
@@ -189,11 +194,7 @@ public class PaymentsView implements Initializable {
                                 + "-glyph-size:20px;"
                                 + "-fx-color: #fff"
                         );
-                        payIcon.setStyle(
-                                "-fx-cursor: hand ;"
-                                + "-glyph-size:20px;"
-                                + "-fx-color: #fff"
-                        );
+
 
                         HBox action = null;
 

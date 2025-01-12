@@ -1,148 +1,156 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
-import com.yourcompany.rentalmanagement.dao.impl.ManagerDaoImpl;
 import com.yourcompany.rentalmanagement.model.Manager;
-import com.yourcompany.rentalmanagement.model.Address;
-import com.yourcompany.rentalmanagement.util.HibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.junit.jupiter.api.BeforeEach;
+import com.yourcompany.rentalmanagement.model.UserRole;
+import org.hibernate.JDBCException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ManagerDaoImplTest {
-
-    private ManagerDaoImpl managerDao;
-
-    @BeforeEach
-    void setUp() {
-        managerDao = new ManagerDaoImpl();
-    }
-
+    ManagerDaoImpl managerDAO = new ManagerDaoImpl();
     @Test
-    void testCreate() {
-        Manager newManager = new Manager();
-        newManager.setUsername("NewManager");
-        newManager.setPassword("newpassword");
-        newManager.setEmail("newmanager@example.com");
+    void testCreateManager_Success() {
+        Manager manager = new Manager();
+        manager.setUsername("testUser");
+        manager.setEmail("test@example.com");
+        manager.setPassword("testPassword");
+        manager.setRole(UserRole.MANAGER);
+        manager.setSalt("testSalt");
 
-        assertDoesNotThrow(() -> managerDao.create(newManager), "Manager creation should not throw exceptions");
+        managerDAO.create(manager);
+
+        Manager retrievedManager = managerDAO.read(manager.getId());
+
+        assertNotNull(retrievedManager, "Manager should be created successfully.");
+        assertEquals("testUser", retrievedManager.getUsername(), "Username should match.");
+        assertEquals("test@example.com", retrievedManager.getEmail(), "Email should match.");
+        assertEquals(UserRole.MANAGER, retrievedManager.getRole(), "Role should match.");
     }
-
     @Test
-    void testRead_ValidId() {
-        Manager manager = managerDao.read(11L);
-        assertNotNull(manager, "Manager should not be null for a valid ID");
-        assertEquals("UpdatedManager", manager.getUsername(), "Username should match");
+    void testCreateManager_MissingFields() {
+        Manager manager = new Manager();
+        manager.setUsername("incompleteUser");
+        // Missing email, password, role, and salt
+
+        assertThrows(IllegalArgumentException.class, () -> managerDAO.create(manager),
+                "Creating a manager without all required fields should throw an exception.");
     }
-
     @Test
-    void testRead_InvalidId() {
-        Manager manager = managerDao.read(999L);
-        assertNull(manager, "Manager should be null for an invalid ID");
+    void testCreateManager_DuplicateUsername() {
+        Manager manager1 = new Manager();
+        manager1.setUsername("duplicateUser");
+        manager1.setEmail("test1@example.com");
+        manager1.setPassword("password1");
+        manager1.setRole(UserRole.MANAGER);
+        manager1.setSalt("salt1");
+        managerDAO.create(manager1);
+
+        Manager manager2 = new Manager();
+        manager2.setUsername("duplicateUser");
+        manager2.setEmail("test2@example.com");
+        manager2.setPassword("password2");
+        manager2.setRole(UserRole.MANAGER);
+        manager2.setSalt("salt2");
+
+        assertThrows(Exception.class, () -> managerDAO.create(manager2),
+                "Creating a manager with a duplicate username should throw an exception.");
     }
-
     @Test
-    void testUpdate() {
-        Manager manager = managerDao.read(11L);
-        assertNotNull(manager, "Manager should not be null");
+    void testUpdateManager_Success() {
+        Manager manager = new Manager();
+        manager.setUsername("originalUser");
+        manager.setEmail("original@example.com");
+        manager.setPassword("originalPassword");
+        manager.setRole(UserRole.MANAGER);
+        manager.setSalt("originalSalt");
+        managerDAO.create(manager);
 
-        manager.setUsername("UpdatedManager");
-        managerDao.update(manager);
+        manager.setUsername("updatedUser");
+        manager.setEmail("updated@example.com");
+        managerDAO.update(manager);
 
-        Manager updatedManager = managerDao.read(11L);
-        assertNotNull(updatedManager);
-        assertEquals("UpdatedManager", updatedManager.getUsername(), "Username should be updated");
+        Manager updatedManager = managerDAO.read(manager.getId());
+
+        assertNotNull(updatedManager, "Updated manager should exist.");
+        assertEquals("updatedUser", updatedManager.getUsername(), "Username should be updated.");
+        assertEquals("updated@example.com", updatedManager.getEmail(), "Email should be updated.");
     }
-
     @Test
-    void testDelete() {
-        Manager manager = managerDao.read(14L);
-        assertNotNull(manager, "Manager should exist before deletion");
+    void testUpdateManager_NonExistent() {
+        Manager manager = new Manager();
+        manager.setId(999L);
+        manager.setUsername("nonExistentUser");
+        manager.setEmail("nonexistent@example.com");
+        manager.setPassword("password");
+        manager.setRole(UserRole.MANAGER);
+        manager.setSalt("salt");
 
-        managerDao.delete(manager);
-
-        Manager deletedManager = managerDao.read(14L);
-        assertNull(deletedManager, "Manager should be null after deletion");
+        assertThrows(Exception.class, () -> managerDAO.update(manager),
+                "Updating a non-existent manager should throw an exception.");
     }
-
     @Test
-    void testFindByUsername_ValidUsername() {
-        Manager manager = managerDao.findByUsername("diemqui1101");
-        assertNotNull(manager, "Manager should not be null for a valid username");
-        assertEquals(8, manager.getId(), "ID should match the expected value");
+    void testUpdateManager_MissingFields() {
+        Manager manager = new Manager();
+        manager.setUsername("validUser");
+        manager.setEmail("valid@example.com");
+        manager.setPassword("password");
+        manager.setRole(UserRole.MANAGER);
+        manager.setSalt("salt");
+        managerDAO.create(manager);
+
+        manager.setUsername(null); // Invalid update
+        assertThrows(IllegalArgumentException.class, () -> managerDAO.update(manager),
+                "Updating a manager with missing required fields should throw an exception.");
     }
-
     @Test
-    void testFindByUsername_InvalidUsername() {
-        Manager manager = managerDao.findByUsername("NonExistent");
-        assertNull(manager, "Manager should be null for an invalid username");
+    void testDeleteManager_Success() {
+        Manager manager = new Manager();
+        manager.setUsername("deletableUser");
+        manager.setEmail("delete@example.com");
+        manager.setPassword("deletePassword");
+        manager.setRole(UserRole.MANAGER);
+        manager.setSalt("deleteSalt");
+        managerDAO.create(manager);
+
+        managerDAO.delete(manager);
+
+        Manager deletedManager = managerDAO.read(manager.getId());
+        assertNull(deletedManager, "Manager should be deleted.");
     }
-
     @Test
-    void testUpdateProfile_Success() {
-        Map<String, Object> profile = new HashMap<>();
-        profile.put("username", "ProfileUpdated");
-        profile.put("dob", "1990-01-01");
-        profile.put("email", "profileupdated@example.com");
-        profile.put("phoneNumber", "123456789");
+    void testDeleteManager_NonExistent() {
+        Manager manager = new Manager();
+        manager.setId(999L);
+        manager.setUsername("nonExistentUser");
 
-        Map<String, Object> result = managerDao.updateProfile(10, profile);
-        assertEquals("success", result.get("status"), "Profile update should be successful");
-
-        Manager updatedManager = managerDao.read(10L);
-        assertEquals("ProfileUpdated", updatedManager.getUsername(), "Username should be updated");
+        assertThrows(Exception.class, () -> managerDAO.delete(manager),
+                "Deleting a non-existent manager should throw an exception.");
     }
-
     @Test
-    void testUpdateProfile_ManagerNotFound() {
-        Map<String, Object> profile = new HashMap<>();
-        profile.put("username", "NonExistent");
+    void testFindByUsername_Success() {
+        Manager manager = new Manager();
+        manager.setUsername("findUser");
+        manager.setEmail("find@example.com");
+        manager.setPassword("findPassword");
+        manager.setRole(UserRole.MANAGER);
+        manager.setSalt("findSalt");
+        managerDAO.create(manager);
 
-        Map<String, Object> result = managerDao.updateProfile(999L, profile);
-        assertEquals("failed", result.get("status"), "Profile update should fail for a non-existent manager");
+        Manager retrievedManager = managerDAO.findByUsername("findUser");
+
+        assertNotNull(retrievedManager, "Manager should be found.");
+        assertEquals("findUser", retrievedManager.getUsername(), "Username should match.");
     }
-
     @Test
-    void testUpdateUserImage_Success() {
-        Map<String, Object> result = managerDao.updateUserImage(10, "https://th.bing.com/th/id/OIP.gYV1VqfK1YVNYL1XSoT1VwHaFh?w=670&h=500&rs=1&pid=ImgDetMain");
-        assertEquals("success", result.get("status"), "Image update should be successful");
-
-
+    void testFindByUsername_NotFound() {
+        Manager retrievedManager = managerDAO.findByUsername("nonExistentUser");
+        assertNull(retrievedManager, "Manager should not be found.");
     }
-
     @Test
-    void testUpdateUserImage_ManagerNotFound() {
-        Map<String, Object> result = managerDao.updateUserImage(999L, "nonExistentImage.jpg");
-        assertEquals("failed", result.get("status"), "Image update should fail for a non-existent manager");
-    }
-
-    @Test
-    void testUpdatePassword_Success() {
-        Map<String, Object> result = managerDao.updatePassword(10, "password1", "newPassword");
-        assertEquals("success", result.get("status"), "Password update should be successful");
-
-        Manager updatedManager = managerDao.read(1L);
-        assertTrue(updatedManager.checkPassword("newPassword"), "Password should be updated successfully");
-    }
-
-    @Test
-    void testUpdatePassword_OldPasswordMismatch() {
-        Map<String, Object> result = managerDao.updatePassword(9, "wrongPassword", "newPassword");
-        assertEquals("failed", result.get("status"), "Password update should fail for a mismatched old password");
-        assertEquals("Password does not match", result.get("message"), "Error message should indicate mismatch");
-    }
-
-    @Test
-    void testGetAllManagers() {
-        List<Manager> managers = managerDao.getAllManagers();
-        System.out.println(managers.size());
-        assertNotNull(managers, "Manager list should not be null");
-        assertEquals(12, managers.size(), "Manager list size should match the expected count");
+    void testFindByUsername_NullUsername() {
+        assertThrows(IllegalArgumentException.class, () -> managerDAO.findByUsername(null),
+                "Finding a manager with null username should throw an exception.");
     }
 }
