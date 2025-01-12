@@ -12,7 +12,6 @@ import com.yourcompany.rentalmanagement.dao.impl.OwnerDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.TenantDaoImpl;
 import com.yourcompany.rentalmanagement.model.*;
 import com.yourcompany.rentalmanagement.util.AddressData;
-import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -30,12 +29,12 @@ public class HibernateTest {
 //            "Henry", "Ivy", "Jack", "Kelly", "Liam", "Mia", "Noah",
 //            "Olivia", "Peter", "Quinn", "Ryan", "Sophia", "Tom"
 //    };
-    private static final String[] FIRST_NAMES = {
+    private static final String[] LAST_NAMES = {
             "An", "Binh", "Chi", "Dung", "Em", "Phuc", "Hanh",
             "Hoang", "Khanh", "Lan", "Linh", "Minh", "Ngoc", "Nam",
             "Quynh", "Son", "Thu", "Trang", "Van", "Tuan"
     };
-    private static final String[] LAST_NAMES = {
+    private static final String[] FIRST_NAMES = {
             "Nguyen", "Tran", "Le", "Pham", "Hoang", "Vu",
             "Vo", "Dang", "Bui", "Do", "Ho", "Ngo",
             "Duong", "Ly", "Truong", "Dinh", "Huynh", "Phan",
@@ -50,6 +49,8 @@ public class HibernateTest {
 //            "Rodriguez", "Smith", "Taylor", "Thomas", "Thompson", "White",
 //            "Williams", "Wilson"
 //    };
+    static HostDaoImpl hostDaoImp = new HostDaoImpl();
+    static Host host = hostDaoImp.getHostById(58);
 
     public static void main(String[] args) {
         Transaction transaction = null;
@@ -59,26 +60,27 @@ public class HibernateTest {
         HostDaoImpl hostDaoImp = new HostDaoImpl();
         OwnerDaoImpl ownerDaoImpl = new OwnerDaoImpl();
         List<Address> addresses = new ArrayList<>();
-        addresses.add(new Address("10", "Hai Thuong Lan Ong", "Ward 10", "District 5", "Ho Chi Minh City"));
-        addresses.add(new Address("25", "Nguyen Van Troi", "Ward 2", "Phu Nhuan District", "Ho Chi Minh City"));
-        addresses.add(new Address("78", "Truong Chinh", "Ward Hoa An", "Cam Le District", "Da Nang"));
-        addresses.add(new Address("42", "Le Hong Phong", "Ward Phuoc Ninh", "Hai Chau District", "Da Nang"));
-        addresses.add(new Address("30", "Tran Nhat Duat", "Ward Tan Dinh", "District 1", "Ho Chi Minh City"));
-        addresses.add(new Address("55", "Vo Thi Sau", "Ward Thao Dien", "Thu Duc City", "Ho Chi Minh City"));
-        addresses.add(new Address("90", "Pham Hung", "Ward My Dinh", "Nam Tu Liem District", "Hanoi"));
-        addresses.add(new Address("11", "Chu Van An", "Ward Dien Bien", "Ba Dinh District", "Hanoi"));
-        addresses.add(new Address("63", "Nguyen Thai Hoc", "Ward Hang Gai", "Hoan Kiem District", "Hanoi"));
-        addresses.add(new Address("88", "Ly Thai To", "Ward Le Hong Phong", "Ngo Quyen District", "Hai Phong"));
-        addresses.add(new Address("101", "Le Thanh Tong", "Ward Hai Tan", "Hai Duong City", "Hai Duong"));
-        addresses.add(new Address("33", "Tran Quang Khai", "Ward Quang Trung", "Vinh City", "Nghe An"));
-        addresses.add(new Address("77", "Le Loi", "Ward Ben Ngu", "Hue City", "Thua Thien Hue"));
-        addresses.add(new Address("22", "Hung Vuong", "Ward An Hoa", "Ninh Kieu District", "Can Tho"));
-        addresses.add(new Address("12", "Pham Ngu Lao", "Ward Pham Ngu Lao", "District 1", "Ho Chi Minh City"));
-        addresses.add(new Address("49", "Quang Trung", "Ward Nguyen Trai", "Ha Dong District", "Hanoi"));
-        addresses.add(new Address("35", "Ton That Thuyet", "Ward Dich Vong", "Cau Giay District", "Hanoi"));
-        addresses.add(new Address("66", "Bach Dang", "Ward Thuan Phuoc", "Hai Chau District", "Da Nang"));
-        addresses.add(new Address("81", "Nguyen Cong Tru", "Ward An Hai Bac", "Son Tra District", "Da Nang"));
-        addresses.add(new Address("100", "Luong Dinh Cua", "Ward An Khanh", "Thu Duc City", "Ho Chi Minh City"));
+        addresses.add(new Address("15", "Le Van Sy", "Ward 14", "District 3", "Ho Chi Minh City"));
+        addresses.add(new Address("37", "Nguyen Hue", "Ward Ben Nghe", "District 1", "Ho Chi Minh City"));
+        addresses.add(new Address("56", "Pham Van Dong", "Ward Hoa Khanh Bac", "Lien Chieu District", "Da Nang"));
+        addresses.add(new Address("44", "Nguyen Van Cu", "Ward An Hai Dong", "Son Tra District", "Da Nang"));
+        addresses.add(new Address("25", "Hoang Van Thu", "Ward Quang Trung", "Ha Dong District", "Hanoi"));
+        addresses.add(new Address("78", "Nguyen Du", "Ward Hang Bac", "Hoan Kiem District", "Hanoi"));
+        addresses.add(new Address("50", "Nguyen Van Linh", "Ward Hoa Phu", "Thu Dau Mot City", "Binh Duong"));
+        addresses.add(new Address("91", "Ly Thuong Kiet", "Ward Van Mieu", "Nam Dinh City", "Nam Dinh"));
+        addresses.add(new Address("62", "Cach Mang Thang 8", "Ward Hoa Cuong Nam", "Hai Chau District", "Da Nang"));
+        addresses.add(new Address("18", "Hung Vuong", "Ward Phu Hoi", "Hue City", "Thua Thien Hue"));
+        addresses.add(new Address("29", "Nguyen Trai", "Ward Van Quyet", "Son La City", "Son La"));
+        addresses.add(new Address("64", "Hai Ba Trung", "Ward Trung Trac", "Vinh Yen City", "Vinh Phuc"));
+        addresses.add(new Address("83", "Dien Bien Phu", "Ward Dakao", "District 1", "Ho Chi Minh City"));
+        addresses.add(new Address("48", "Nguyen Thi Minh Khai", "Ward Ben Thanh", "District 1", "Ho Chi Minh City"));
+        addresses.add(new Address("39", "Tran Hung Dao", "Ward Chau Van Liem", "O Mon District", "Can Tho"));
+        addresses.add(new Address("72", "Vo Nguyen Giap", "Ward My An", "Ngu Hanh Son District", "Da Nang"));
+        addresses.add(new Address("85", "Nguyen Thi Dinh", "Ward Binh Trung Tay", "Thu Duc City", "Ho Chi Minh City"));
+        addresses.add(new Address("31", "Tran Phu", "Ward Lam Son", "Thanh Hoa City", "Thanh Hoa"));
+        addresses.add(new Address("43", "To Hieu", "Ward Le Chan", "Le Chan District", "Hai Phong"));
+        addresses.add(new Address("99", "Tran Phu", "Ward Cam Chau", "Cam Ranh City", "Khanh Hoa"));
+
 
 
         Random random = new Random();
@@ -86,7 +88,7 @@ public class HibernateTest {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            for (int i = 0; i < 1; i++) {
+            for (int i = 5; i < 6; i++) {
                 try {
                     Tenant tenant = new Tenant();
                     tenant.setUsername(FIRST_NAMES[i] + " " + LAST_NAMES[i]);
@@ -100,16 +102,16 @@ public class HibernateTest {
                     tenant.setRole(UserRole.TENANT);
 
 
-                    Host host = new Host();
-                    host.setUsername("host");
-                    host.setPassword("bread1102");
-                    host.setHashedPassword("bread1102" + 321);
-                    host.setDob(generateRandomDate(random));
-                    host.setEmail(LAST_NAMES[i] + "@gmail.com");
-                    host.setProfileImage("https://res.cloudinary.com/dqydgahsj/image/upload/v1736670115/zguznvwm7ib3exi1g1ko.png");
-                    host.setPhoneNumber(generateRandomPhoneNumber(random));
-                    host.setAddress(generateRandomAddress(random, addresses));
-                    host.setRole(UserRole.HOST);
+//                    Host host = new Host();
+//                    host.setUsername("host");
+//                    host.setPassword("bread1102");
+//                    host.setHashedPassword("bread1102" + 321);
+//                    host.setDob(generateRandomDate(random));
+//                    host.setEmail(LAST_NAMES[i] + "@gmail.com");
+//                    host.setProfileImage("https://res.cloudinary.com/dqydgahsj/image/upload/v1736670115/zguznvwm7ib3exi1g1ko.png");
+//                    host.setPhoneNumber(generateRandomPhoneNumber(random));
+//                    host.setAddress(generateRandomAddress(random, addresses));
+//                    host.setRole(UserRole.HOST);
 
 
 //
@@ -320,8 +322,8 @@ public class HibernateTest {
 
     private static LocalDate[] generateRandomContractDates(Random random) {
         // Define the date range
-        long minDay = LocalDate.of(2020, 1, 1).toEpochDay();
-        long maxDay = LocalDate.of(2025, 1, 1).toEpochDay();
+        long minDay = LocalDate.of(2019, 1, 1).toEpochDay();
+        long maxDay = LocalDate.of(2024, 1, 1).toEpochDay();
 
         // Generate random start date
         long startDay = minDay + random.nextInt((int) (maxDay - minDay));

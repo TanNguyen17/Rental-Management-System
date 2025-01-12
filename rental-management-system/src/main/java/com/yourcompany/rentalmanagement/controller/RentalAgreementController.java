@@ -60,4 +60,6 @@ public class RentalAgreementController {
     public RentalAgreement getRentalAgreementById(long id) {
         return rentalAgreementDao.getRentalAgreementById(id);
     }
+
+
 }
