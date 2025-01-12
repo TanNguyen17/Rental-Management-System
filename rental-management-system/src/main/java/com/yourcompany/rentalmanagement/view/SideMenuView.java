@@ -120,7 +120,7 @@ public class SideMenuView implements Initializable {
         } else if (role.equals(UserRole.HOST)) {
             buttonOrder.addAll(Arrays.asList("Dashboard", "Property", "Rental Agreements", "Payments", "Profile"));
         } else if (role.equals(UserRole.MANAGER)) {
-            buttonOrder.addAll(Arrays.asList("Dashboard", "Profile"));
+            buttonOrder.addAll(Arrays.asList("Dashboard", "Statistical Report", "Profile"));
         }
 
         for (String buttonName : buttonOrder) {
