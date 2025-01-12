@@ -46,7 +46,7 @@ public class LoginController {
             viewController.showSuccessMessage(successMessage);
             viewController.navigateToMainView();
         } catch (Exception e) {
-            viewController.showErrorMessage("Registration failed: " + e.getMessage());
+            viewController.showErrorMessage("Username already exists");
         }
     }
 
