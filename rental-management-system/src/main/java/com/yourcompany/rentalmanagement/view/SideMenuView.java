@@ -89,7 +89,7 @@ public class SideMenuView implements Initializable {
         menuConfig.put(UserRole.MANAGER, new LinkedHashMap<>(Map.of(
                 "Profile", "/fxml/ProfileView.fxml",
                 "Dashboard", "/fxml/manager/ManagerDashBoard.fxml",
-                "Statistical Report", "/fxml/manager/ManagerDashBoard.fxml"
+                "Statistical Report", "/fxml/manager/StatisticalReport.fxml"
         )));
     }
 

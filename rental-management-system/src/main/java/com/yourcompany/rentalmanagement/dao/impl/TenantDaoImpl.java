@@ -2,6 +2,7 @@ package com.yourcompany.rentalmanagement.dao.impl;
 
 import com.yourcompany.rentalmanagement.dao.UserDao;
 import com.yourcompany.rentalmanagement.model.Address;
+import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
@@ -105,6 +106,7 @@ public class TenantDaoImpl implements UserDao {
                 tenant.setDob(LocalDate.parse((String) profile.get("dob")));
                 tenant.setEmail((String) profile.get("email"));
                 tenant.setPhoneNumber(profile.get("phoneNumber").toString());
+                tenant.setPaymentMethod((Payment.paymentMethod) profile.get("paymentMethod"));
             }
             transaction.commit();
             result.put("status", "success");

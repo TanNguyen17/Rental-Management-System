@@ -24,12 +24,13 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         new Thread(() -> {
             paymentScheduler.startPaymentGeneration();
-        });
+            System.out.println("Payment generation started");
+        }).start();
+
         new Thread(() -> {
             // Load address data
             AddressData.fetchProvinceData();
             System.out.println("Province Data fetched: ");
-
         }).start();
 
         try {

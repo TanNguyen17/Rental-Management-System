@@ -167,7 +167,6 @@ public class OwnerDaoImpl implements UserDao {
             if (owner != null) {
                 Address address = owner.getAddress();
                 address.setCity(data.get("province").toString());
-                address.setCity(data.get("city").toString());
                 address.setNumber(data.get("streetNumber").toString());
                 address.setStreet(data.get("streetName").toString());
                 address.setWard(data.get("ward").toString());

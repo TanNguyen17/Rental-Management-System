@@ -75,9 +75,10 @@ public class PaymentDaoImpl implements PaymentDao {
             Query<RentalAgreement> query = session.createQuery("SELECT ra FROM RentalAgreement ra LEFT JOIN FETCH ra.tenants WHERE ra.id = :id", RentalAgreement.class);
             query.setParameter("id", rentalAgreementId);
             RentalAgreement rentalAgreement = query.getSingleResult();
-//            Tenant tenant = session.get(Tenant.class, tenantId);
+            Tenant tenant = rentalAgreement.getTenants().get(0);
             if (rentalAgreement != null) {
                 System.out.println(rentalAgreement.getId());
+                payment.setMethod(tenant.getPaymentMethod() != null ? tenant.getPaymentMethod() : Payment.paymentMethod.CASH);
                 payment.setRentalAgreement(rentalAgreement);
                 payment.setTenant(rentalAgreement.getTenants().get(0));
                 session.persist(payment);
