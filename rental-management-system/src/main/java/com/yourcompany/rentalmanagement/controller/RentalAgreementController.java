@@ -1,19 +1,18 @@
 package com.yourcompany.rentalmanagement.controller;
 
-import com.yourcompany.rentalmanagement.dao.RentalAgreementDao;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.yourcompany.rentalmanagement.dao.impl.RentalAgreementDaoImpl;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.view.RentalAgreementCreationView;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class RentalAgreementController {
+
     private RentalAgreementDaoImpl rentalAgreementDao;
     private RentalAgreementCreationView rentalAgreementCreationView;
     private Map<String, Object> data;
@@ -26,8 +25,7 @@ public class RentalAgreementController {
     public List<RentalAgreement> getAllRentalAgreements(UserRole userRole, long userId) {
         if (userRole.equals(UserRole.TENANT)) {
             return rentalAgreementDao.getRentalAgreementsByRole(userRole, userId);
-        }
-        else {
+        } else {
             return rentalAgreementDao.getAllRentalAgreements();
         }
     }
@@ -46,20 +44,20 @@ public class RentalAgreementController {
         }
     }
 
-
     public void createRentalAgreement(Map<String, Object> data) {
         rentalAgreementDao.createRentalAgreement(data);
     }
 
-    public void updateRentalAgreementById(long id, Map<String, Object> data){
+    public void updateRentalAgreementById(long id, Map<String, Object> data) {
         rentalAgreementDao.updateRentalAgreementById(id, data);
     }
 
-    public void deleteRentalAgreementById(long id){
-        rentalAgreementDao.deleteRentalAgreementById(id);
+    public boolean deleteRentalAgreementById(long id) {
+        Map<String, Object> result = rentalAgreementDao.deleteRentalAgreementById(id);
+        return "success".equals(result.get("status"));
     }
 
-    public RentalAgreement getRentalAgreementById(long id){
+    public RentalAgreement getRentalAgreementById(long id) {
         return rentalAgreementDao.getRentalAgreementById(id);
     }
 }

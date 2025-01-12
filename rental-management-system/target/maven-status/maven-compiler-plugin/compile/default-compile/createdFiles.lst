@@ -11,6 +11,7 @@ com\yourcompany\rentalmanagement\model\Owner.class
 com\yourcompany\rentalmanagement\view\PropertyView$PropertyListCell.class
 com\yourcompany\rentalmanagement\controller\PropertyController.class
 com\yourcompany\rentalmanagement\util\UserSession.class
+com\yourcompany\rentalmanagement\view\RentalAgreementManagementView$3.class
 com\yourcompany\rentalmanagement\view\PropertyFormController$2.class
 com\yourcompany\rentalmanagement\view\RentalAgreementCreationView.class
 com\yourcompany\rentalmanagement\controller\ResidentialPropertyController.class
@@ -89,5 +90,6 @@ com\yourcompany\rentalmanagement\util\CloudinaryService.class
 com\yourcompany\rentalmanagement\view\TenantView.class
 com\yourcompany\rentalmanagement\model\Host.class
 com\yourcompany\rentalmanagement\view\PropertyDetailsController.class
+com\yourcompany\rentalmanagement\view\RentalAgreementManagementView$4.class
 com\yourcompany\rentalmanagement\view\CommercialPropertyManagementView$2.class
 com\yourcompany\rentalmanagement\view\UserManagementView.class

@@ -1,33 +1,40 @@
 package com.yourcompany.rentalmanagement.view;
 
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.util.UserSession;
 import com.yourcompany.rentalmanagement.view.components.LoadingSpinner;
 import com.yourcompany.rentalmanagement.view.components.Toast;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.*;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.geometry.Side;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
-
 public class HostDashboardViewController implements Initializable {
+
     private PropertyDaoImpl propertyDaoImpl = new PropertyDaoImpl();
     private PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
     private ObservableList<Property> properties;
@@ -38,7 +45,7 @@ public class HostDashboardViewController implements Initializable {
     Map<Long, Double> incomeByProperty = new HashMap<>();
     Map<Long, Double> averageStayByProperty = new HashMap<>();
     String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     private LoadingSpinner loadingSpinner;
 
     @FXML
@@ -93,7 +100,7 @@ public class HostDashboardViewController implements Initializable {
         pieChart.setTitle("Property Status");
     }
 
-    private void initializeTable(){
+    private void initializeTable() {
         // Bind data to the table
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
         title.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -189,13 +196,14 @@ public class HostDashboardViewController implements Initializable {
     private void setupLoadingSpinner() {
         try {
             loadingSpinner = new LoadingSpinner();
-            BorderPane mainContainer = (BorderPane) vBox.getParent();
-            loadingSpinner.prefWidthProperty().bind(mainContainer.widthProperty());
-            loadingSpinner.prefHeightProperty().bind(mainContainer.heightProperty());
+            loadingSpinner.prefWidthProperty().bind(borderPane.widthProperty());
+            loadingSpinner.prefHeightProperty().bind(borderPane.heightProperty());
+
             Platform.runLater(() -> {
-                mainContainer.getChildren().add(loadingSpinner);
-                loadingSpinner.setViewOrder(-1000);
-                loadingSpinner.toFront();
+                borderPane.getChildren().add(loadingSpinner);
+                BorderPane.setAlignment(loadingSpinner, Pos.CENTER);
+                loadingSpinner.setViewOrder(-1);
+                loadingSpinner.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
             });
         } catch (Exception e) {
             System.err.println("Error setting up loading spinner: " + e.getMessage());

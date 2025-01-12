@@ -1,132 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="780.0" stylesheets="@../css/profile.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.ProfileView">
-   <children>
-      <VBox spacing="20" styleClass="profile-container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <!-- Top Section with Image and Basic Info -->
-         <HBox alignment="CENTER" spacing="20">
-            <!-- Left side - Username -->
-            <VBox spacing="10" HBox.hgrow="ALWAYS">
-               <Text fx:id="username" styleClass="username-text" />
-            </VBox>
+<VBox styleClass="main-container" 
+      stylesheets="@../css/profile.css"
+      xmlns="http://javafx.com/javafx/17" 
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.yourcompany.rentalmanagement.view.ProfileView">
+    
+    <Text styleClass="profile-header" fx:id="username"/>
+    
+    <TabPane>
+        <tabs>
+            <Tab text="Profile" closable="false">
+                <content>
+                    <HBox styleClass="content-container">
+                        <!-- Left Side - Form -->
+                        <VBox styleClass="form-container">
+                            <VBox styleClass="form-group">
+                                <Label styleClass="form-label" text="Phone Number"/>
+                                <TextField fx:id="phoneNumber" styleClass="form-field"/>
+                            </VBox>
+                            
+                            <VBox styleClass="form-group">
+                                <Label styleClass="form-label" text="Date of Birth"/>
+                                <DatePicker fx:id="dateOfBirth" styleClass="form-field"/>
+                            </VBox>
+                            
+                            <VBox styleClass="form-group">
+                                <Label styleClass="form-label" text="Email"/>
+                                <TextField fx:id="email" styleClass="form-field"/>
+                            </VBox>
+                            
+                            <Button styleClass="save-button" text="Save Changes" onAction="#updateProfile"/>
+                        </VBox>
+                        
+                        <!-- Right Side - Image -->
+                        <VBox styleClass="image-container" HBox.hgrow="ALWAYS">
+                            <ImageView fx:id="profileImage" styleClass="profile-image" fitHeight="200" fitWidth="200" preserveRatio="true"/>
+                            <Button styleClass="upload-button" text="Upload" onAction="#handleUploadImage"/>
+                        </VBox>
+                    </HBox>
+                </content>
+            </Tab>
             
-            <!-- Right side - Image -->
-            <VBox alignment="CENTER" spacing="10" styleClass="image-container">
-               <ImageView fx:id="profileImage" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="profile-image" />
-               <Button fx:id="uploadImageButton" onAction="#handleUploadImage" styleClass="upload-button" text="Upload" />
-            </VBox>
-         </HBox>
-
-         <!-- Tab Section -->
-         <TabPane styleClass="tab-pane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
-            <!-- Profile Tab -->
-            <Tab text="Profile">
-               <ScrollPane fitToWidth="true" styleClass="profile-scroll-pane">
-                  <VBox styleClass="form-section">
-                     <HBox styleClass="form-row">
-                        <VBox styleClass="form-column">
-                           <Label styleClass="field-label" text="First Name" />
-                           <TextField fx:id="firstName" promptText="Enter first name" />
-                           <Text fx:id="errorFirstName" styleClass="error-text" />
-                           
-                           <Label styleClass="field-label" text="Last Name" />
-                           <TextField fx:id="lastName" promptText="Enter last name" />
-                           <Text fx:id="errorLastName" styleClass="error-text" />
-                           
-                           <Label styleClass="field-label" text="Email" />
-                           <TextField fx:id="email" promptText="Enter email" />
-                           <Text fx:id="errorEmail" styleClass="error-text" />
+            <Tab text="Address" closable="false">
+                <content>
+                    <HBox styleClass="content-container">
+                        <VBox styleClass="form-container">
+                            <VBox styleClass="form-group">
+                                <Label styleClass="form-label" text="Number"/>
+                                <TextField fx:id="number" styleClass="form-field"/>
+                            </VBox>
+                            
+                            <VBox styleClass="form-group">
+                                <Label styleClass="form-label" text="Street"/>
+                                <TextField fx:id="street" styleClass="form-field"/>
+                            </VBox>
+                            
+                            <VBox styleClass="form-group">
+                                <Label styleClass="form-label" text="Ward"/>
+                                <TextField fx:id="ward" styleClass="form-field"/>
+                            </VBox>
+                            
+                            <VBox styleClass="form-group">
+                                <Label styleClass="form-label" text="District"/>
+                                <TextField fx:id="district" styleClass="form-field"/>
+                            </VBox>
+                            
+                            <VBox styleClass="form-group">
+                                <Label styleClass="form-label" text="City"/>
+                                <TextField fx:id="city" styleClass="form-field"/>
+                            </VBox>
+                            
+                            <Button styleClass="save-button" text="Save Address" onAction="#updateAddress"/>
                         </VBox>
-                        
-                        <VBox accessibleRole="COMBO_BOX" styleClass="form-column">
-                           <Label styleClass="field-label" text="Phone Number" />
-                           <TextField fx:id="phoneNumber" promptText="Enter phone number" />
-                           <Text fx:id="errorPhoneNumber" styleClass="error-text" />
-                           
-                           <Label styleClass="field-label" text="Date of Birth" />
-                           <DatePicker fx:id="dateOfBirth">
-                              <VBox.margin>
-                                 <Insets bottom="30.0" />
-                              </VBox.margin></DatePicker>
-                           <Label fx:id="paymentText" styleClass="field-label" text="Payment Method" />
-                           <ComboBox fx:id="paymentChoice" prefWidth="150.0" styleClass="choice-box" />
-                        </VBox>
-                     </HBox>
-                     <Button fx:id="updateProfileButton" onAction="#updateProfile" text="Update" />
-                  </VBox>
-               </ScrollPane>
+                    </HBox>
+                </content>
             </Tab>
-
-            <!-- Address Tab -->
-            <Tab text="Address">
-               <ScrollPane fitToWidth="true" styleClass="profile-scroll-pane">
-                  <VBox styleClass="form-section">
-                     <HBox styleClass="form-row">
-                        <VBox styleClass="form-column">
-                           <Label styleClass="field-label" text="Street Number" />
-                           <TextField fx:id="streetNumber" promptText="Enter street number" />
-                           <Text fx:id="errorStreetNumber" styleClass="error-text" />
-                           
-                           <Label styleClass="field-label" text="Street Name" />
-                           <TextField fx:id="streetName" promptText="Enter street name" />
-                           <Text fx:id="errorStreetName" styleClass="error-text" />
+            
+            <Tab text="Password" closable="false">
+                <content>
+                    <HBox styleClass="content-container">
+                        <VBox styleClass="form-container">
+                            <VBox styleClass="form-group">
+                                <Label styleClass="form-label" text="Current Password"/>
+                                <PasswordField fx:id="currentPassword" styleClass="form-field"/>
+                            </VBox>
+                            
+                            <VBox styleClass="form-group">
+                                <Label styleClass="form-label" text="New Password"/>
+                                <PasswordField fx:id="newPassword" styleClass="form-field"/>
+                            </VBox>
+                            
+                            <VBox styleClass="form-group">
+                                <Label styleClass="form-label" text="Confirm New Password"/>
+                                <PasswordField fx:id="confirmPassword" styleClass="form-field"/>
+                            </VBox>
+                            
+                            <Button styleClass="save-button" text="Change Password" onAction="#updatePassword"/>
                         </VBox>
-                        
-                        <VBox styleClass="form-column">
-                           <Label styleClass="field-label" text="Province" />
-                           <ChoiceBox fx:id="provinceChoice" prefWidth="123.0" />
-                           
-                           <Label styleClass="field-label" text="District" />
-                           <ChoiceBox fx:id="districtChoice" prefWidth="123.0" />
-                           
-                           <Label styleClass="field-label" text="Ward" />
-                           <ChoiceBox fx:id="wardChoice" prefWidth="118.0" />
-                        </VBox>
-                     </HBox>
-                     <Button fx:id="updateAddressButton" onAction="#updateAddress" text="Update" />
-                  </VBox>
-               </ScrollPane>
+                    </HBox>
+                </content>
             </Tab>
-
-            <!-- Password Tab -->
-            <Tab text="Password">
-               <ScrollPane fitToWidth="true" styleClass="profile-scroll-pane">
-                  <VBox styleClass="form-section">
-                     <VBox styleClass="form-column">
-                        <Label styleClass="field-label" text="Current Password" />
-                        <MFXPasswordField fx:id="currentPassword" />
-                        <Text fx:id="errorCurrentPassword" styleClass="error-text" />
-                        
-                        <Label styleClass="field-label" text="New Password" />
-                        <MFXPasswordField fx:id="newPassword" />
-                        <Text fx:id="errorNewPassword" styleClass="error-text" />
-                        
-                        <Label styleClass="field-label" text="Confirm Password" />
-                        <MFXPasswordField fx:id="confirmPassword" />
-                        <Text fx:id="errorConfirmPassword" styleClass="error-text" />
-                     </VBox>
-                     <Button fx:id="updatePasswordButton" onAction="#updatePassword" text="Update" />
-                  </VBox>
-               </ScrollPane>
-            </Tab>
-         </TabPane>
-      </VBox>
-   </children>
-</AnchorPane>
+        </tabs>
+    </TabPane>
+</VBox>
