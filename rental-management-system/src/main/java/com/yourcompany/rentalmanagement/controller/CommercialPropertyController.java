@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CommercialPropertyController {
-    static PropertyDaoImpl propertyDao = new PropertyDaoImpl();
+    PropertyDaoImpl propertyDao = new PropertyDaoImpl();
     private Map<String, Object> data;
 
     public CommercialPropertyController() {
@@ -17,12 +17,7 @@ public class CommercialPropertyController {
         this.data = new HashMap<>();
     }
 
-    public static List<CommercialProperty> getAllCommercialProperties() {
+    public List<CommercialProperty> getAllCommercialProperties() {
         return propertyDao.getAllCommercialProperties();
-    }
-
-    public static void main(String[] args) {
-        List<CommercialProperty> output = getAllCommercialProperties();
-        System.out.println(output);
     }
 }
