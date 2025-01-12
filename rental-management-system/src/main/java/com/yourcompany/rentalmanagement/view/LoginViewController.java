@@ -160,7 +160,7 @@ public class LoginViewController {
             } else if (currentUser instanceof Manager) {
 
             } else if (currentUser instanceof Host) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HostView.fxml"));
                 Scene scene = new Scene(loader.load());
                 Stage stage = (Stage) messageLabel.getScene().getWindow();
                 stage.setScene(scene);

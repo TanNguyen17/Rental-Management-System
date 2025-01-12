@@ -252,6 +252,28 @@ public class PaymentDaoImpl implements PaymentDao {
         return data;
     }
 
+    @Override
+    public List<Payment> getAllPaidPayments(Payment.paymentStatus status) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            try {
+                Query<Payment> query = session.createQuery("from Payment where status = :status", Payment.class);
+                query.setParameter("status", status);
+                payments = query.list();
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                throw e; // Re-throw the exception to allow higher-level handling
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return payments;
+    }
+
     public List<Double> getMonthlyPayment(long id, String type) {
         List<Double> monthlyPayments = new ArrayList<>(Collections.nCopies(12, 0.0)); // Initialize with 12 zeros
 

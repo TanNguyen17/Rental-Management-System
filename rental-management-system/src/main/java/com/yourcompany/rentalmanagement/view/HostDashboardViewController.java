@@ -4,6 +4,8 @@ import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.util.UserSession;
+import com.yourcompany.rentalmanagement.view.components.LoadingSpinner;
+import com.yourcompany.rentalmanagement.view.components.Toast;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -18,8 +20,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.geometry.Side;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,6 +32,14 @@ public class HostDashboardViewController implements Initializable {
     private PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
     private ObservableList<Property> properties;
     private UserSession userSession = UserSession.getInstance();
+    private List<Double> expectedRevenue;
+    private List<Double> actualRevenue;
+    Map<Long, List<Long>> stayDurationsByProperty = new HashMap<>();
+    Map<Long, Double> incomeByProperty = new HashMap<>();
+    Map<Long, Double> averageStayByProperty = new HashMap<>();
+    String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    private LoadingSpinner loadingSpinner;
 
     @FXML
     private BorderPane borderPane;
@@ -61,109 +71,143 @@ public class HostDashboardViewController implements Initializable {
     @FXML
     private TableColumn<Property, String> status;
 
-
     @FXML
     private TableView<Property> propertyTable;
 
-    private void initializeLineChart() {
-        String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    @FXML
+    private VBox vBox;
 
-        xAxis = new CategoryAxis();
+    private void initializeLineChart() {
         xAxis.setCategories(FXCollections.observableArrayList(months));
         xAxis.setLabel("Month");
         xAxis.setSide(Side.BOTTOM); // Ensure the label is at the bottom
-        xAxis.lookup(".axis-label").setTranslateX(150);
 
-        yAxis = new NumberAxis();
         yAxis.setLabel("Income ($)");
         yAxis.setSide(Side.TOP);
 
         // Create the LineChart
         lineChart.setTitle("Monthly Revenue Overview");
-
-        // Create data series
-        XYChart.Series<String, Double> expectedRevenueSeries = new XYChart.Series<>();
-        expectedRevenueSeries.setName("Expected Revenue");
-
-        XYChart.Series<String, Double> actualRevenueSeries = new XYChart.Series<>();
-        actualRevenueSeries.setName("Actual Revenue");
-
-        // Fetch total income
-//        List<Double> expectedRevenue = paymentDaoImpl.getMonthlyPayment(userSession.getCurrentUser().getId(), "expected");
-        List<Double> expectedRevenue = paymentDaoImpl.getMonthlyPayment(1, "expected");
-        List<Double> actualRevenue = paymentDaoImpl.getMonthlyPayment(1, "actual");
-
-        // Populate the series with data
-        for (int i = 0; i < months.length; i++) {
-            double income = (i < expectedRevenue.size()) ? expectedRevenue.get(i) : 0.0;
-            expectedRevenueSeries.getData().add(new XYChart.Data<>(months[i], income));
-        }
-
-        for (int i = 0; i < months.length; i++) {
-            double income = (i < actualRevenue.size()) ? actualRevenue.get(i) : 0.0;
-            actualRevenueSeries.getData().add(new XYChart.Data<>(months[i], income));
-        }
-
-        // Add series to the chart
-        lineChart.getData().addAll(actualRevenueSeries, expectedRevenueSeries);
     }
 
     private void initializePieChart() {
-        // Count properties by status
-        Map<Property.propertyStatus, Integer> statusCounts = new HashMap<>();
-        properties = FXCollections.observableArrayList(propertyDaoImpl.getAllPropertiesByHostID(1));
-        for (Property property : properties) {
-            statusCounts.put(property.getStatus(), statusCounts.getOrDefault(property.getStatus(), 0) + 1);
-        }
-
-        // Create PieChart Data
-        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-        for (Map.Entry<Property.propertyStatus, Integer> entry : statusCounts.entrySet()) {
-            pieChartData.add(new PieChart.Data(entry.getKey().toString(), entry.getValue()));
-        }
-
-        // Set data to the PieChart
-        pieChart.setData(pieChartData);
         pieChart.setTitle("Property Status");
     }
 
-    private void initializeTableData(){
-        // Fetch all properties managed by the current host
-        properties = FXCollections.observableArrayList(propertyDaoImpl.getAllPropertiesByHostID(1));
-        //long hostId = userSession.getCurrentUser().getId();
-
-        // Retrieve stay durations grouped by property
-        Map<Long, List<Long>> stayDurationsByProperty = propertyDaoImpl.getStayDurationsByProperty(1); // change to HostID later
-        Map<Long, Double> incomeByProperty = propertyDaoImpl.calculateTotalIncomeByProperty(1);
-
-        // Calculate the average stay length for each property
-        Map<Long, Double> averageStayByProperty = new HashMap<>();
-        stayDurationsByProperty.forEach((propertyId, durations) -> {
-            double averageStay = durations.stream()
-                    .mapToLong(Long::longValue)
-                    .average()
-                    .orElse(0.0);
-            averageStayByProperty.put(propertyId, averageStay);
-        });
-
+    private void initializeTable(){
         // Bind data to the table
-        id.setCellValueFactory(cellData ->
-                new SimpleLongProperty(propertyTable.getItems().indexOf(cellData.getValue()) + 1).asObject()
-        );
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
         title.setCellValueFactory(new PropertyValueFactory<>("title"));
         status.setCellValueFactory(new PropertyValueFactory<>("status"));
-        totalIncome.setCellValueFactory(cellData -> new SimpleDoubleProperty(
-                Math.round(incomeByProperty.getOrDefault(cellData.getValue().getId(), 0.0) * 100.0) / 100.0).asObject());
-        stayLength.setCellValueFactory(cellData -> new SimpleDoubleProperty(
-                Math.round(averageStayByProperty.getOrDefault(cellData.getValue().getId(), 0.0) * 100.0) / 100.0).asObject());
-        propertyTable.setItems(properties);
+        totalIncome.setCellValueFactory(cellData -> new SimpleDoubleProperty(0.0).asObject());
+        stayLength.setCellValueFactory(cellData -> new SimpleDoubleProperty(0.0).asObject());
+
+        propertyTable.setItems(FXCollections.observableArrayList());
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        initializeLineChart();
-        initializePieChart();
-        initializeTableData();
+        setupLoadingSpinner();
+        new Thread(() -> {
+            initializeLineChart();
+            initializePieChart();
+            initializeTable();
+            loadingData();
+            Platform.runLater(() -> {
+                if (!expectedRevenue.isEmpty() && !actualRevenue.isEmpty()) {
+                    XYChart.Series<String, Double> expectedRevenueSeries = new XYChart.Series<>();
+                    expectedRevenueSeries.setName("Expected Revenue");
+
+                    XYChart.Series<String, Double> actualRevenueSeries = new XYChart.Series<>();
+                    actualRevenueSeries.setName("Actual Revenue");
+                    for (int i = 0; i < months.length; i++) {
+                        double income = (i < expectedRevenue.size()) ? expectedRevenue.get(i) : 0.0;
+                        expectedRevenueSeries.getData().add(new XYChart.Data<>(months[i], income));
+                    }
+
+                    for (int i = 0; i < months.length; i++) {
+                        double income = (i < actualRevenue.size()) ? actualRevenue.get(i) : 0.0;
+                        actualRevenueSeries.getData().add(new XYChart.Data<>(months[i], income));
+                    }
+                    // Add series to the chart
+                    lineChart.getData().addAll(actualRevenueSeries, expectedRevenueSeries);
+                }
+            });
+            Platform.runLater(() -> {
+                if (!properties.isEmpty()) {
+                    Map<Property.propertyStatus, Integer> statusCounts = new HashMap<>();
+                    for (Property property : properties) {
+                        statusCounts.put(property.getStatus(), statusCounts.getOrDefault(property.getStatus(), 0) + 1);
+                    }
+                    ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+                    for (Map.Entry<Property.propertyStatus, Integer> entry : statusCounts.entrySet()) {
+                        pieChartData.add(new PieChart.Data(entry.getKey().toString(), entry.getValue()));
+                    }
+                    pieChart.setData(pieChartData);
+                }
+            });
+            Platform.runLater(() -> {
+                if (!stayDurationsByProperty.isEmpty() && !incomeByProperty.isEmpty()) {
+                    stayDurationsByProperty.forEach((propertyId, durations) -> {
+                        double averageStay = durations.stream()
+                                .mapToLong(Long::longValue)
+                                .average()
+                                .orElse(0.0);
+                        averageStayByProperty.put(propertyId, averageStay);
+                    });
+
+                    totalIncome.setCellValueFactory(cellData -> new SimpleDoubleProperty(
+                            Math.round(incomeByProperty.getOrDefault(cellData.getValue().getId(), 0.0) * 100.0) / 100.0).asObject());
+                    stayLength.setCellValueFactory(cellData -> new SimpleDoubleProperty(
+                            Math.round(averageStayByProperty.getOrDefault(cellData.getValue().getId(), 0.0) * 100.0) / 100.0).asObject());
+                    propertyTable.setItems(properties);
+                }
+            });
+        }).start();
+    }
+
+    private void loadingData() {
+        System.out.println("Loading data...");
+        loadingSpinner.show();
+        try {
+
+            long hostId = userSession.getCurrentUser().getId();
+            expectedRevenue = paymentDaoImpl.getMonthlyPayment(hostId, "expected");
+            actualRevenue = paymentDaoImpl.getMonthlyPayment(hostId, "actual");
+            properties = FXCollections.observableArrayList(propertyDaoImpl.getAllPropertiesByHostID(hostId));
+            stayDurationsByProperty = propertyDaoImpl.getStayDurationsByProperty(hostId);
+            incomeByProperty = propertyDaoImpl.calculateTotalIncomeByProperty(hostId);
+
+            Platform.runLater(() -> showSuccess("Data loaded successfully!"));
+        } catch (Exception e) {
+            System.err.println("Error loading properties: " + e.getMessage());
+            Platform.runLater(() -> showError("Error loading properties: " + e.getMessage()));
+        } finally {
+            loadingSpinner.hide();
+        }
+    }
+
+    private void setupLoadingSpinner() {
+        try {
+            loadingSpinner = new LoadingSpinner();
+            BorderPane mainContainer = (BorderPane) vBox.getParent();
+            loadingSpinner.prefWidthProperty().bind(mainContainer.widthProperty());
+            loadingSpinner.prefHeightProperty().bind(mainContainer.heightProperty());
+            Platform.runLater(() -> {
+                mainContainer.getChildren().add(loadingSpinner);
+                loadingSpinner.setViewOrder(-1000);
+                loadingSpinner.toFront();
+            });
+        } catch (Exception e) {
+            System.err.println("Error setting up loading spinner: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void showSuccess(String message) {
+        Platform.runLater(() -> Toast.showSuccess((Stage) borderPane.getScene().getWindow(), message));
+    }
+
+    private void showError(String message) {
+        Platform.runLater(() -> Toast.showError((Stage) borderPane.getScene().getWindow(), message));
     }
 }

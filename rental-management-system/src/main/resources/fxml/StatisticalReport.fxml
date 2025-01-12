@@ -46,16 +46,10 @@
                               <Text fx:id="totalTenant" strokeType="OUTSIDE" strokeWidth="0.0" />
                            </children>
                         </VBox>
-                        <VBox alignment="CENTER" layoutX="310.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                        <VBox alignment="CENTER" layoutX="410.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
                            <children>
                               <Label fx:id="revenueLable" text="Revenue" />
                               <Text fx:id="totalRevenue" strokeType="OUTSIDE" strokeWidth="0.0" />
-                           </children>
-                        </VBox>
-                        <VBox alignment="CENTER" layoutX="410.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
-                           <children>
-                              <Label fx:id="profitLable" text="Profit" />
-                              <Text fx:id="totalProfit" strokeType="OUTSIDE" strokeWidth="0.0" />
                            </children>
                         </VBox>
                      </children>

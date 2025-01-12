@@ -1,5 +1,6 @@
 package com.yourcompany.rentalmanagement.view;
 
+import com.yourcompany.rentalmanagement.controller.PaymentController;
 import com.yourcompany.rentalmanagement.dao.impl.*;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -24,6 +25,7 @@ public class StatisticalReportController implements Initializable {
     private OwnerDaoImpl ownerDaoImpl = new OwnerDaoImpl();
     private TenantDaoImpl tenantDaoImpl = new TenantDaoImpl();
     private RentalAgreementDaoImpl rentalAgreementDaoImpl = new RentalAgreementDaoImpl();
+    private PaymentController paymentController = new PaymentController();
 
     @FXML
     private Label hostLabel;
@@ -38,13 +40,11 @@ public class StatisticalReportController implements Initializable {
     private PieChart pieChart;
 
     @FXML
-    private Label profitLable;
+    private Label revenueLable;
 
     @FXML
     private Label propertyLabel;
 
-    @FXML
-    private Label revenueLable;
 
     @FXML
     private Label tenantLabel;
@@ -54,9 +54,6 @@ public class StatisticalReportController implements Initializable {
 
     @FXML
     private Text totalOwner;
-
-    @FXML
-    private Text totalProfit;
 
     @FXML
     private Text totalProperty;
@@ -79,6 +76,7 @@ public class StatisticalReportController implements Initializable {
         totalHost.setText(String.valueOf(hostDaoImpl.getTotalUsers()));
         totalOwner.setText(String.valueOf(ownerDaoImpl.getTotalUsers()));
         totalTenant.setText(String.valueOf(tenantDaoImpl.getTotalUsers()));
+        totalRevenue.setText(paymentController.getTotalIncome() + " USD");
     }
 
     private void loadLineChart() {
@@ -144,8 +142,6 @@ public class StatisticalReportController implements Initializable {
             data.getNode().setOnMouseExited(event -> data.getNode().setStyle("-fx-opacity: 1.0;"));
         });
     }
-
-
 
     private void loadPieChart() {
         // Get the total counts of commercial and residential properties

@@ -21,12 +21,12 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        new Thread(() -> {
-            // Load address data
-            AddressData.fetchProvinceData();
-            System.out.println("Province Data fetched: ");
-
-        }).start();
+//        new Thread(() -> {
+//            // Load address data
+//            AddressData.fetchProvinceData();
+//            System.out.println("Province Data fetched: ");
+//
+//        }).start();
 
         try {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -51,7 +51,7 @@ public class MainApp extends Application {
                 loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
             }
              //If no valid stored session --> show login view
-            //loader = new FXMLLoader(getClass().getResource("/fxml/HostView.fxml"));
+
             Scene scene = new Scene(loader.load());
             scene.getStylesheets().addAll(
                     getClass().getResource("/css/property-list.css").toExternalForm(),
