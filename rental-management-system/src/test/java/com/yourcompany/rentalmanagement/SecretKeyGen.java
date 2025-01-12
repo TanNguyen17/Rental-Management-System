@@ -1,4 +1,7 @@
 package com.yourcompany.rentalmanagement;
+/**
+ * @author FTech
+ */
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 

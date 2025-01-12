@@ -1,5 +1,9 @@
 package com.yourcompany.rentalmanagement.model;
 
+/**
+ * @author FTech
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,5 +1,9 @@
 package com.yourcompany.rentalmanagement.service;
 
+/**
+ * @author FTech
+ */
+
 import org.hibernate.event.spi.PostDeleteEvent;
 import org.hibernate.event.spi.PostDeleteEventListener;
 import org.hibernate.event.spi.PostInsertEvent;

@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement.dao.impl;
-
+/**
+ * @author FTech
+ */
 import com.yourcompany.rentalmanagement.model.Address;
 import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;

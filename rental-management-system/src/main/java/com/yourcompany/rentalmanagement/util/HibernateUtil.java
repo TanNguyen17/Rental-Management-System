@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement.util;
-
+/**
+ * @author FTech
+ */
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;

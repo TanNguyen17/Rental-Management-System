@@ -1,5 +1,9 @@
 package com.yourcompany.rentalmanagement.dao;
 
+/**
+ * @author FTech
+ */
+
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.model.UserRole;

@@ -1,5 +1,9 @@
 package com.yourcompany.rentalmanagement.controller;
 
+/**
+ * @author FTech
+ */
+
 import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.service.AuthService;

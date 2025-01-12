@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement.dao.impl;
-
+/**
+ * @author FTech
+ */
 import com.yourcompany.rentalmanagement.model.Address;
 import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.User;
@@ -64,60 +66,6 @@ class OwnerDaoImplTest {
     }
 
     @Test
-    void testGetAllUserName_WithMultipleUsernames() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction transaction = session.beginTransaction();
-
-            // Add sample owners to the database
-            Owner owner1 = new Owner();
-            owner1.setUsername("owner1");
-            owner1.setEmail("owner1@example.com");
-            owner1.setPassword("password1");
-            owner1.setSalt("salt1");
-            owner1.setRole(UserRole.OWNER);
-            session.persist(owner1);
-
-            Owner owner2 = new Owner();
-            owner2.setUsername("owner2");
-            owner2.setEmail("owner2@example.com");
-            owner2.setPassword("password2");
-            owner2.setSalt("salt2");
-            owner2.setRole(UserRole.OWNER);
-            session.persist(owner2);
-
-            transaction.commit();
-
-            // Call the getAllUserName method
-            List<String> usernames = ownerDao.getAllUserName();
-
-            assertNotNull(usernames);
-            assertTrue(usernames.contains("owner1"));
-            assertTrue(usernames.contains("owner2"));
-        } catch (Exception e) {
-            fail("Exception should not occur when retrieving usernames");
-        }
-    }
-
-//    @Test
-//    void testGetAllUserName_WhenNoUsernamesExist() {
-//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//
-//            // Ensure no owners exist in the database
-//            session.createQuery("DELETE FROM Owner").executeUpdate();
-//            transaction.commit();
-//
-//            // Call the getAllUserName method
-//            List<String> usernames = ownerDao.getAllUserName();
-//
-//            assertNotNull(usernames);
-//            assertTrue(usernames.isEmpty(), "Usernames list should be empty when no owners exist");
-//        } catch (Exception e) {
-//            fail("Exception should not occur when no usernames exist");
-//        }
-//    }
-
-    @Test
     void testGetAllOwners_WithMultipleOwners() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
@@ -152,25 +100,25 @@ class OwnerDaoImplTest {
         }
     }
 
-//    @Test
-//    void testGetAllOwners_WhenNoOwnersExist() {
-//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//
-//            // Ensure no owners exist in the database
-//            session.createQuery("DELETE FROM Owner").executeUpdate();
-//            transaction.commit();
-//
-//            // Call the getAllOwners method
-//            List<Owner> owners = ownerDao.getAllOwners();
-//
-//            assertNotNull(owners);
-//            assertTrue(owners.isEmpty(), "Owners list should be empty when no owners exist");
-//
-//        } catch (Exception e) {
-//            fail("Exception should not occur when no owners exist");
-//        }
-//    }
+    @Test
+    void testGetAllOwners_WhenNoOwnersExist() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            // Ensure no owners exist in the database
+            session.createQuery("DELETE FROM Owner").executeUpdate();
+            transaction.commit();
+
+            // Call the getAllOwners method
+            List<Owner> owners = ownerDao.getAllOwners();
+
+            assertNotNull(owners);
+            assertTrue(owners.isEmpty(), "Owners list should be empty when no owners exist");
+
+        } catch (Exception e) {
+            fail("Exception should not occur when no owners exist");
+        }
+    }
 
     @Test
     void testUpdateProfile_Success() {

@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement.view;
-
+/**
+ * @author FTech
+ */
 import com.yourcompany.rentalmanagement.controller.PropertyController;
 import com.yourcompany.rentalmanagement.model.Address;
 import com.yourcompany.rentalmanagement.model.CommercialProperty;

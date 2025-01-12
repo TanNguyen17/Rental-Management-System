@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement.view;
-
+/**
+ * @author FTech
+ */
 import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;

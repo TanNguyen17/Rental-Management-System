@@ -1,5 +1,9 @@
 package com.yourcompany.rentalmanagement.dao;
 
+/**
+ * @author FTech
+ */
+
 import com.yourcompany.rentalmanagement.model.Owner;
 
 import java.util.List;

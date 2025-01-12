@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement;
-
+/**
+ * @author FTech
+ */
 import org.hibernate.SessionFactory;
 
 import com.yourcompany.rentalmanagement.model.UserRole;

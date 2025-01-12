@@ -1,5 +1,9 @@
 package com.yourcompany.rentalmanagement.model;
 
+/**
+ * @author FTech
+ */
+
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
