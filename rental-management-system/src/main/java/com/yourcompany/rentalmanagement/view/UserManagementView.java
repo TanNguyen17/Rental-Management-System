@@ -57,7 +57,7 @@ public class UserManagementView {
     @FXML
     public void initialize() {
         configureTableColumns();
-        initializeViewMoreColumn();
+        // initializeViewMoreColumn();
         configureTableColumns();
         configureRoleFilterCheckComboBox();
 

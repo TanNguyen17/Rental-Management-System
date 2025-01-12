@@ -126,9 +126,13 @@ public class RentalAgreementFormView implements Initializable {
                 List<Tenant> otherTenants = userController.getTenants();
                 if (otherTenants != null && !otherTenants.isEmpty()) {
                     subTenantInput.getItems().addAll(FXCollections.observableArrayList(otherTenants));
-                    if (rentalAgreement.getTenants() != null) {
-                        subTenantInput.getCheckModel().getCheckedItems().addAll(rentalAgreement.getTenants());
-                    }
+//                    if (rentalAgreement.getTenants() != null) {
+//                        for (Tenant tenant : rentalAgreement.getTenants()) {
+//                            subTenantInput.getCheckModel().check(tenant);
+//                        }
+//
+//                        // subTenantInput.getCheckModel().getCheckedItems().addAll(rentalAgreement.getTenants());
+//                    }
                 }
 
                 RentalAgreement.rentalAgreementStatus status = rentalAgreement.getStatus();

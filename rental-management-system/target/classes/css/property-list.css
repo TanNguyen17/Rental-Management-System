@@ -271,21 +271,24 @@
     -fx-padding: 5 10;
     -fx-background-radius: 4;
     -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
 }
 
-.status-label.available {
-    -fx-background-color: #e8f5e9;
-    -fx-text-fill: #2e7d32;
+.status-available {
+    -fx-background-color: #4CAF50;
 }
 
-.status-label.rented {
-    -fx-background-color: #ede7f6;
-    -fx-text-fill: #4527a0;
+.status-rented {
+    -fx-background-color: #2196F3;
 }
 
-.status-label.under_maintenance {
-    -fx-background-color: #fff3e0;
-    -fx-text-fill: #ef6c00;
+.status-under_maintenance {
+    -fx-background-color: #FF9800;
+}
+
+.status-unavailable {
+    -fx-background-color: #F44336;
 }
 
 .filter-container {

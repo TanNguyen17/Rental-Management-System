@@ -8,7 +8,7 @@
 
 <VBox alignment="CENTER_RIGHT" prefHeight="720.0" prefWidth="1080.0" spacing="12.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.CommercialPropertyManagementView">
    <children>
-      <Button fx:id="addNewBtn" mnemonicParsing="false" text="Add New Data" />
+<!--      <Button fx:id="addNewBtn" mnemonicParsing="false" text="Add New Data" />-->
       <TableView fx:id="commercialPropertyTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="718.0" prefWidth="1080.0">
          <columns>
             <TableColumn fx:id="titleCol" prefWidth="75.0" styleClass="table-column" text="TITLE" />

@@ -32,6 +32,10 @@ public class PaymentController {
         return paymentDao.loadDataByRole(pageNumber, filterValue, null, 1);
     }
 
+    public List<Payment> getAllPayments(){
+        return paymentDao.getAllPayments();
+    }
+
     public List<Payment> getPaymentsByRole(int pageNumber, Map<String, String> filterValue, UserRole userRole, long tenantId) {
         return paymentDao.loadDataByRole(pageNumber, filterValue, userRole, tenantId);
     }
