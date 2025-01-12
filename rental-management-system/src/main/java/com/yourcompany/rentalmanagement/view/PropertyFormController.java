@@ -24,8 +24,10 @@ import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.UserSession;
 import com.yourcompany.rentalmanagement.view.components.LoadingSpinner;
 import com.yourcompany.rentalmanagement.view.components.Toast;
+import com.yourcompany.rentalmanagement.util.AddressData;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -43,6 +45,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import javafx.event.ActionEvent;
 
 public class PropertyFormController {
 
@@ -56,17 +59,6 @@ public class PropertyFormController {
     private ComboBox<Property.propertyStatus> statusCombo;
     @FXML
     private TextField priceField;
-
-    @FXML
-    private TextField streetField;
-    @FXML
-    private TextField numberField;
-    @FXML
-    private TextField wardField;
-    @FXML
-    private TextField districtField;
-    @FXML
-    private TextField cityField;
 
     @FXML
     private VBox commercialFields;
@@ -105,6 +97,18 @@ public class PropertyFormController {
 
     @FXML
     private Button submitButton;
+
+    @FXML
+    private ComboBox<String> provinceCombo;
+    @FXML
+    private ComboBox<String> districtCombo;
+    @FXML
+    private ComboBox<String> wardCombo;
+
+    @FXML
+    private TextField streetField;
+    @FXML
+    private TextField numberField;
 
     public PropertyFormController() {
         cloudinaryService = new CloudinaryService();
@@ -162,6 +166,8 @@ public class PropertyFormController {
             stage.setMinWidth(800);
             stage.setMinHeight(600);
         });
+
+        initializeAddressFields();
     }
 
     private void setupFilters() {
@@ -312,9 +318,9 @@ public class PropertyFormController {
         Address address = new Address();
         address.setStreet(streetField.getText());
         address.setNumber(numberField.getText());
-        address.setWard(wardField.getText());
-        address.setDistrict(districtField.getText());
-        address.setCity(cityField.getText());
+        address.setWard(wardCombo.getValue());
+        address.setDistrict(districtCombo.getValue());
+        address.setCity(provinceCombo.getValue());
         property.setAddress(address);
 
         if (isEditMode) {
@@ -340,9 +346,9 @@ public class PropertyFormController {
                 || statusCombo.getValue() == null
                 || streetField.getText().isEmpty()
                 || numberField.getText().isEmpty()
-                || wardField.getText().isEmpty()
-                || districtField.getText().isEmpty()
-                || cityField.getText().isEmpty()
+                || provinceCombo.getValue() == null
+                || districtCombo.getValue() == null
+                || wardCombo.getValue() == null
                 || (!isEditMode && selectedImage == null)) {
             showError("Please fill in all required fields (marked with *)");
             return false;
@@ -358,6 +364,19 @@ public class PropertyFormController {
                 showError("Please fill in all residential property fields");
                 return false;
             }
+        }
+
+        if (provinceCombo.getValue() == null || provinceCombo.getValue().isEmpty()) {
+            showError("Please select a province/city");
+            return false;
+        }
+        if (districtCombo.getValue() == null || districtCombo.getValue().isEmpty()) {
+            showError("Please select a district");
+            return false;
+        }
+        if (wardCombo.getValue() == null || wardCombo.getValue().isEmpty()) {
+            showError("Please select a ward");
+            return false;
         }
 
         return true;
@@ -379,9 +398,11 @@ public class PropertyFormController {
         priceField.clear();
         streetField.clear();
         numberField.clear();
-        wardField.clear();
-        districtField.clear();
-        cityField.clear();
+        provinceCombo.setValue(null);
+        districtCombo.setValue(null);
+        wardCombo.setValue(null);
+        districtCombo.setDisable(true);
+        wardCombo.setDisable(true);
         businessTypeField.clear();
         parkingSpaceCheck.setSelected(false);
         squareFootageField.clear();
@@ -447,11 +468,13 @@ public class PropertyFormController {
         if (address != null) {
             streetField.setText(address.getStreet());
             numberField.setText(address.getNumber());
-            wardField.setText(address.getWard());
-            districtField.setText(address.getDistrict());
-            cityField.setText(address.getCity());
-
-
+            provinceCombo.setValue(address.getCity());
+            Platform.runLater(() -> {
+                provinceCombo.fireEvent(new ActionEvent());
+                districtCombo.setValue(address.getDistrict());
+                districtCombo.fireEvent(new ActionEvent());
+                wardCombo.setValue(address.getWard());
+            });
         }
 
         // Set host if exists
@@ -563,6 +586,48 @@ public class PropertyFormController {
                 loadingSpinner.hide();
             }
         });
+    }
+
+    private void initializeAddressFields() {
+        // Initialize ComboBoxes
+        provinceCombo.setItems(FXCollections.observableArrayList(AddressData.provinceCities.keySet()));
+
+        // Add listeners for cascading selection
+        provinceCombo.setOnAction(e -> {
+            String selectedProvince = provinceCombo.getValue();
+            if (selectedProvince != null) {
+                List<String> districts = AddressData.provinceCities.get(selectedProvince);
+                districtCombo.setItems(FXCollections.observableArrayList(districts));
+                districtCombo.setDisable(false);
+                // Clear subsequent selections
+                districtCombo.setValue(null);
+                wardCombo.setValue(null);
+                wardCombo.setDisable(true);
+            }
+        });
+
+        districtCombo.setOnAction(e -> {
+            String selectedDistrict = districtCombo.getValue();
+            if (selectedDistrict != null) {
+                List<String> wards = AddressData.cityWards.get(selectedDistrict);
+                wardCombo.setItems(FXCollections.observableArrayList(wards));
+                wardCombo.setDisable(false);
+            }
+        });
+
+        // Initially disable district and ward selection
+        districtCombo.setDisable(true);
+        wardCombo.setDisable(true);
+    }
+
+    private Address createAddress() {
+        Address address = new Address();
+        address.setStreet(streetField.getText());
+        address.setNumber(numberField.getText());
+        address.setWard(wardCombo.getValue());
+        address.setDistrict(districtCombo.getValue());
+        address.setCity(provinceCombo.getValue());
+        return address;
     }
 
     // ... validation and helper methods ...
