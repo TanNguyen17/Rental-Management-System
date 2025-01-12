@@ -1,7 +1,17 @@
 # Rental Management System
 
 ## Project Overview
-// Put later
+The project involves developing a comprehensive Rental Management System designed to enhance and streamline rental operations for various user roles. Building upon the previous A1, the system introduces five distinct user types: Visitor, Tenant, Host, Owner, and Manager, each with specific functionalities tailored to their responsibilities. 
+
+Visitors can browse and filter available rental properties without the need to log in. 
+
+Tenants have the ability to manage their personal information, view rental agreements, and access payment details. 
+
+Hosts can oversee their properties, modify rental agreements, track unpaid payments, and access property-specific statistics. 
+
+Owners are empowered to add new properties, including uploading images, ensuring efficient storage and display within the system. 
+
+Managers possess full control, enabling CRUD (Create, Read, Update, Delete) operations on all entities and access to comprehensive system-wide statistics. 
 
 ## Features
 // Put later
