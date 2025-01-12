@@ -85,7 +85,7 @@ public class RentalAgreementFormView implements Initializable{
         rentalAgreement = rentalAgreementController.getRentalAgreementById(id);
 
         // For Property Update
-        Property property;
+        Property property = null;
         if (rentalAgreement.getCommercialProperty() != null) {
              property = rentalAgreement.getCommercialProperty();
         } else {

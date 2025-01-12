@@ -137,7 +137,7 @@ public class LoginViewController {
         try {
             User currentUser = UserSession.getInstance().getCurrentUser();
 
-            if (currentUser instanceof Owner || currentUser instanceof Manager) {
+            if (currentUser instanceof Owner) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OwnerView.fxml"));
                 Scene scene = new Scene(loader.load());
 

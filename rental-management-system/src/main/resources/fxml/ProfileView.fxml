@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -53,13 +55,18 @@
                            <Text fx:id="errorEmail" styleClass="error-text" />
                         </VBox>
                         
-                        <VBox styleClass="form-column">
+                        <VBox accessibleRole="COMBO_BOX" styleClass="form-column">
                            <Label styleClass="field-label" text="Phone Number" />
                            <TextField fx:id="phoneNumber" promptText="Enter phone number" />
                            <Text fx:id="errorPhoneNumber" styleClass="error-text" />
                            
                            <Label styleClass="field-label" text="Date of Birth" />
-                           <DatePicker fx:id="dateOfBirth" />
+                           <DatePicker fx:id="dateOfBirth">
+                              <VBox.margin>
+                                 <Insets bottom="30.0" />
+                              </VBox.margin></DatePicker>
+                           <Label fx:id="paymentText" styleClass="field-label" text="Payment Method" />
+                           <ComboBox fx:id="paymentChoice" prefWidth="150.0" styleClass="choice-box" />
                         </VBox>
                      </HBox>
                      <Button fx:id="updateProfileButton" onAction="#updateProfile" text="Update" />

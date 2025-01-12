@@ -49,12 +49,18 @@ public class UserController {
 
         if (role == UserRole.TENANT) {
             result = tenantDao.updateProfile(userId, data);
+        } else if (role == UserRole.HOST) {
+            result = hostDao.updateProfile(userId, data);
+        } else if (role == UserRole.OWNER) {
+            result = ownerDao.updateProfile(userId, data);
+        } else if (role == UserRole.MANAGER) {
+            result = hostDao.updateProfile(userId, data);
         }
 
         if (result.get("status").toString().equals("success")) {
-            profileView.showSuccessAlert("Update Address", result.get("message").toString());
+            profileView.showSuccessAlert("Update Profile", result.get("message").toString());
         } else {
-            profileView.showErrorAlert("Update Address", result.get("message").toString());
+            profileView.showErrorAlert("Update Profile", result.get("message").toString());
         }
     }
 
@@ -63,6 +69,12 @@ public class UserController {
 
         if (role == UserRole.TENANT) {
             result = tenantDao.updateAddress(userId, data);
+        } else if (role == UserRole.HOST) {
+            result = hostDao.updateAddress(userId, data);
+        } else if (role == UserRole.OWNER) {
+            result = ownerDao.updateAddress(userId, data);
+        } else if (role == UserRole.MANAGER) {
+            result = hostDao.updateAddress(userId, data);
         }
 
         if (result.get("status").toString().equals("success")) {
@@ -77,6 +89,12 @@ public class UserController {
 
         if (role == UserRole.TENANT) {
             result = tenantDao.updateUserImage(userId, imageLink);
+        } else if (role == UserRole.HOST) {
+            result = hostDao.updateUserImage(userId, imageLink);
+        } else if (role == UserRole.OWNER) {
+            result = ownerDao.updateUserImage(userId, imageLink);
+        } else if (role == UserRole.MANAGER) {
+            result = hostDao.updateUserImage(userId, imageLink);
         }
 
         if (result.get("status").toString().equals("success")) {

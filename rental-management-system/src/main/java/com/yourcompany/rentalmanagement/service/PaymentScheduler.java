@@ -49,7 +49,6 @@ public class PaymentScheduler {
     private Payment createPayment(RentalAgreement agreement, LocalDate dueDate) {
         Payment payment = new Payment();
         payment.setReceipt("RECURRING-" + agreement.getId() + "-" + dueDate); // Unique receipt
-        payment.setMethod("AUTOMATIC");
         payment.setAmount(agreement.getRentingFee());
         payment.setStatus(Payment.paymentStatus.UNPAID);
         payment.setDueDate(dueDate);

@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
 public class RentalAgreementListView implements Initializable {
     private RentalAgreementController rentalAgreementController = new RentalAgreementController();
     private UserSession userSession = UserSession.getInstance();
-    private ObservableList<RentalAgreement> rentalAgreements;
+    private ObservableList<RentalAgreement> rentalAgreements = FXCollections.observableArrayList();
 
     @FXML
     TableView<RentalAgreement> rentalAgreementTableView = new TableView<>();
