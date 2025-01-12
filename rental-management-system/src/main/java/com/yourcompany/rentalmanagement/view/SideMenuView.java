@@ -97,7 +97,8 @@ public class SideMenuView implements Initializable {
         menuConfig.put(UserRole.MANAGER, new LinkedHashMap<>(Map.of(
                 "Profile", "/fxml/ProfileView.fxml",
                 "Dashboard", "/fxml/manager/ManagerDashBoard.fxml",
-                "Statistical Report", "/fxml/manager/StatisticalReport.fxml"
+                "Statistical Report", "/fxml/manager/StatisticalReport.fxml",
+                "Property", "/fxml/ViewRentalProperties.fxml"
         )));
     }
 
@@ -120,7 +121,7 @@ public class SideMenuView implements Initializable {
         } else if (role.equals(UserRole.HOST)) {
             buttonOrder.addAll(Arrays.asList("Dashboard", "Property", "Rental Agreements", "Payments", "Profile"));
         } else if (role.equals(UserRole.MANAGER)) {
-            buttonOrder.addAll(Arrays.asList("Dashboard", "Statistical Report", "Profile"));
+            buttonOrder.addAll(Arrays.asList("Dashboard", "Statistical Report", "Property", "Profile"));
         }
 
         for (String buttonName : buttonOrder) {
