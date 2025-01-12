@@ -187,7 +187,4 @@ public class RentalAgreementManagementView implements Initializable {
     private void deleteRow(long id){
         rentalAgreementController.deleteRentalAgreementById(id);
     }
-
-
-
 }

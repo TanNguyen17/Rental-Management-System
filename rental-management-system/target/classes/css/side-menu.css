@@ -1,0 +1,103 @@
+.side-menu {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 0);
+    -fx-min-width: 220px;
+    -fx-pref-width: 220px;
+    -fx-max-width: 220px;
+}
+
+.role-combo {
+    -fx-background-color: transparent;
+    -fx-border-color: #1E3058;
+    -fx-border-radius: 4px;
+    -fx-font-size: 14px;
+    -fx-pref-width: 180px;
+}
+
+.nav-container {
+    -fx-padding: 0;
+}
+
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1E3058;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 16;
+    -fx-cursor: hand;
+}
+
+.menu-button:hover {
+    -fx-background-color: #DCE8F8;
+    -fx-background-radius: 4px;
+}
+
+.menu-button:pressed {
+    -fx-background-color: derive(#DCE8F8, -10%);
+}
+
+.menu-button.active {
+    -fx-background-color: #1E3058;
+    -fx-text-fill: white;
+    -fx-background-radius: 4px;
+}
+
+.menu-button.active:hover {
+    -fx-background-color: derive(#1E3058, 10%);
+}
+
+.logout-button {
+    -fx-border-color: #1E3058;
+    -fx-border-radius: 4px;
+    -fx-text-fill: #1E3058;
+}
+
+.logout-button:hover {
+    -fx-background-color: #1E3058;
+    -fx-text-fill: white;
+}
+
+.user-info-container {
+    -fx-padding: 0 0 16 0;
+    -fx-border-color: transparent transparent #DCE8F8 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-spacing: 8;
+}
+
+.role-text {
+    -fx-fill: #1E3058;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-opacity: 0.8;
+}
+
+.username-box {
+    -fx-background-color: transparent;
+    -fx-border-color: #1E3058;
+    -fx-border-radius: 4px;
+    -fx-padding: 8 12;
+    -fx-pref-width: 180px;
+    -fx-min-height: 35px;
+    -fx-alignment: center-left;
+}
+
+.username-box:hover {
+    -fx-background-color: #DCE8F8;
+}
+
+.username-text {
+    -fx-fill: #1E3058;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.exit-button {
+    -fx-border-color: #D32F2F;
+    -fx-border-radius: 4px;
+    -fx-text-fill: #D32F2F;
+}
+
+.exit-button:hover {
+    -fx-background-color: #D32F2F;
+    -fx-text-fill: white;
+}

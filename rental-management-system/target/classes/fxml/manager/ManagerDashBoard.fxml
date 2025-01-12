@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+        <VBox fx:id="mainContent" prefHeight="720.0" prefWidth="1080.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementManagementView">
+            <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="dashboardTitle" prefHeight="17.0" prefWidth="971.0" text="Dashboard">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+                <TabPane fx:id="dashboardPanel" prefHeight="720.0" prefWidth="1080.0" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                        <Tab fx:id="userTab" text="User" >
+                            <content>
+                                <fx:include source="User.fxml"/>
+                            </content>
+                        </Tab>
+                        <Tab fx:id="paymentTab" text="Payment">
+                            <content>
+                                <fx:include source="payment/Payment.fxml"/>
+                            </content>
+                        </Tab>
+                        <Tab fx:id="commercialPropertyTab" text="Commercial Property">
+                            <content>
+                                <fx:include source="property/CommercialProperty.fxml"/>
+                            </content>
+                        </Tab>
+                        <Tab fx:id="residentialPropertyTab" text="Residential Property">
+                            <content>
+                                <fx:include source="property/ResidentialProperty.fxml"/>
+                            </content>
+                        </Tab>
+                        <Tab fx:id="rentalAgreementTab" style="height: 720;" text="Rental Agreement">
+                            <content>
+                                <fx:include source="rental-agreement-management/RentalAgreementView.fxml"/>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+            </children>
+        </VBox>
