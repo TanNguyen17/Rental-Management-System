@@ -138,8 +138,7 @@ public class HostDashboardViewController implements Initializable {
                     // Add series to the chart
                     lineChart.getData().addAll(actualRevenueSeries, expectedRevenueSeries);
                 }
-            });
-            Platform.runLater(() -> {
+
                 if (!properties.isEmpty()) {
                     Map<Property.propertyStatus, Integer> statusCounts = new HashMap<>();
                     for (Property property : properties) {
@@ -172,8 +171,6 @@ public class HostDashboardViewController implements Initializable {
                         });
                     }
                 }
-            });
-            Platform.runLater(() -> {
                 if (!stayDurationsByProperty.isEmpty() && !incomeByProperty.isEmpty()) {
                     stayDurationsByProperty.forEach((propertyId, durations) -> {
                         double averageStay = durations.stream()

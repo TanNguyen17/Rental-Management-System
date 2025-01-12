@@ -139,7 +139,6 @@ class HostDaoImplTest {
     }
 
     @Test
-
     void testUpdatePassword_Success() {
         // Act
         Map<String, Object> result = hostDao.updatePassword(testHostId, "password", "newPassword");
@@ -149,6 +148,13 @@ class HostDaoImplTest {
 
         Host updatedHost = hostDao.getHostById(testHostId);
         assertTrue(updatedHost.checkPassword("newPassword"), "Password should be updated");
+    }
+
+    @Test
+    void setPassword(){
+        Map<String, Object> result = hostDao.setPassword(46, "password");
+        System.out.println(hostDao.getHostById(46).getPassword());
+        assertEquals("success", result.get("status"), "Password update should be successful");
     }
 
     @Test

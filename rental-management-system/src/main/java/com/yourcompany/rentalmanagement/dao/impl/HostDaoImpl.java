@@ -172,6 +172,26 @@ public class HostDaoImpl implements HostDao {
         return result;
     }
 
+    public Map<String, Object> setPassword(long id, String newPassword) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            host = session.get(Host.class, id);
+            host.setHashedPassword(newPassword);
+            transaction.commit();
+            result.put("status", "success");
+            result.put("message", "Password changed successfully");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            result.put("status", "failed");
+            result.put("message", e.getMessage());
+        }
+        return result;
+    }
+
     @Override
     public List<String> getAllUserName() {
         return getAllHosts().stream().map(Host::getUsername).collect(Collectors.toList());
