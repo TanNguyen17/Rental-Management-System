@@ -29,172 +29,7 @@ import java.util.*;
 public class RentalAgreementManagementView implements Initializable {
     private RentalAgreementController rentalAgreementController = new RentalAgreementController();
     private UserSession userSession = UserSession.getInstance();
-    private ObservableList<RentalAgreement> rentalAgreements = new ObservableList<RentalAgreement>() {
-        @Override
-        public void addListener(ListChangeListener<? super RentalAgreement> listChangeListener) {
-
-        }
-
-        @Override
-        public void removeListener(ListChangeListener<? super RentalAgreement> listChangeListener) {
-
-        }
-
-        @Override
-        public boolean addAll(RentalAgreement... rentalAgreements) {
-            return false;
-        }
-
-        @Override
-        public boolean setAll(RentalAgreement... rentalAgreements) {
-            return false;
-        }
-
-        @Override
-        public boolean setAll(Collection<? extends RentalAgreement> collection) {
-            return false;
-        }
-
-        @Override
-        public boolean removeAll(RentalAgreement... rentalAgreements) {
-            return false;
-        }
-
-        @Override
-        public boolean retainAll(RentalAgreement... rentalAgreements) {
-            return false;
-        }
-
-        @Override
-        public void remove(int i, int i1) {
-
-        }
-
-        @Override
-        public int size() {
-            return 0;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return false;
-        }
-
-        @Override
-        public boolean contains(Object o) {
-            return false;
-        }
-
-        @Override
-        public Iterator<RentalAgreement> iterator() {
-            return null;
-        }
-
-        @Override
-        public Object[] toArray() {
-            return new Object[0];
-        }
-
-        @Override
-        public <T> T[] toArray(T[] a) {
-            return null;
-        }
-
-        @Override
-        public boolean add(RentalAgreement rentalAgreement) {
-            return false;
-        }
-
-        @Override
-        public boolean remove(Object o) {
-            return false;
-        }
-
-        @Override
-        public boolean containsAll(Collection<?> c) {
-            return false;
-        }
-
-        @Override
-        public boolean addAll(Collection<? extends RentalAgreement> c) {
-            return false;
-        }
-
-        @Override
-        public boolean addAll(int index, Collection<? extends RentalAgreement> c) {
-            return false;
-        }
-
-        @Override
-        public boolean removeAll(Collection<?> c) {
-            return false;
-        }
-
-        @Override
-        public boolean retainAll(Collection<?> c) {
-            return false;
-        }
-
-        @Override
-        public void clear() {
-
-        }
-
-        @Override
-        public RentalAgreement get(int index) {
-            return null;
-        }
-
-        @Override
-        public RentalAgreement set(int index, RentalAgreement element) {
-            return null;
-        }
-
-        @Override
-        public void add(int index, RentalAgreement element) {
-
-        }
-
-        @Override
-        public RentalAgreement remove(int index) {
-            return null;
-        }
-
-        @Override
-        public int indexOf(Object o) {
-            return 0;
-        }
-
-        @Override
-        public int lastIndexOf(Object o) {
-            return 0;
-        }
-
-        @Override
-        public ListIterator<RentalAgreement> listIterator() {
-            return null;
-        }
-
-        @Override
-        public ListIterator<RentalAgreement> listIterator(int index) {
-            return null;
-        }
-
-        @Override
-        public List<RentalAgreement> subList(int fromIndex, int toIndex) {
-            return List.of();
-        }
-
-        @Override
-        public void addListener(InvalidationListener invalidationListener) {
-
-        }
-
-        @Override
-        public void removeListener(InvalidationListener invalidationListener) {
-
-        }
-    };
+    private List<RentalAgreement> rentalAgreements = new ArrayList<>();
 
     @FXML
     TableView<RentalAgreement> rentalAgreementTableView = new TableView<>();
@@ -239,7 +74,7 @@ public class RentalAgreementManagementView implements Initializable {
             Platform.runLater(() -> {
                 if (!rentalAgreementList.isEmpty()) {
                     rentalAgreements.addAll(rentalAgreementList);
-                    rentalAgreementTableView.setItems(rentalAgreements);
+                    rentalAgreementTableView.setItems(FXCollections.observableArrayList(rentalAgreements));
                 }
             });
         }).start();
@@ -250,14 +85,14 @@ public class RentalAgreementManagementView implements Initializable {
         });
     }
 
-    private void loadingData() {
-        System.out.println("loading data");
-        rentalAgreements.setAll(rentalAgreementController.getAllRentalAgreements(
-                userSession.getCurrentUser().getRole(),
-                userSession.getCurrentUser().getId()
-        ));
-        rentalAgreements = FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(userSession.getCurrentUser().getRole(), userSession.getCurrentUser().getId()));
-    }
+//    private void loadingData() {
+//        System.out.println("loading data");
+//        rentalAgreements.setAll(rentalAgreementController.getAllRentalAgreements(
+//                userSession.getCurrentUser().getRole(),
+//                userSession.getCurrentUser().getId()
+//        ));
+//        rentalAgreements = FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(userSession.getCurrentUser().getRole(), userSession.getCurrentUser().getId()));
+//    }
 
     private void initializeColumn(){
         agreementId.setCellValueFactory(new PropertyValueFactory<>("id"));
