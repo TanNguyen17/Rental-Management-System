@@ -1,0 +1,275 @@
+/* Base colors and variables */
+* {
+    -primary-color: #1E3058;
+    -secondary-color: #DCE8F8;
+    -hover-color: derive(-primary-color, 20%);
+    -border-color: derive(-primary-color, 80%);
+}
+
+.root {
+    -fx-background-color: white;
+    -fx-padding: 24px;
+}
+
+/* Form Container */
+.form-container {
+    -fx-spacing: 24px;
+    -fx-padding: 32px;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+    -fx-background-radius: 8px;
+    -fx-min-width: 900px;
+    -fx-min-height: 600px;
+}
+
+/* ScrollPane styling */
+.form-scroll-pane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-fit-to-width: true;
+}
+
+.form-scroll-pane>.viewport {
+    -fx-background-color: transparent;
+}
+
+.form-scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12px;
+}
+
+.form-scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: -primary-color;
+    -fx-background-radius: 6px;
+}
+
+.form-scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: -secondary-color;
+    -fx-background-radius: 6px;
+}
+
+/* Form content layout */
+.form-content {
+    -fx-spacing: 48px;
+    -fx-padding: 32px;
+    -fx-alignment: TOP_CENTER;
+}
+
+.form-column {
+    -fx-spacing: 32px;
+    -fx-min-width: 400px;
+    -fx-pref-width: 400px;
+    -fx-max-width: 500px;
+}
+
+/* Column titles */
+.column-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-color;
+    -fx-padding: 0 0 16px 0;
+}
+
+/* Update form groups */
+.form-group {
+    -fx-spacing: 12px;
+    -fx-padding: 0 0 24px 0;
+}
+
+.form-group .label {
+    -fx-padding: 0 0 4px 0;
+}
+
+.form-group .combo-box,
+.form-group .check-combo-box {
+    -fx-max-width: Infinity;
+    -fx-min-height: 40px;
+}
+
+/* Make combo boxes more prominent */
+.combo-box,
+.check-combo-box {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-pref-height: 45px;
+}
+
+.combo-box:hover,
+.check-combo-box:hover {
+    -fx-border-color: derive(-primary-color, 50%);
+}
+
+.combo-box:focused,
+.check-combo-box:focused {
+    -fx-border-color: -primary-color;
+    -fx-effect: dropshadow(gaussian, rgba(30, 48, 88, 0.1), 4, 0, 0, 0);
+}
+
+/* Update button container */
+.button-container {
+    -fx-spacing: 16px;
+    -fx-padding: 24px 0 0 0;
+    -fx-alignment: CENTER_RIGHT;
+    -fx-border-color: transparent -border-color transparent transparent;
+    -fx-border-width: 1px;
+}
+
+/* Section Styling */
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-color;
+    -fx-padding: 0 0 16px 0;
+}
+
+.form-section {
+    -fx-spacing: 16px;
+}
+
+.form-row {
+    -fx-spacing: 16px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* Labels */
+.label {
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Form Controls */
+.text-field,
+.choice-box,
+.date-picker,
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-pref-height: 40px;
+    -fx-min-width: 200px;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused,
+.choice-box:focused,
+.date-picker:focused,
+.combo-box:focused {
+    -fx-border-color: -primary-color;
+    -fx-effect: dropshadow(gaussian, rgba(30, 48, 88, 0.1), 4, 0, 0, 0);
+}
+
+/* ComboBox Styling */
+.combo-box .list-view {
+    -fx-pref-height: 200px;
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 4px;
+}
+
+.combo-box .list-cell {
+    -fx-padding: 8px 12px;
+    -fx-text-fill: -primary-color;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: -secondary-color;
+}
+
+/* Date Picker Styling */
+.date-picker .arrow-button {
+    -fx-background-color: -primary-color;
+    -fx-background-radius: 0 4px 4px 0;
+}
+
+.date-picker .arrow-button .arrow {
+    -fx-background-color: white;
+}
+
+.date-picker .cell {
+    -fx-text-fill: -primary-color;
+}
+
+.date-picker .cell:hover {
+    -fx-background-color: -secondary-color;
+}
+
+.date-picker .selected {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+}
+
+/* Buttons */
+.button {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10 20;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+    -fx-min-width: 100px;
+    -fx-pref-height: 40px;
+}
+
+.button:hover {
+    -fx-background-color: -hover-color;
+}
+
+.secondary-button {
+    -fx-background-color: white;
+    -fx-text-fill: -primary-color;
+    -fx-border-color: -primary-color;
+    -fx-border-radius: 4px;
+}
+
+.secondary-button:hover {
+    -fx-background-color: -secondary-color;
+}
+
+/* Error Text */
+.error-text {
+    -fx-fill: #f44336;
+    -fx-font-size: 12px;
+}
+
+/* Status Colors */
+.status-active {
+    -fx-text-fill: #2e7d32;
+}
+
+.status-pending {
+    -fx-text-fill: #ed6c02;
+}
+
+.status-expired {
+    -fx-text-fill: #d32f2f;
+}
+
+.owner-label {
+    -fx-text-fill: #0087ee;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 4px 0 0 0;
+}
+
+/* CheckComboBox specific styles */
+.check-combo-box {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.check-combo-box:focused {
+    -fx-border-color: -primary-color;
+}
+
+.check-combo-box .combo-box-popup .list-view {
+    -fx-pref-height: 200px;
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+}

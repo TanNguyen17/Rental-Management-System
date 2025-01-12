@@ -12,6 +12,7 @@ import jakarta.persistence.UniqueConstraint;
 @Table(name = "Address", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"id"})})
 public class Address {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false)
@@ -91,7 +92,7 @@ public class Address {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return number + " " + street + " " + ward + " " + district + " " + city;
     }
 }

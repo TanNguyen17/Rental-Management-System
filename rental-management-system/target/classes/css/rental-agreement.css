@@ -1,122 +1,130 @@
-/* Base colors */
-.root {
-    -fx-background-color: #DCE8F8;
-    -fx-font-family: 'Segoe UI', sans-serif;
-}
-
-/* Rental Agreement List View Styles */
-.table-view {
+/* Base Container */
+.main-container {
     -fx-background-color: white;
-    -fx-background-radius: 8px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+    -fx-padding: 32px;
 }
 
-.table-view .column-header-background {
-    -fx-background-color: #1E3058;
-    -fx-background-radius: 8px 8px 0px 0px;
-    -fx-padding: 5px;
+.content-container {
+    -fx-padding: 0;
 }
 
-.table-view .column-header,
-.table-view .filler {
-    -fx-background-color: transparent;
-    -fx-size: 45px;
-    -fx-border-width: 0 0 0 0;
-}
-
-.table-view .column-header .label {
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-}
-
-.table-row-cell {
-    -fx-background-color: white;
-    -fx-border-color: transparent;
-    -fx-table-cell-border-color: transparent;
-}
-
-.table-row-cell:odd {
-    -fx-background-color: #DCE8F8;
-}
-
-.table-row-cell:selected {
-    -fx-background-color: #1E3058;
-}
-
-.table-row-cell:selected .text {
-    -fx-fill: white;
-}
-
-/* Rental Agreement Creation View Styles */
-.creation-container {
-    -fx-background-color: white;
-    -fx-background-radius: 8px;
-    -fx-padding: 20px;
-}
-
-.title-label {
+/* Page Title */
+.page-title {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-text-fill: #1E3058;
+    -fx-fill: #1E3058;
 }
 
-.detail-label {
-    -fx-font-size: 14px;
-    -fx-text-fill: #1E3058;
+/* Table Styling */
+.agreement-table {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
 }
 
-.form-container {
-    -fx-spacing: 15px;
-    -fx-padding: 20px;
-}
-
-/* ComboBox Styling */
-.combo-box {
-    -fx-background-color: white;
-    -fx-background-radius: 4px;
-    -fx-border-color: #1E3058;
-    -fx-border-radius: 4px;
-    -fx-border-width: 1px;
-    -fx-pref-height: 35px;
-}
-
-.combo-box .list-cell {
-    -fx-text-fill: #1E3058;
-    -fx-padding: 4px 8px;
-}
-
-.combo-box:hover {
-    -fx-border-color: derive(#1E3058, 20%);
-}
-
-/* CheckComboBox Styling */
-.check-combo-box {
-    -fx-background-color: white;
-    -fx-background-radius: 4px;
-    -fx-border-color: #1E3058;
-    -fx-border-radius: 4px;
-    -fx-border-width: 1px;
-    -fx-pref-height: 35px;
-}
-
-.check-combo-box .list-cell {
-    -fx-text-fill: #1E3058;
-    -fx-padding: 4px 8px;
-}
-
-/* Button Styling */
-.button {
+.agreement-table .column-header-background {
     -fx-background-color: #1E3058;
+    -fx-background-radius: 8px 8px 0 0;
+    -fx-padding: 8px 4px;
+}
+
+.agreement-table .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 40px;
+}
+
+.agreement-table .column-header .label {
     -fx-text-fill: white;
-    -fx-background-radius: 4px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px;
+}
+
+/* Table Columns */
+.column-id {
+    -fx-alignment: CENTER;
+    -fx-pref-width: 80px;
+}
+
+.column-status {
+    -fx-alignment: CENTER;
+    -fx-pref-width: 120px;
+}
+
+.column-date {
+    -fx-alignment: CENTER;
+    -fx-pref-width: 150px;
+}
+
+.column-owner {
+    -fx-alignment: CENTER-LEFT;
+    -fx-pref-width: 150px;
+}
+
+.column-host {
+    -fx-alignment: CENTER-LEFT;
+    -fx-pref-width: 150px;
+}
+
+.column-fee {
+    -fx-alignment: CENTER-RIGHT;
+    -fx-pref-width: 120px;
+}
+
+.column-action {
+    -fx-alignment: CENTER;
+    -fx-padding: 0 8px;
+}
+
+.column-action .button {
     -fx-min-width: 100px;
-    -fx-min-height: 35px;
+    -fx-max-width: 100px;
+}
+
+/* Table Rows */
+.agreement-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #DCE8F8 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 8px 4px;
+}
+
+.agreement-table .table-row-cell:odd {
+    -fx-background-color: #F8FAFD;
+}
+
+.agreement-table .table-row-cell:selected {
+    -fx-background-color: derive(#1E3058, 90%);
+}
+
+/* Status Labels */
+.status-label {
+    -fx-padding: 4px 12px;
+    -fx-background-radius: 12px;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.status-new {
+    -fx-background-color: #E3F2FD;
+    -fx-text-fill: #1976D2;
+}
+
+.status-active {
+    -fx-background-color: #E8F5E9;
+    -fx-text-fill: #2E7D32;
+}
+
+.status-completed {
+    -fx-background-color: #EEEEEE;
+    -fx-text-fill: #616161;
+}
+
+/* Action Buttons */
+.action-button {
+    -fx-background-radius: 4px;
     -fx-cursor: hand;
     -fx-font-weight: bold;
-}
-
-.button:hover {
-    -fx-background-color: derive(#1E3058, 10%);
+    -fx-min-width: 80px;
+    -fx-min-height: 30px;
 }
 
 .view-button {
@@ -124,89 +132,87 @@
     -fx-text-fill: white;
 }
 
-.delete-button {
-    -fx-background-color: #F44336;
-    -fx-text-fill: white;
-}
-
-/* Error Text */
-.error-text {
-    -fx-fill: #F44336;
-    -fx-font-size: 12px;
-}
-
-/* Status Colors */
-.status-new {
-    -fx-background-color: #2196F3;
-    -fx-text-fill: white;
-    -fx-background-radius: 4px;
-    -fx-padding: 4px 8px;
-}
-
-.status-active {
-    -fx-background-color: #4CAF50;
-    -fx-text-fill: white;
-    -fx-background-radius: 4px;
-    -fx-padding: 4px 8px;
-}
-
-.status-completed {
-    -fx-background-color: #9E9E9E;
-    -fx-text-fill: white;
-    -fx-background-radius: 4px;
-    -fx-padding: 4px 8px;
-}
-
-/* Add these styles */
-.button.view-button {
-    -fx-background-color: #1E3058;
-    -fx-text-fill: white;
-    -fx-min-width: 80px;
-}
-
-.button.delete-button {
-    -fx-background-color: #F44336;
-    -fx-text-fill: white;
-    -fx-min-width: 80px;
-}
-
-/* Add hover effects */
-.button.view-button:hover {
+.view-button:hover {
     -fx-background-color: derive(#1E3058, 10%);
 }
 
-.button.delete-button:hover {
-    -fx-background-color: derive(#F44336, 10%);
+.delete-button {
+    -fx-background-color: #FFE5E5;
+    -fx-text-fill: #D32F2F;
+    -fx-border-color: #D32F2F;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-min-width: 100px;
+    -fx-padding: 8px 16px;
 }
 
-/* Update table column styles */
-.table-view .column-header {
+.delete-button:hover {
+    -fx-background-color: #D32F2F;
+    -fx-text-fill: white;
+}
+
+/* Form Styling */
+.form-container {
+    -fx-background-color: white;
+    -fx-padding: 32px;
+    -fx-spacing: 24px;
+}
+
+.form-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-fill: #1E3058;
+}
+
+.form-group {
+    -fx-spacing: 8px;
+}
+
+.form-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #1E3058;
+    -fx-font-weight: bold;
+}
+
+.form-field {
+    -fx-background-color: white;
+    -fx-border-color: #1E3058;
+    -fx-border-radius: 4px;
+    -fx-padding: 8px;
+    -fx-min-height: 35px;
+}
+
+.form-field:focused {
+    -fx-border-color: derive(#1E3058, 20%);
+}
+
+.form-buttons {
+    -fx-spacing: 16px;
+    -fx-padding: 16px 0 0 0;
+}
+
+/* Error Messages */
+.error-text {
+    -fx-fill: #D32F2F;
+    -fx-font-size: 12px;
+}
+
+/* Add these button styles */
+.view-more-button {
+    -fx-background-color: #DCE8F8;
+    -fx-text-fill: #1E3058;
+    -fx-border-color: #1E3058;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-min-width: 100px;
+    -fx-padding: 8px 16px;
+}
+
+.view-more-button:hover {
     -fx-background-color: #1E3058;
     -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-padding: 8px;
-    -fx-border-width: 0;
-    -fx-alignment: CENTER_LEFT;
-}
-
-.table-view .column-header .label {
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-alignment: CENTER_LEFT;
-}
-
-/* Add styles for specific columns */
-.table-view .table-column {
-    -fx-alignment: CENTER_LEFT;
-    -fx-padding: 8px;
-}
-
-/* Status column specific style */
-.table-column-status {
-    -fx-alignment: CENTER;
-}
-
-/* Action column specific style */
-.table-column-actions {
-    -fx-alignment: CENTER;
 }

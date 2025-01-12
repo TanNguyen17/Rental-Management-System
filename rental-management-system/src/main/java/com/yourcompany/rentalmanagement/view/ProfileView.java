@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 
 import com.yourcompany.rentalmanagement.controller.UserController;
 import com.yourcompany.rentalmanagement.model.Payment;
+import com.yourcompany.rentalmanagement.model.Payment.paymentMethod;
 import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.model.UserRole;
@@ -29,19 +30,22 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
-import static com.yourcompany.rentalmanagement.model.Payment.*;
-
 
 public class ProfileView implements Initializable {
     private UserController userController;
     private CloudinaryService cloudinaryService = new CloudinaryService();
-    private Tenant currentUser = (Tenant) UserSession.getInstance().getCurrentUser();
+    private User currentUser = UserSession.getInstance().getCurrentUser();
 
     @FXML
     private Text username;
@@ -139,7 +143,7 @@ public class ProfileView implements Initializable {
         // Load User Data in Background
         new Thread(() -> {
             // Load user data
-            currentUser = (Tenant) userController.getUserProfile(currentUser.getId(), currentUser.getRole());
+            currentUser = userController.getUserProfile(currentUser.getId(), currentUser.getRole());
 
             // Update UI on JavaFX Application Thread
             Platform.runLater(() -> {
@@ -164,9 +168,10 @@ public class ProfileView implements Initializable {
     }
 
     private void initialProfile() {
+        System.out.println(currentUser.getUsername());
         username.setText(currentUser.getUsername());
 
-        Image image = new Image(currentUser.getProfileImage() != null ? currentUser.getProfileImage() : "https://res.cloudinary.com/dqydgahsj/image/upload/v1735456851/q7ldgrgk68q8fnwqadkw.jpg");
+        Image image = new Image(currentUser.getProfileImage() != null ? currentUser.getProfileImage() : "https://res.cloudinary.com/dqydgahsj/image/upload/v1736670115/zguznvwm7ib3exi1g1ko.png");
         profileImage.setImage(image);
 
         firstName.setPromptText(currentUser.getUsername() != null ? currentUser.getUsername() : "First Name");
@@ -178,10 +183,12 @@ public class ProfileView implements Initializable {
 
         paymentText.setVisible(false);
         paymentChoice.setVisible(false);
-        if (currentUser.getRole().equals(UserRole.TENANT)) {
+
+        if (currentUser.getRole() != null && currentUser.getRole().equals(UserRole.TENANT)) {
+            Tenant tenantUser = (Tenant) currentUser;
             paymentText.setVisible(true);
             paymentChoice.setVisible(true);
-            paymentChoice.setValue(currentUser.getPaymentMethod() != null ? currentUser.getPaymentMethod() : null);
+            paymentChoice.setValue(tenantUser.getPaymentMethod() != null ? tenantUser.getPaymentMethod() : null);
             ObservableList<Payment.paymentMethod> methodOptions = FXCollections.observableArrayList(Payment.paymentMethod.values());
             paymentChoice.setItems(methodOptions);
         }

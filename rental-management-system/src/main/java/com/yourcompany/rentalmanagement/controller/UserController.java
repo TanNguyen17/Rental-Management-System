@@ -3,6 +3,7 @@ package com.yourcompany.rentalmanagement.controller;
 import java.util.*;
 
 import com.yourcompany.rentalmanagement.dao.impl.HostDaoImpl;
+import com.yourcompany.rentalmanagement.dao.impl.ManagerDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.OwnerDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.TenantDaoImpl;
 import com.yourcompany.rentalmanagement.model.*;
@@ -13,6 +14,7 @@ public class UserController {
     private OwnerDaoImpl ownerDao;
     private TenantDaoImpl tenantDao;
     private HostDaoImpl hostDao;
+    private ManagerDaoImpl managerDao;
     private ProfileView profileView;
     private Map<String, Object> result;
     private List<User> users;
@@ -35,12 +37,19 @@ public class UserController {
         this.ownerDao = new OwnerDaoImpl();
         this.tenantDao = new TenantDaoImpl();
         this.hostDao = new HostDaoImpl();
+        this.managerDao = new ManagerDaoImpl();
         this.users = new ArrayList<>();
     }
 
     public User getUserProfile(long id, UserRole role) {
         if (role == UserRole.TENANT) {
             user = tenantDao.getUserById(id);
+        } else if (role == UserRole.HOST) {
+            user = ownerDao.getUserById(id);
+        } else if (role == UserRole.OWNER) {
+            user = ownerDao.getUserById(id);
+        } else if (role == UserRole.MANAGER) {
+            user = managerDao.read(id);
         }
         return user;
     }

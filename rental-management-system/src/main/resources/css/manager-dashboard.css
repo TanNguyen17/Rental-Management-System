@@ -1,0 +1,203 @@
+/* Base colors and variables */
+* {
+    -primary-color: #1E3058;
+    -secondary-color: #DCE8F8;
+    -hover-color: derive(-primary-color, 20%);
+}
+
+.root {
+    -fx-background-color: -secondary-color;
+    -fx-font-family: 'Segoe UI', sans-serif;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    -fx-spacing: 20;
+    -fx-padding: 20;
+    -fx-background-color: white;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    -fx-padding: 20;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+    -fx-background-radius: 8;
+}
+
+.dashboard-title {
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+/* Dashboard Tabs */
+.dashboard-tabs {
+    -fx-background-color: transparent;
+    -fx-tab-min-width: 150px;
+}
+
+.dashboard-tabs .tab-header-area {
+    -fx-padding: 0;
+}
+
+.dashboard-tabs .tab-header-background {
+    -fx-background-color: -primary-color;
+    -fx-background-radius: 8 8 0 0;
+}
+
+/* Remove close button */
+.dashboard-tab .tab-close-button {
+    -fx-opacity: 0;
+    -fx-padding: 0;
+    -fx-max-width: 0;
+}
+
+/* Tab styling */
+.dashboard-tab {
+    -fx-background-color: -primary-color;
+    -fx-padding: 8 15;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.dashboard-tab:hover {
+    -fx-background-color: derive(-primary-color, 10%);
+}
+
+.dashboard-tab .tab-label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.dashboard-tab:selected {
+    -fx-background-color: white;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.dashboard-tab:selected .tab-label {
+    -fx-text-fill: -primary-color;
+    -fx-font-weight: bold;
+}
+
+/* Remove focus border */
+.tab-pane:focused,
+.tab-pane .tab-header-area .headers-region .tab:selected:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* Content Area */
+.tab-pane>.tab-content-area {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+    -fx-background-radius: 0 0 8 8;
+}
+
+/* Table Styling */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: -primary-color;
+    -fx-border-radius: 8;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: -primary-color;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-padding: 10 5;
+    -fx-border-width: 0 1 0 0;
+    /* Right border only */
+    -fx-border-color: white;
+    /* White divider */
+}
+
+/* Last column header shouldn't have right border */
+.table-view .column-header:last-visible {
+    -fx-border-width: 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+    /* Center the header text */
+}
+
+/* Add vertical lines between cells */
+.table-view .table-cell {
+    -fx-border-color: transparent #E0E0E0 transparent transparent;
+    /* Light grey vertical lines */
+    -fx-padding: 5 10;
+    -fx-alignment: CENTER;
+    /* Center the cell content */
+}
+
+/* Remove border from last column cells */
+.table-view .table-cell:last-visible {
+    -fx-border-color: transparent;
+}
+
+/* Alternate row colors for better readability */
+.table-row-cell:odd {
+    -fx-background-color: #F8F9FA;
+}
+
+.table-row-cell:even {
+    -fx-background-color: white;
+}
+
+/* Hover effect on rows */
+.table-row-cell:hover {
+    -fx-background-color: derive(#DCE8F8, 50%);
+}
+
+/* Button Styling */
+.button {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: -hover-color;
+}
+
+/* Property Management Table Buttons */
+.edit-button {
+    -fx-background-color: #DCE8F8;
+    -fx-text-fill: #1E3058;
+    -fx-font-weight: bold;
+    -fx-min-width: 70px;
+    -fx-padding: 5 10;
+    -fx-background-radius: 4;
+    -fx-border-color: #1E3058;
+    -fx-border-radius: 4;
+    -fx-cursor: hand;
+}
+
+.edit-button:hover {
+    -fx-background-color: derive(#DCE8F8, -10%);
+}
+
+.delete-button {
+    -fx-background-color: #FF4444;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-min-width: 70px;
+    -fx-padding: 5 10;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.delete-button:hover {
+    -fx-background-color: derive(#FF4444, 10%);
+}

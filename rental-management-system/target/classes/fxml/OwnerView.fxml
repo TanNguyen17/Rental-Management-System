@@ -2,9 +2,7 @@
 
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane fx:id="borderPane" 
-           xmlns="http://javafx.com/javafx/21" 
-           xmlns:fx="http://javafx.com/fxml/1" 
-           fx:controller="com.yourcompany.rentalmanagement.view.OwnerView"
-           styleClass="main-container">
+<BorderPane fx:id="borderPane" prefHeight="-1" prefWidth="-1"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.yourcompany.rentalmanagement.view.OwnerView">
 </BorderPane>

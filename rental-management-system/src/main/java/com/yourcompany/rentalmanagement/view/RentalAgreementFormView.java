@@ -1,21 +1,5 @@
 package com.yourcompany.rentalmanagement.view;
 
-import com.yourcompany.rentalmanagement.controller.PropertyController;
-import com.yourcompany.rentalmanagement.controller.RentalAgreementController;
-import com.yourcompany.rentalmanagement.controller.UserController;
-import com.yourcompany.rentalmanagement.model.Host;
-import com.yourcompany.rentalmanagement.model.Property;
-import com.yourcompany.rentalmanagement.model.RentalAgreement;
-import com.yourcompany.rentalmanagement.model.Tenant;
-import javafx.collections.FXCollections;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
-import org.controlsfx.control.CheckComboBox;
-
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -24,7 +8,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class RentalAgreementFormView implements Initializable{
+import org.controlsfx.control.CheckComboBox;
+
+import com.yourcompany.rentalmanagement.controller.PropertyController;
+import com.yourcompany.rentalmanagement.controller.RentalAgreementController;
+import com.yourcompany.rentalmanagement.controller.UserController;
+import com.yourcompany.rentalmanagement.model.Host;
+import com.yourcompany.rentalmanagement.model.Property;
+import com.yourcompany.rentalmanagement.model.RentalAgreement;
+import com.yourcompany.rentalmanagement.model.Tenant;
+
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.stage.Stage;
+
+public class RentalAgreementFormView implements Initializable {
+
     RentalAgreement rentalAgreement;
     RentalAgreementController rentalAgreementController = new RentalAgreementController();
     PropertyController propertyController = new PropertyController();
@@ -57,90 +60,94 @@ public class RentalAgreementFormView implements Initializable{
     @FXML
     Button updateButton = new Button();
 
-
     @FXML
-    public void closeWindow(Button closeButton) {
-        // Get the current stage and close it
-        Stage stage = (Stage) closeButton.getScene().getWindow();
+    private void handleCancel() {
+        Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
 
+    @FXML
+    private void handleSubmit() {
+        if (isAddingNewData) {
+            addInformation();
+        } else {
+            updateInformation(1); // How to pass id
+        }
+    }
+
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle){
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         cancelButton.setOnMouseClicked(e -> {
-            closeWindow(cancelButton);
+            handleCancel();
         });
 
         updateButton.setOnMouseClicked(e -> {
-            if (isAddingNewData){
-                addInformation();
-            } else {
-                updateInformation(1); // How to pass id
-            }
+            handleSubmit();
         });
 
     }
 
-    public void showRentalAgreementByIdForUpdate(long id){
+    public void showRentalAgreementByIdForUpdate(long id) {
         rentalAgreement = rentalAgreementController.getRentalAgreementById(id);
 
-        // For Property Update
-        Property property = null;
-        if (rentalAgreement.getCommercialProperty() != null) {
-             property = rentalAgreement.getCommercialProperty();
-        } else {
-            property = rentalAgreement.getResidentialProperty();
-        }
-        List<Property> otherProperties = propertyController.getPropertyList(); // Need to change to getAvailable
-        // Property
-        propertyInput.setItems(FXCollections.observableArrayList(otherProperties));
-        propertyInput.setValue(property);
-        propertyInput.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            // Update the label text when the ComboBox value changes
-            if (newValue != null) {
-                ownerShow.setText("Owner: " + newValue.getOwner().toString());
-                hostInput.setValue(newValue.getRentalAgreement().getHost());
+        if (rentalAgreement != null) {
+            Property property = null;
+            if (rentalAgreement.getCommercialProperty() != null) {
+                property = rentalAgreement.getCommercialProperty();
+            } else if (rentalAgreement.getResidentialProperty() != null) {
+                property = rentalAgreement.getResidentialProperty();
             }
-        });
 
-        // For Owner
-        ownerShow.setText("Owner: " + property.getOwner().toString());
+            if (property != null) {
+                List<Property> otherProperties = propertyController.getPropertyList();
+                propertyInput.setItems(FXCollections.observableArrayList(otherProperties));
+                propertyInput.setValue(property);
+                propertyInput.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue != null && newValue.getOwner() != null) {
+                        ownerShow.setText("Owner: " + newValue.getOwner().toString());
+                        if (newValue.getRentalAgreement() != null
+                                && newValue.getRentalAgreement().getHost() != null) {
+                            hostInput.setValue(newValue.getRentalAgreement().getHost());
+                        }
+                    }
+                });
 
-        // For Host Update
-        Host host = rentalAgreement.getHost();
-        List<Host> otherHosts = userController.getAllHosts();
-        hostInput.setValue(host);
-        hostInput.setItems(FXCollections.observableArrayList(otherHosts));
+                if (property.getOwner() != null) {
+                    ownerShow.setText("Owner: " + property.getOwner().toString());
+                }
 
-        //For sub tenant update
-        List<Tenant> otherTenants = userController.getTenants();
-        subTenantInput.getItems().addAll(FXCollections.observableArrayList(otherTenants));
-//        subTenantInput.getCheckModel().getCheckedItems().addAll();
+                Host host = rentalAgreement.getHost();
+                if (host != null) {
+                    List<Host> otherHosts = userController.getAllHosts();
+                    hostInput.setValue(host);
+                    hostInput.setItems(FXCollections.observableArrayList(otherHosts));
+                }
 
-        // For status update
-        RentalAgreement.rentalAgreementStatus status = rentalAgreement.getStatus();
-        statusInput.setValue(status);
-        statusInput.getItems().addAll(RentalAgreement.rentalAgreementStatus.NEW,
-                RentalAgreement.rentalAgreementStatus.ACTIVE, RentalAgreement.rentalAgreementStatus.COMPLETED);
+                List<Tenant> otherTenants = userController.getTenants();
+                if (otherTenants != null && !otherTenants.isEmpty()) {
+                    subTenantInput.getItems().addAll(FXCollections.observableArrayList(otherTenants));
+                    if (rentalAgreement.getTenants() != null) {
+                        subTenantInput.getCheckModel().getCheckedItems().addAll(rentalAgreement.getTenants());
+                    }
+                }
 
-        // For contract periods update => store renting fee
-        contractedTimeInput.setItems(FXCollections.observableArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12));
-        LocalDate currentStartDate = rentalAgreement.getStartContractDate();
-        LocalDate currentEndDate = rentalAgreement.getEndContractDate();
-        if ((currentStartDate == null) ||  (currentEndDate == null)) {
-            contractedTimeInput.setValue(0);
-        } else {
-            contractedTimeInput.setValue((int) ChronoUnit.MONTHS.between(currentStartDate, currentEndDate));
+                RentalAgreement.rentalAgreementStatus status = rentalAgreement.getStatus();
+                if (status != null) {
+                    statusInput.setValue(status);
+                    statusInput.getItems().addAll(RentalAgreement.rentalAgreementStatus.values());
+                }
+
+                contractedTimeInput.setItems(FXCollections.observableArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12));
+                LocalDate currentStartDate = rentalAgreement.getStartContractDate();
+                LocalDate currentEndDate = rentalAgreement.getEndContractDate();
+                if (currentStartDate != null && currentEndDate != null) {
+                    contractedTimeInput.setValue((int) ChronoUnit.MONTHS.between(currentStartDate, currentEndDate));
+                }
+            }
         }
-
-        updateButton.setOnMouseClicked(e -> {
-            System.out.println("You are updating new rental agreement!");
-            updateInformation(1); // How to pass id
-        });
     }
 
-
-    public void updateInformation(long id){
+    public void updateInformation(long id) {
         checkAddingNewData(false);
         int monthsToAdd = contractedTimeInput.getValue();
         rentalAgreementID = id;
@@ -195,7 +202,7 @@ public class RentalAgreementFormView implements Initializable{
         });
     }
 
-    public void addInformation(){
+    public void addInformation() {
         int monthsToAdd = contractedTimeInput.getValue();
         Property newProperty = propertyInput.getValue();
         List<Tenant> newSubTenants = subTenantInput.getCheckModel().getCheckedItems();
@@ -219,7 +226,7 @@ public class RentalAgreementFormView implements Initializable{
         rentalAgreementController.createRentalAgreement(newData);
     }
 
-    public void checkAddingNewData(boolean isAddNewData){
+    public void checkAddingNewData(boolean isAddNewData) {
         this.isAddingNewData = isAddNewData;
     }
 }

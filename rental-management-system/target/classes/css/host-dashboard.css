@@ -1,0 +1,224 @@
+/* Base Container */
+.root {
+    -fx-background-color: white;
+}
+
+/* Charts Container */
+.chart-container {
+    -fx-padding: 24px;
+    -fx-spacing: 24px;
+}
+
+/* Line Chart Styling */
+.chart {
+    -fx-padding: 16px;
+    -fx-background-color: white;
+}
+
+.chart-title {
+    -fx-text-fill: #1E3058;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.chart-plot-background {
+    -fx-background-color: #DCE8F8;
+    -fx-opacity: 0.3;
+}
+
+.chart-vertical-grid-lines {
+    -fx-stroke: #DCE8F8;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: #DCE8F8;
+}
+
+.chart-alternative-row-fill {
+    -fx-fill: transparent;
+    -fx-stroke: transparent;
+}
+
+.axis {
+    -fx-tick-label-fill: #1E3058;
+}
+
+.axis-label {
+    -fx-text-fill: #1E3058;
+}
+
+/* Line Chart Series Colors */
+.default-color0.chart-series-line {
+    -fx-stroke: #1E3058;
+}
+
+.default-color1.chart-series-line {
+    -fx-stroke: #4A90E2;
+}
+
+.default-color0.chart-line-symbol {
+    -fx-background-color: #1E3058;
+}
+
+.default-color1.chart-line-symbol {
+    -fx-background-color: #4A90E2;
+}
+
+/* Pie Chart Styling */
+.pie-chart {
+    -fx-padding: 16px;
+}
+
+.pie-chart-legend {
+    -fx-background-color: transparent;
+}
+
+.pie-legend-symbol {
+    -fx-padding: 4px;
+}
+
+.pie-chart .chart-content {
+    -fx-padding: 16px;
+}
+
+.pie-chart .chart-title {
+    -fx-text-fill: #1E3058;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* Table Styling */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #DCE8F8;
+    -fx-border-radius: 4px;
+    -fx-min-width: 920px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #1E3058;
+    -fx-background-radius: 4px 4px 0 0;
+    -fx-padding: 8px 4px;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-pref-height: 40px;
+    -fx-alignment: CENTER;
+    -fx-border-color: white;
+    -fx-border-width: 0 1 0 0;
+}
+
+.table-view .column-header:last-visible {
+    -fx-border-width: 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px;
+}
+
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #DCE8F8;
+    -fx-background-opacity: 0.3;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: derive(#1E3058, 90%);
+}
+
+/* Table Columns */
+.table-column {
+    -fx-alignment: CENTER-LEFT;
+    -fx-padding: 8px;
+}
+
+.numeric-column {
+    -fx-alignment: CENTER-RIGHT;
+}
+
+/* Section Title */
+.section-title {
+    -fx-fill: #1E3058;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* VBox and HBox Containers */
+.main-container {
+    -fx-background-color: white;
+    -fx-padding: 24px;
+    -fx-spacing: 20px;
+    -fx-alignment: CENTER;
+    -fx-fill-width: true;
+}
+
+.chart-box {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+    -fx-background-radius: 8px;
+    -fx-alignment: CENTER;
+    -fx-fill-width: true;
+}
+
+.table-box {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+    -fx-background-radius: 8px;
+    -fx-alignment: CENTER;
+    -fx-fill-width: true;
+    -fx-spacing: 16px;
+}
+
+.table-box>.section-title {
+    -fx-alignment: CENTER-LEFT;
+    -fx-translate-x: -8px;
+    -fx-padding: 0 0 8px 0;
+}
+
+/* Add styles for loading spinner */
+.loading-spinner {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-alignment: CENTER;
+}
+
+/* Add column width constraints */
+.table-column.id-column {
+    -fx-pref-width: 60px;
+    -fx-min-width: 60px;
+    -fx-max-width: 80px;
+    -fx-alignment: CENTER;
+}
+
+.table-column.title-column {
+    -fx-pref-width: 1.5fr;
+    -fx-min-width: 150px;
+    -fx-alignment: CENTER-LEFT;
+}
+
+.table-column.status-column {
+    -fx-pref-width: 1fr;
+    -fx-min-width: 100px;
+    -fx-alignment: CENTER;
+}
+
+.table-column.income-column {
+    -fx-pref-width: 1fr;
+    -fx-min-width: 120px;
+    -fx-alignment: CENTER-RIGHT;
+}
+
+.table-column.stay-length-column {
+    -fx-pref-width: 1.2fr;
+    -fx-min-width: 150px;
+    -fx-alignment: CENTER-RIGHT;
+}

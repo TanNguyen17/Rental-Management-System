@@ -184,16 +184,15 @@ public class PaymentsView implements Initializable {
                             sendEmailIcon = new FontAwesomeIconView(FontAwesomeIcon.MAIL_REPLY);
                         }
 
-
                         viewIcon.setStyle(
                                 "-fx-cursor: hand ;"
-                                        + "-glyph-size:20px;"
+                                + "-glyph-size:20px;"
                                 + "-fx-color: #fff"
                         );
                         payIcon.setStyle(
                                 "-fx-cursor: hand ;"
-                                        + "-glyph-size:20px;"
-                                        + "-fx-color: #fff"
+                                + "-glyph-size:20px;"
+                                + "-fx-color: #fff"
                         );
 
                         HBox action = null;
@@ -252,7 +251,9 @@ public class PaymentsView implements Initializable {
 
     private void handleSendEmail() {
         payment = paymentTable.getSelectionModel().getSelectedItem();
-        if (payment == null) return;
+        if (payment == null) {
+            return;
+        }
 
         Tenant tenant = paymentController.getTenant(payment.getId());
         if (tenant == null || tenant.getEmail() == null || tenant.getEmail().isEmpty()) {
@@ -263,13 +264,14 @@ public class PaymentsView implements Initializable {
         System.out.println(tenant.getEmail());
 
         try {
-            EmailUtil.sendEmail(tenant.getEmail(), "Payment Reminder from Rental Management System", "Hi this is" +
-                    "a reminder for your rental payment payment info " + payment.getReceipt() + "with fee of: " + payment.getAmount()
+            EmailUtil.sendEmail(tenant.getEmail(), "Payment Reminder from Rental Management System", "Hi this is"
+                    + "a reminder for your rental payment payment info " + payment.getReceipt() + "with fee of: " + payment.getAmount()
                     + "due date " + payment.getDueDate());
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
     }
+
     private void handlePayment() {
         payment = paymentTable.getSelectionModel().getSelectedItem();
         if (payment == null) {
