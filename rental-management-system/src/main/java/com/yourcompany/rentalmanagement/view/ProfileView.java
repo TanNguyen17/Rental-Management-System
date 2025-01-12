@@ -167,7 +167,7 @@ public class ProfileView implements Initializable {
         System.out.println(currentUser.getUsername());
         username.setText(currentUser.getUsername());
 
-        Image image = new Image(currentUser.getProfileImage() != null ? currentUser.getProfileImage() : "https://res.cloudinary.com/dqydgahsj/image/upload/v1735456851/q7ldgrgk68q8fnwqadkw.jpg");
+        Image image = new Image(currentUser.getProfileImage() != null ? currentUser.getProfileImage() : "https://res.cloudinary.com/dqydgahsj/image/upload/v1736670115/zguznvwm7ib3exi1g1ko.png");
         profileImage.setImage(image);
 
         firstName.setPromptText(currentUser.getUsername() != null ? currentUser.getUsername() : "First Name");
