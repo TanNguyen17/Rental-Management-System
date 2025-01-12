@@ -80,6 +80,7 @@ com\yourcompany\rentalmanagement\model\RentalAgreement$rentalAgreementStatus.cla
 com\yourcompany\rentalmanagement\model\ResidentialProperty.class
 com\yourcompany\rentalmanagement\util\TokenStorage.class
 com\yourcompany\rentalmanagement\view\PropertyFormController.class
+com\yourcompany\rentalmanagement\view\PropertyListView.class
 com\yourcompany\rentalmanagement\model\Address.class
 com\yourcompany\rentalmanagement\view\StatisticalReportController.class
 com\yourcompany\rentalmanagement\dao\impl\HostDaoImpl.class

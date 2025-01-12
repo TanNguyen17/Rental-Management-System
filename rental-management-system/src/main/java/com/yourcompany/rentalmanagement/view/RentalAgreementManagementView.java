@@ -72,8 +72,14 @@ public class RentalAgreementManagementView implements Initializable {
         initializeColumn();
         initializeViewMoreColumn();
         initializeDeleteColumn();
+
+        // cai nay de check user role for add mew button visibility
+        UserRole currentRole = userSession.getCurrentUser().getRole();
+        addNewBtn.setVisible(currentRole == UserRole.MANAGER || currentRole == UserRole.TENANT);
+        addNewBtn.setManaged(currentRole == UserRole.MANAGER || currentRole == UserRole.TENANT);
+
         new Thread(() -> {
-            List<RentalAgreement> rentalAgreementList = rentalAgreementController.getAllRentalAgreements(UserRole.MANAGER, 1);
+            List<RentalAgreement> rentalAgreementList = rentalAgreementController.getAllRentalAgreements(currentRole, 1);
             Platform.runLater(() -> {
                 if (!rentalAgreementList.isEmpty()) {
                     rentalAgreements.addAll(rentalAgreementList);
@@ -81,8 +87,7 @@ public class RentalAgreementManagementView implements Initializable {
                 }
             });
         }).start();
-//        rentalAgreements = FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(UserRole.MANAGER, 1));
-//        rentalAgreementTableView.setItems(rentalAgreements);
+
         addNewBtn.setOnMouseClicked(e -> {
             openAddNewDataForm();
         });
@@ -225,7 +230,12 @@ public class RentalAgreementManagementView implements Initializable {
             // Create a new Stage (or replace the existing one)
             Stage newStage = new Stage();
             newStage.setTitle("Update Rental Agreement");
-            newStage.setScene(new Scene(newRoot, 400, 360));
+            // Remove the fixed size and let it use the preferred size from FXML
+            Scene scene = new Scene(newRoot);
+            newStage.setScene(scene);
+            // Set minimum size to prevent window from being too small
+            newStage.setMinWidth(1000);
+            newStage.setMinHeight(700);
             newStage.show();
         } catch (Exception e) {
             e.printStackTrace();

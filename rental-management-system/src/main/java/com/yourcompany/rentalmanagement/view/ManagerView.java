@@ -1,6 +1,11 @@
 package com.yourcompany.rentalmanagement.view;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import com.yourcompany.rentalmanagement.util.UserSession;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,11 +18,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 public class ManagerView implements Initializable {
+
     private UserSession userSession = UserSession.getInstance();
 
     @FXML
@@ -25,7 +27,6 @@ public class ManagerView implements Initializable {
 
     @FXML
     private BorderPane borderPane;
-
 
     @FXML
     private Button homeTab;

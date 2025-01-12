@@ -61,24 +61,28 @@ public class RentalAgreementFormView implements Initializable {
     Button updateButton = new Button();
 
     @FXML
-    public void closeWindow(Button closeButton) {
-        // Get the current stage and close it
-        Stage stage = (Stage) closeButton.getScene().getWindow();
+    private void handleCancel() {
+        Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    private void handleSubmit() {
+        if (isAddingNewData) {
+            addInformation();
+        } else {
+            updateInformation(1); // How to pass id
+        }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         cancelButton.setOnMouseClicked(e -> {
-            closeWindow(cancelButton);
+            handleCancel();
         });
 
         updateButton.setOnMouseClicked(e -> {
-            if (isAddingNewData) {
-                addInformation();
-            } else {
-                updateInformation(1); // How to pass id
-            }
+            handleSubmit();
         });
 
     }

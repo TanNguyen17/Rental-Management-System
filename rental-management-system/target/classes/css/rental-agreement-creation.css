@@ -1,0 +1,163 @@
+/* Base colors and variables */
+* {
+    -primary-color: #1E3058;
+    -secondary-color: #DCE8F8;
+    -hover-color: derive(-primary-color, 20%);
+    -border-color: derive(-primary-color, 80%);
+}
+
+/* Form Container */
+.form-container {
+    -fx-spacing: 24px;
+    -fx-padding: 32px;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+    -fx-background-radius: 8px;
+    -fx-min-width: 900px;
+    -fx-min-height: 600px;
+}
+
+/* Section Title */
+.section-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-color;
+    -fx-padding: 0 0 24px 0;
+}
+
+/* ScrollPane styling */
+.form-scroll-pane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-fit-to-width: true;
+}
+
+.form-scroll-pane>.viewport {
+    -fx-background-color: transparent;
+}
+
+/* Form content layout */
+.form-content {
+    -fx-spacing: 48px;
+    -fx-padding: 32px;
+    -fx-alignment: TOP_CENTER;
+}
+
+.form-column {
+    -fx-spacing: 32px;
+    -fx-min-width: 400px;
+    -fx-pref-width: 400px;
+    -fx-max-width: 500px;
+}
+
+/* Column titles */
+.column-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-color;
+    -fx-padding: 0 0 16px 0;
+}
+
+/* Form groups */
+.form-group {
+    -fx-spacing: 12px;
+    -fx-padding: 0 0 24px 0;
+}
+
+.form-group .label {
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Info labels (for property and owner details) */
+.info-label {
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 16px;
+    -fx-padding: 8px 16px;
+    -fx-background-color: -secondary-color;
+    -fx-background-radius: 4px;
+    -fx-min-height: 45px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* ComboBox Styling */
+.combo-box,
+.check-combo-box {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-pref-height: 45px;
+}
+
+.combo-box:hover,
+.check-combo-box:hover {
+    -fx-border-color: derive(-primary-color, 50%);
+}
+
+.combo-box:focused,
+.check-combo-box:focused {
+    -fx-border-color: -primary-color;
+    -fx-effect: dropshadow(gaussian, rgba(30, 48, 88, 0.1), 4, 0, 0, 0);
+}
+
+.combo-box .list-view,
+.check-combo-box .combo-box-popup .list-view {
+    -fx-pref-height: 200px;
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+}
+
+.combo-box .list-cell,
+.check-combo-box .combo-box-popup .list-cell {
+    -fx-padding: 8px 12px;
+    -fx-text-fill: -primary-color;
+}
+
+.combo-box .list-cell:hover,
+.check-combo-box .combo-box-popup .list-cell:hover {
+    -fx-background-color: -secondary-color;
+}
+
+/* Button Container */
+.button-container {
+    -fx-spacing: 16px;
+    -fx-padding: 24px 0 0 0;
+    -fx-alignment: CENTER_RIGHT;
+    -fx-border-color: transparent -border-color transparent transparent;
+    -fx-border-width: 1px;
+}
+
+/* Buttons */
+.button {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 12px 24px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+    -fx-min-width: 120px;
+}
+
+.button:hover {
+    -fx-background-color: -hover-color;
+}
+
+.secondary-button {
+    -fx-background-color: white;
+    -fx-text-fill: -primary-color;
+    -fx-border-color: -primary-color;
+    -fx-border-radius: 4px;
+}
+
+.secondary-button:hover {
+    -fx-background-color: -secondary-color;
+}
+
+/* Error Text */
+.error-text {
+    -fx-fill: #f44336;
+    -fx-font-size: 12px;
+}

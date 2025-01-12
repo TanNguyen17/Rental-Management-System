@@ -1,100 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<VBox fx:id="raUpdateForm" alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="444.0" prefWidth="400.0" spacing="12.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementFormView">
-   <children>
-      <Label fx:id="formTitle" text="Rental Agreement">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Label>
-      <VBox prefHeight="45.0" prefWidth="347.0" spacing="8.0">
-         <children>
-            <Label text="Property Name">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Label>
-            <ComboBox fx:id="propertyInput" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Choose a Property" />
-            <Label fx:id="ownerShow" text="Owner: " textFill="#0087ee">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-            </Label>
-         </children>
-      </VBox>
-      <VBox prefHeight="45.0" prefWidth="347.0" spacing="8.0">
-         <children>
-            <Label text="Host Name">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Label>
-            <ComboBox fx:id="hostInput" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Choose a Host" />
-         </children>
-      </VBox>
-      <VBox prefHeight="45.0" prefWidth="347.0" spacing="8.0">
-         <children>
-            <Label text="Sub Tenant">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Label>
-            <CheckComboBox fx:id="subTenantInput" prefHeight="26.0" prefWidth="385.0" showCheckedCount="true" title="Choose sub tenants" />
-         </children>
-      </VBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="347.0" spacing="8.0">
-         <children>
-            <Label prefHeight="18.0" prefWidth="114.0" text="Contract Period">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Label>
-            <ComboBox fx:id="contractedTimeInput" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="267.0" promptText="Choose renting period"/>
-         </children>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="347.0" spacing="8.0">
-         <children>
-            <Label prefHeight="18.0" prefWidth="114.0" text="Status">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Label>
-            <ComboBox fx:id="statusInput" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="267.0" promptText="Choose agreement status" />
-         </children>
-      </HBox>
-      <HBox alignment="CENTER" prefHeight="68.0" prefWidth="376.0" spacing="24.0">
-         <children>
-            <VBox alignment="CENTER" prefHeight="68.0" prefWidth="182.0">
-               <children>
-                  <Button fx:id="cancelButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="177.0" text="CANCEL">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Button>
-               </children>
+<VBox stylesheets="@../../../css/rental-agreement-form.css" 
+      styleClass="form-container" 
+      prefWidth="1000.0"
+      prefHeight="700.0"
+      xmlns="http://javafx.com/javafx/23.0.1" 
+      xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementFormView">
+    
+    <Label styleClass="section-title" text="Rental Agreement Details" />
+    
+    <ScrollPane fitToWidth="true" styleClass="form-scroll-pane">
+        <HBox styleClass="form-content">
+            <!-- Left Column -->
+            <VBox styleClass="form-column" HBox.hgrow="ALWAYS">
+                <Label styleClass="column-title" text="Property Information" />
+                
+                <VBox styleClass="form-group">
+                    <Label text="Property" />
+                    <ComboBox fx:id="propertyInput" promptText="Select Property" maxWidth="Infinity" />
+                    <Label fx:id="ownerShow" styleClass="owner-label" text="Owner: " />
+                </VBox>
+                
+                <VBox styleClass="form-group">
+                    <Label text="Host" />
+                    <ComboBox fx:id="hostInput" promptText="Select Host" maxWidth="Infinity" />
+                </VBox>
+                
+                <VBox styleClass="form-group">
+                    <Label text="Contract Period" />
+                    <ComboBox fx:id="contractedTimeInput" promptText="Choose renting period" maxWidth="Infinity" />
+                </VBox>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="68.0" prefWidth="182.0">
-               <children>
-                  <Button fx:id="updateButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="177.0" text="SAVE">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Button>
-               </children>
+            
+            <!-- Right Column -->
+            <VBox styleClass="form-column" HBox.hgrow="ALWAYS">
+                <Label styleClass="column-title" text="Tenant Information" />
+                
+                <VBox styleClass="form-group">
+                    <Label text="Sub Tenants" />
+                    <CheckComboBox fx:id="subTenantInput" maxWidth="Infinity" />
+                </VBox>
+                
+                <VBox styleClass="form-group">
+                    <Label text="Status" />
+                    <ComboBox fx:id="statusInput" promptText="Select Status" maxWidth="Infinity" />
+                </VBox>
             </VBox>
-         </children>
-      </HBox>
-   </children>
-   <padding>
-      <Insets bottom="18.0" left="12.0" right="12.0" top="12.0" />
-   </padding>
+        </HBox>
+    </ScrollPane>
+    
+    <!-- Button Section -->
+    <HBox styleClass="button-container">
+        <Button fx:id="cancelButton" styleClass="secondary-button" text="Cancel" onAction="#handleCancel" />
+        <Button fx:id="updateButton" text="Save" onAction="#handleSubmit" />
+    </HBox>
 </VBox>
