@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PopupControl;
 import javafx.scene.control.Tooltip;
 import javafx.scene.text.Text;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class StatisticalReportController implements Initializable {
+
     private PropertyDaoImpl propertyDaoImpl = new PropertyDaoImpl();
     private HostDaoImpl hostDaoImpl = new HostDaoImpl();
     private OwnerDaoImpl ownerDaoImpl = new OwnerDaoImpl();
@@ -45,7 +47,6 @@ public class StatisticalReportController implements Initializable {
     @FXML
     private Label propertyLabel;
 
-
     @FXML
     private Label tenantLabel;
 
@@ -70,8 +71,7 @@ public class StatisticalReportController implements Initializable {
     @FXML
     private CategoryAxis xAxis;
 
-
-    private void loadTable(){
+    private void loadTable() {
         totalProperty.setText(String.valueOf(propertyDaoImpl.getTotalResidentialPropertyCount() + propertyDaoImpl.getTotalCommercialPropertyCount()));
         totalHost.setText(String.valueOf(hostDaoImpl.getTotalUsers()));
         totalOwner.setText(String.valueOf(ownerDaoImpl.getTotalUsers()));
@@ -160,6 +160,10 @@ public class StatisticalReportController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Add the stylesheet
+        VBox root = (VBox) totalProperty.getParent().getParent().getParent();
+        root.getStylesheets().add(getClass().getResource("/css/statistical-report.css").toExternalForm());
+
         loadTable();
         loadLineChart();
         loadPieChart();

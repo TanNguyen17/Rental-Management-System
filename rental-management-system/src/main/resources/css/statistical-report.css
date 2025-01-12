@@ -1,0 +1,111 @@
+/* Base colors */
+* {
+    -primary-color: #1E3058;
+    -secondary-color: #DCE8F8;
+    -hover-color: derive(-primary-color, 20%);
+}
+
+.main-container {
+    -fx-background-color: white;
+    -fx-padding: 32px;
+}
+
+/* Header Section */
+.page-title {
+    -fx-fill: -primary-color;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* Stats Cards */
+.stats-container {
+    -fx-padding: 24px 0;
+}
+
+.stat-card {
+    -fx-background-color: -secondary-color;
+    -fx-padding: 16px;
+    -fx-min-width: 160px;
+    -fx-alignment: CENTER;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);
+}
+
+.stat-label {
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.stat-value {
+    -fx-fill: -primary-color;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* Charts */
+.charts-container {
+    -fx-min-height: 400px;
+}
+
+.chart-box {
+    -fx-background-color: white;
+    -fx-padding: 16px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);
+}
+
+/* Line Chart Styling */
+.trend-chart {
+    -fx-background-color: transparent;
+}
+
+.trend-chart .chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.trend-chart .chart-vertical-grid-lines {
+    -fx-stroke: -secondary-color;
+}
+
+.trend-chart .chart-horizontal-grid-lines {
+    -fx-stroke: -secondary-color;
+}
+
+.trend-chart .chart-series-line {
+    -fx-stroke-width: 2px;
+}
+
+.trend-chart .default-color0.chart-series-line {
+    -fx-stroke: -primary-color;
+}
+
+.trend-chart .default-color1.chart-series-line {
+    -fx-stroke: #FF6B6B;
+}
+
+.trend-chart .chart-legend {
+    -fx-background-color: transparent;
+}
+
+/* Pie Chart Styling */
+.distribution-chart {
+    -fx-background-color: transparent;
+    -fx-min-width: 400px;
+}
+
+.distribution-chart .chart-pie {
+    -fx-border-width: 0;
+}
+
+.distribution-chart .chart-pie-label {
+    -fx-fill: -primary-color;
+}
+
+.distribution-chart .default-color0.chart-pie {
+    -fx-pie-color: -primary-color;
+}
+
+.distribution-chart .default-color1.chart-pie {
+    -fx-pie-color: -secondary-color;
+}
