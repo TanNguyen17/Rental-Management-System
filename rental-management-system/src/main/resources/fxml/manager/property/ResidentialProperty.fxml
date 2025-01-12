@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="10.0" stylesheets="@../../../css/rental-agreement.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.RentalAgreementListView">
-   <children>
-      <TableView fx:id="rentalAgreementTableView" styleClass="table-view" VBox.vgrow="ALWAYS">
-         <columns>
-            <TableColumn fx:id="agreementId" prefWidth="75.0" text="ID" styleClass="table-column" />
-            <TableColumn fx:id="status" prefWidth="100.0" text="STATUS" styleClass="table-column-status" />
-            <TableColumn fx:id="contractedDate" prefWidth="120.0" text="CONTRACT DATE" styleClass="table-column" />
-            <TableColumn fx:id="owner" prefWidth="100.0" text="OWNER" styleClass="table-column" />
-            <TableColumn fx:id="host" prefWidth="100.0" text="HOST" styleClass="table-column" />
-            <TableColumn fx:id="rentingFee" prefWidth="100.0" text="RENTING FEE" styleClass="table-column" />
-            <TableColumn fx:id="view" prefWidth="100.0" text="VIEW" styleClass="table-column-actions" />
-            <TableColumn fx:id="delete" prefWidth="100.0" text="DELETE" styleClass="table-column-actions" />
-         </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
-      </TableView>
-   </children>
-   <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-   </padding>
-</VBox> 
+<VBox alignment="CENTER_RIGHT" prefHeight="720.0" prefWidth="1080.0" spacing="12.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yourcompany.rentalmanagement.view.ResidentialPropertyManagementView">
+    <children>
+        <Button fx:id="addNewBtn" mnemonicParsing="false" text="Add New Data" />
+        <TableView fx:id="residentialPropertyTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="718.0" prefWidth="1080.0">
+            <columns>
+                <TableColumn fx:id="titleCol" prefWidth="75.0" styleClass="table-column" text="TITLE" />
+                <TableColumn fx:id="addressCol" prefWidth="116.91962432861328" styleClass="table-column-status" text="ADDRESS" />
+                <TableColumn fx:id="ownerCol" prefWidth="99.58038330078125" styleClass="table-column" text="OWNER" />
+                <TableColumn fx:id="priceCol" prefWidth="82.12860107421875" styleClass="table-column" text="PRICE" />
+                <TableColumn fx:id="statusCol" prefWidth="99.58831787109375" styleClass="table-column" text="STATUS" />
+                <TableColumn fx:id="gardenAvailabilityCol" prefWidth="147.91168212890625" styleClass="table-column" text="GARDEN AVAILABILITY" />
+                <TableColumn fx:id="bedroomNumCol" prefWidth="146.83123779296875" styleClass="table-column-actions" text="NUMBER OF BEDROOMS" />
+                <TableColumn fx:id="petFriendlinessCol" prefWidth="123.45184326171875" styleClass="table-column-actions" text="PET FRIENDLINESS" />
+            <TableColumn fx:id="viewMoreCol" prefWidth="104.87762451171875" styleClass="table-column-actions" text="VIEW MORE" />
+            <TableColumn fx:id="deleteCol" prefWidth="104.87762451171875" styleClass="table-column-actions" text="DELETE" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+    </children>
+    <padding>
+        <Insets right="8.0" top="8.0" />
+    </padding>
+</VBox>

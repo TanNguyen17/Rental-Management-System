@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.yourcompany.rentalmanagement.model.Address;
 import com.yourcompany.rentalmanagement.util.TimeFormat;
@@ -16,9 +17,9 @@ import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
 public class HostDaoImpl implements HostDao {
-    Transaction transaction = null;
-    Host host = null;
-    Map<String, Object> result = new HashMap<>();
+    private Transaction transaction = null;
+    private Host host = null;
+    private Map<String, Object> result = new HashMap<>();
 
     @Override
     public List<Host> getAllHosts() {
@@ -161,5 +162,21 @@ public class HostDaoImpl implements HostDao {
             result.put("message", e.getMessage());
         }
         return result;
+    }
+
+    @Override
+    public List<String> getAllUserName() {
+        return getAllHosts().stream().map(Host::getUsername).collect(Collectors.toList());
+    }
+
+    @Override
+    public long getTotalUsers() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Long> query = session.createQuery("select count(*) from Host");
+            return query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

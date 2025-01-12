@@ -1,10 +1,14 @@
 package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.RentalAgreementController;
+import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.UserSession;
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,12 +24,12 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ResourceBundle;
+import java.util.*;
 
-public class RentalAgreementListView implements Initializable {
+public class RentalAgreementManagementView implements Initializable {
     private RentalAgreementController rentalAgreementController = new RentalAgreementController();
     private UserSession userSession = UserSession.getInstance();
-    private ObservableList<RentalAgreement> rentalAgreements = FXCollections.observableArrayList();
+    private List<RentalAgreement> rentalAgreements = new ArrayList<>();
 
     @FXML
     TableView<RentalAgreement> rentalAgreementTableView = new TableView<>();
@@ -65,21 +69,30 @@ public class RentalAgreementListView implements Initializable {
         initializeColumn();
         initializeViewMoreColumn();
         initializeDeleteColumn();
-        loadingData();
-        rentalAgreementTableView.setItems(rentalAgreements);
+        new Thread(() -> {
+                List<RentalAgreement> rentalAgreementList = rentalAgreementController.getAllRentalAgreements(UserRole.MANAGER, 1);
+            Platform.runLater(() -> {
+                if (!rentalAgreementList.isEmpty()) {
+                    rentalAgreements.addAll(rentalAgreementList);
+                    rentalAgreementTableView.setItems(FXCollections.observableArrayList(rentalAgreements));
+                }
+            });
+        }).start();
+//        rentalAgreements = FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(UserRole.MANAGER, 1));
+//        rentalAgreementTableView.setItems(rentalAgreements);
         addNewBtn.setOnMouseClicked(e -> {
             openAddNewDataForm();
         });
     }
 
-    private void loadingData() {
-        System.out.println("loading data");
-        rentalAgreements.setAll(rentalAgreementController.getAllRentalAgreements(
-                userSession.getCurrentUser().getRole(),
-                userSession.getCurrentUser().getId()
-        ));
-        rentalAgreements = FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(userSession.getCurrentUser().getRole(), userSession.getCurrentUser().getId()));
-    }
+//    private void loadingData() {
+//        System.out.println("loading data");
+//        rentalAgreements.setAll(rentalAgreementController.getAllRentalAgreements(
+//                userSession.getCurrentUser().getRole(),
+//                userSession.getCurrentUser().getId()
+//        ));
+//        rentalAgreements = FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(userSession.getCurrentUser().getRole(), userSession.getCurrentUser().getId()));
+//    }
 
     private void initializeColumn(){
         agreementId.setCellValueFactory(new PropertyValueFactory<>("id"));

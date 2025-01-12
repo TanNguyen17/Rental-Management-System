@@ -5,10 +5,7 @@ import java.util.*;
 import com.yourcompany.rentalmanagement.dao.impl.HostDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.OwnerDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.TenantDaoImpl;
-import com.yourcompany.rentalmanagement.model.Host;
-import com.yourcompany.rentalmanagement.model.Tenant;
-import com.yourcompany.rentalmanagement.model.User;
-import com.yourcompany.rentalmanagement.model.UserRole;
+import com.yourcompany.rentalmanagement.model.*;
 import com.yourcompany.rentalmanagement.view.ProfileView;
 
 public class UserController {
@@ -24,6 +21,14 @@ public class UserController {
 
     public List<Host> getAllHosts(){
         return hostDao.getAllHosts();
+    }
+
+    public List<Tenant> getAllTenant(){
+        return tenantDao.getAllTenants();
+    }
+
+    public List<Owner> getAllOwners(){
+        return ownerDao.getAllOwners();
     }
 
     public UserController() {

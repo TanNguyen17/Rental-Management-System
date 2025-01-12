@@ -3,6 +3,7 @@ package com.yourcompany.rentalmanagement.dao.impl;
 import com.yourcompany.rentalmanagement.dao.UserDao;
 import com.yourcompany.rentalmanagement.model.Address;
 import com.yourcompany.rentalmanagement.model.Payment;
+import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.TimeFormat;
@@ -38,6 +39,16 @@ public class TenantDaoImpl implements UserDao {
         return null;
     }
 
+    public List<Tenant> getAllTenants() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Tenant> query = session.createQuery("FROM Tenant", Tenant.class);
+            return query.list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Override
     public List<Tenant> loadAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -69,6 +80,17 @@ public class TenantDaoImpl implements UserDao {
             e.printStackTrace();
         }
         return tenant;
+    }
+
+    @Override
+    public long getTotalUsers() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Long> query = session.createQuery("select count(*) from Tenant");
+            return query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     @Override

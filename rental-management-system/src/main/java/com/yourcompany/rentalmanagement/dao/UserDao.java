@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement.dao;
 
+import com.yourcompany.rentalmanagement.model.Owner;
+
 import java.util.List;
 
 import java.util.Map;
@@ -11,6 +13,8 @@ public interface UserDao {
     public <T extends Object> T getUserById(long id);
 
     void loadData();
+
+    public long getTotalUsers();
 
     public List<String> getAllUserName();
 

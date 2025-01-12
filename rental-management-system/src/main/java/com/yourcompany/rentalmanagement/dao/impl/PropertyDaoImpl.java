@@ -424,7 +424,13 @@ public class PropertyDaoImpl implements PropertyDao {
             Query<CommercialProperty> query = session.createQuery(
                     "FROM CommercialProperty", CommercialProperty.class);
             return query.list();
+        }  catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
         }
+        return null;
     }
 
     @Override
@@ -432,8 +438,16 @@ public class PropertyDaoImpl implements PropertyDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<ResidentialProperty> query = session.createQuery(
                     "FROM ResidentialProperty", ResidentialProperty.class);
+            System.out.println("Get residential property successfully!");
             return query.list();
+
+        }  catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        e.printStackTrace();
         }
+        return null;
     }
 
     @Override
@@ -547,17 +561,37 @@ public class PropertyDaoImpl implements PropertyDao {
             String residentialHql = "SELECT COUNT(p) FROM ResidentialProperty p WHERE p.owner.id = :ownerId";
             String commercialHql = "SELECT COUNT(p) FROM CommercialProperty p WHERE p.owner.id = :ownerId";
             return session.createQuery(residentialHql, Long.class).setParameter("ownerId", ownerId).uniqueResult() + session.createQuery(commercialHql, Long.class).setParameter("ownerId", ownerId).uniqueResult();
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
     }
 
-    public List<ResidentialProperty> getResidentialPropertiesByOwner(long ownerId) {
+    public long getTotalResidentialPropertyCount() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery(
-                    "FROM ResidentialProperty WHERE owner.id = :ownerId",
-                    ResidentialProperty.class)
-                    .setParameter("ownerId", ownerId)
-                    .list();
+            String residentialHql = "SELECT COUNT(p) FROM ResidentialProperty p";
+            String commercialHql = "SELECT COUNT(p) FROM CommercialProperty p";
+            return session.createQuery(residentialHql, Long.class).uniqueResult() + session.createQuery(commercialHql, Long.class).uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public long getTotalCommercialPropertyCount() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String commercialHql = "SELECT COUNT(p) FROM CommercialProperty p";
+            return session.createQuery(commercialHql, Long.class).uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public Long getTotalResidentialPropertyCount(long ownerId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String commercialHql = "SELECT COUNT(p) FROM CommercialProperty p";
+            return session.createQuery(commercialHql, Long.class).uniqueResult();
         }
     }
 

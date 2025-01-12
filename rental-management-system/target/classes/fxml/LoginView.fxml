@@ -9,45 +9,45 @@
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml" 
             fx:controller="com.yourcompany.rentalmanagement.view.LoginViewController"
-            prefWidth="1280" prefHeight="720"
             stylesheets="@../css/login.css">
             
-    <HBox>
+    <HBox AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" 
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          spacing="0">
         <!-- Left side - Image -->
-        <VBox styleClass="image-container" prefWidth="780" prefHeight="720">
-            <ImageView fitWidth="780" fitHeight="720" preserveRatio="false">
+        <VBox styleClass="image-container" HBox.hgrow="ALWAYS">
+            <ImageView styleClass="login-image">
                 <Image url="@../images/login-illustration.jpg"/>
             </ImageView>
         </VBox>
         
         <!-- Right side - Login Form -->
-        <VBox styleClass="form-side" prefWidth="500" alignment="CENTER">
-            <padding>
-                <Insets top="20" right="40" bottom="40" left="40"/>
-            </padding>
-            
-            <TabPane styleClass="login-tab-pane" tabClosingPolicy="UNAVAILABLE">
+        <VBox styleClass="form-side" HBox.hgrow="NEVER">
+            <TabPane fx:id="tabPane" styleClass="login-tab-pane" tabClosingPolicy="UNAVAILABLE">
                 <tabs>
                     <!-- Login Tab -->
                     <Tab text="Login" closable="false">
-                        <VBox styleClass="form-container" alignment="CENTER">
-                            <Text text="Welcome Back!" styleClass="welcome-text"/>
-                            <TextField fx:id="loginUsername" promptText="Username" 
+                        <VBox styleClass="form-container">
+                            <Text text="Log In" styleClass="welcome-text"/>
+                            <TextField fx:id="loginUsername" promptText="Email Address" 
                                      onKeyPressed="#handleLoginKeyPress"/>
                             <PasswordField fx:id="loginPassword" promptText="Password"
                                          onKeyPressed="#handleLoginKeyPress"/>
-                            <Button text="Login" onAction="#handleLogin"
+                            <Button text="Log in" onAction="#handleLogin"
                                     maxWidth="Infinity"/>
-                            <Button text="Continue as Visitor" 
-                                    onAction="#handleVisitor"
-                                    styleClass="secondary-button"
-                                    maxWidth="Infinity"/>
+                            <HBox alignment="CENTER">
+                                <Text text="Forgot Password?" styleClass="link-text" onMouseClicked="#handleForgotPassword"/>
+                            </HBox>
+                            <HBox alignment="CENTER" styleClass="signup-prompt">
+                                <Text text="Don't Have an account? " styleClass="prompt-text"/>
+                                <Text text="Signup Now" styleClass="link-text" onMouseClicked="#handleSignupClick"/>
+                            </HBox>
                         </VBox>
                     </Tab>
                     
                     <!-- Sign Up Tab -->
                     <Tab text="Sign Up" closable="false">
-                        <VBox styleClass="form-container" alignment="CENTER">
+                        <VBox styleClass="form-container">
                             <Text text="Create Account" styleClass="welcome-text"/>
                             <TextField fx:id="signupUsername" promptText="Username"
                                      onKeyPressed="#handleSignupKeyPress"/>
@@ -56,8 +56,7 @@
                             <TextField fx:id="signupEmail" promptText="Email"
                                      onKeyPressed="#handleSignupKeyPress"/>
                             <ComboBox fx:id="roleComboBox" promptText="Select Role"
-                                    maxWidth="Infinity"
-                                    onKeyPressed="#handleSignupKeyPress"/>
+                                    maxWidth="Infinity"/>
                             <Button text="Sign Up" onAction="#handleSignup"
                                     maxWidth="Infinity"/>
                         </VBox>

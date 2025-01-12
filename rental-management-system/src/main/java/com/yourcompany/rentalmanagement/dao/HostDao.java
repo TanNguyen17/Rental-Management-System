@@ -7,6 +7,8 @@ import com.yourcompany.rentalmanagement.model.Host;
 
 public interface HostDao {
 
+    List<String> getAllUserName();
+
     List<Host> getAllHosts();
 
     Host getHostById(long id);
@@ -18,4 +20,6 @@ public interface HostDao {
     Map<String, Object> updateAddress(long id, Map<String, Object> data);
 
     Map<String, Object> updatePassword(long id, String oldPassword, String newPassword);
+
+    long getTotalUsers();
 }
