@@ -1,0 +1,341 @@
+/* Base colors and variables */
+* {
+    -primary-color: #1E3058;
+    -secondary-color: #DCE8F8;
+    -hover-color: derive(-primary-color, 20%);
+    -text-color: #333333;
+}
+
+/* Main container */
+.dashboard-container {
+    -fx-background-color: white;
+    -fx-padding: 24px;
+}
+
+/* Card styles */
+.stat-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);
+    -fx-padding: 20px;
+}
+
+.stat-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 10, 0, 0, 4);
+}
+
+.stat-value {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-color;
+}
+
+.stat-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: -text-color;
+    -fx-opacity: 0.8;
+}
+
+/* Chart styles */
+.chart {
+    -fx-padding: 16px;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);
+    -fx-background-radius: 8px;
+}
+
+.chart-title {
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.chart-plot-background {
+    -fx-background-color: -secondary-color;
+    -fx-opacity: 0.3;
+}
+
+.chart-vertical-grid-lines,
+.chart-horizontal-grid-lines {
+    -fx-stroke: -secondary-color;
+}
+
+.default-color0.chart-series-line {
+    -fx-stroke: -primary-color;
+}
+
+.default-color0.chart-line-symbol {
+    -fx-background-color: -primary-color, white;
+}
+
+/* Table styles */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: -primary-color;
+    -fx-background-radius: 8px 8px 0 0;
+    -fx-padding: 8px 4px;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 40px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px;
+}
+
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent -secondary-color transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: derive(-secondary-color, 50%);
+}
+
+.table-row-cell:hover {
+    -fx-background-color: derive(-secondary-color, 20%);
+}
+
+/* Tab styles */
+.tab-pane {
+    -fx-background-color: transparent;
+    -fx-tab-min-width: 120px;
+}
+
+.tab {
+    -fx-background-color: transparent;
+    -fx-padding: 8px 16px;
+}
+
+.tab:selected {
+    -fx-background-color: -primary-color;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: white;
+}
+
+.tab .tab-label {
+    -fx-text-fill: -primary-color;
+    -fx-font-weight: bold;
+}
+
+/* Button styles */
+.action-button {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.action-button:hover {
+    -fx-background-color: -hover-color;
+}
+
+.secondary-button {
+    -fx-background-color: -secondary-color;
+    -fx-text-fill: -primary-color;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: derive(-secondary-color, -10%);
+}
+
+/* Status indicators */
+.status-active {
+    -fx-text-fill: #2e7d32;
+    -fx-font-weight: bold;
+}
+
+.status-pending {
+    -fx-text-fill: #ed6c02;
+    -fx-font-weight: bold;
+}
+
+.status-inactive {
+    -fx-text-fill: #d32f2f;
+    -fx-font-weight: bold;
+}
+
+/* Section headers */
+.section-header {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-color;
+    -fx-padding: 0 0 16px 0;
+}
+
+/* Filter section */
+.filter-container {
+    -fx-spacing: 16px;
+    -fx-padding: 16px;
+    -fx-background-color: -secondary-color;
+    -fx-background-radius: 8px;
+}
+
+.filter-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: -primary-color;
+    -fx-font-weight: bold;
+}
+
+.filter-field {
+    -fx-background-color: white;
+    -fx-background-radius: 4px;
+    -fx-border-color: transparent;
+    -fx-padding: 8px;
+}
+
+.filter-field:focused {
+    -fx-border-color: -primary-color;
+}
+
+/* Dashboard Title */
+#dashboardTitle {
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-padding: 20px 0 20px 24px;
+}
+
+/* Main Content */
+#mainContent {
+    -fx-background-color: white;
+    -fx-padding: 0;
+}
+
+/* TabPane Styling */
+#dashboardPanel {
+    -fx-background-color: transparent;
+    -fx-tab-min-height: 45px;
+    -fx-tab-max-height: 45px;
+}
+
+#dashboardPanel .tab-header-area {
+    -fx-padding: 0 24px;
+}
+
+#dashboardPanel .tab-header-background {
+    -fx-background-color: -secondary-color;
+    -fx-background-radius: 8px 8px 0 0;
+}
+
+#dashboardPanel .tab {
+    -fx-background-color: transparent;
+    -fx-padding: 0 24px;
+    -fx-cursor: hand;
+}
+
+#dashboardPanel .tab:selected {
+    -fx-background-color: -primary-color;
+    -fx-background-radius: 8px 8px 0 0;
+}
+
+#dashboardPanel .tab-label {
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+#dashboardPanel .tab:selected .tab-label {
+    -fx-text-fill: white;
+}
+
+/* Tab Content Area */
+#dashboardPanel .tab-content-area {
+    -fx-background-color: white;
+    -fx-padding: 24px;
+}
+
+/* Add New Data Button */
+#addNewBtn {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+    -fx-min-width: 150px;
+}
+
+#addNewBtn:hover {
+    -fx-background-color: -hover-color;
+}
+
+/* Table Specific Styles */
+.table-column {
+    -fx-alignment: CENTER;
+    -fx-padding: 8px;
+}
+
+.table-column-status {
+    -fx-alignment: CENTER;
+}
+
+.table-column-actions {
+    -fx-alignment: CENTER;
+}
+
+/* Table View Container */
+.table-container {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);
+    -fx-padding: 16px;
+}
+
+/* Status Colors in Tables */
+.status-new {
+    -fx-text-fill: #2196F3;
+    -fx-font-weight: bold;
+}
+
+.status-active {
+    -fx-text-fill: #4CAF50;
+    -fx-font-weight: bold;
+}
+
+.status-completed {
+    -fx-text-fill: #9E9E9E;
+    -fx-font-weight: bold;
+}
+
+/* Action Buttons in Tables */
+.view-button {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+    -fx-min-width: 80px;
+}
+
+.view-button:hover {
+    -fx-background-color: -hover-color;
+}
+
+.delete-button {
+    -fx-background-color: #ff4444;
+    -fx-text-fill: white;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+    -fx-min-width: 80px;
+}
+
+.delete-button:hover {
+    -fx-background-color: derive(#ff4444, -10%);
+}

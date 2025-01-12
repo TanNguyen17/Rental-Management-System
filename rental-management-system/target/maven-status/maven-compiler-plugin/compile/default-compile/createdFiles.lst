@@ -37,6 +37,7 @@ com\yourcompany\rentalmanagement\controller\CommercialPropertyController.class
 com\yourcompany\rentalmanagement\controller\LoginController.class
 com\yourcompany\rentalmanagement\model\RentalAgreement.class
 com\yourcompany\rentalmanagement\view\RentalAgreementFormController.class
+com\yourcompany\rentalmanagement\view\ManagerDashboardController.class
 com\yourcompany\rentalmanagement\view\HostView.class
 com\yourcompany\rentalmanagement\util\AlertUtils.class
 com\yourcompany\rentalmanagement\view\ResidentialPropertyManagementView$2.class

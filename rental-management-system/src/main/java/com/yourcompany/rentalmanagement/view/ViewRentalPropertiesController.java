@@ -611,7 +611,7 @@ public class ViewRentalPropertiesController {
         }
     }
 
-    private void handleEdit(Property property) {
+    public void handleEdit(Property property) {
         Alert confirmation = new Alert(AlertType.CONFIRMATION);
         confirmation.setTitle("Edit Property");
         confirmation.setHeaderText("Are you sure you want to edit this property?");
@@ -638,7 +638,7 @@ public class ViewRentalPropertiesController {
         }
     }
 
-    private void handleDelete(Property property) {
+    public void handleDelete(Property property) {
         Alert confirmation = new Alert(AlertType.CONFIRMATION);
         confirmation.setTitle("Delete Property");
         confirmation.setHeaderText("Are you sure you want to delete this property?");
