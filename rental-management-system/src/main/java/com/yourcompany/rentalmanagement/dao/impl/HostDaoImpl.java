@@ -1,6 +1,7 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -11,6 +12,9 @@ import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
 public class HostDaoImpl implements HostDao {
+    private Host host;
+    private Transaction transaction;
+
 
     @Override
     public List<Host> getAllHosts() {
@@ -31,5 +35,10 @@ public class HostDaoImpl implements HostDao {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public List<String> getAllUserName() {
+        return getAllHosts().stream().map(Host::getUsername).collect(Collectors.toList());
     }
 }
