@@ -150,6 +150,27 @@ public class HostDashboardViewController implements Initializable {
                         pieChartData.add(new PieChart.Data(entry.getKey().toString(), entry.getValue()));
                     }
                     pieChart.setData(pieChartData);
+
+                    // nay t doi color voi hover effect nha, match theme
+                    for (int i = 0; i < pieChartData.size(); i++) {
+                        PieChart.Data data = pieChartData.get(i);
+                        String color = (i % 2 == 0) ? "#1E3058" : "#DCE8F8";
+
+                        if (data.getNode() != null) {
+                            data.getNode().setStyle("-fx-pie-color: " + color + ";");
+                        }
+
+                        int finalI = i;
+                        data.getNode().setOnMouseEntered(event -> {
+                            String baseColor = (finalI % 2 == 0) ? "#1E3058" : "#DCE8F8";
+                            data.getNode().setStyle("-fx-pie-color: derive(" + baseColor + ", 20%);");
+                        });
+
+                        data.getNode().setOnMouseExited(event -> {
+                            String baseColor = (finalI % 2 == 0) ? "#1E3058" : "#DCE8F8";
+                            data.getNode().setStyle("-fx-pie-color: " + baseColor + ";");
+                        });
+                    }
                 }
             });
             Platform.runLater(() -> {

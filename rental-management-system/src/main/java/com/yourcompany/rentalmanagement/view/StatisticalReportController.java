@@ -1,24 +1,30 @@
 package com.yourcompany.rentalmanagement.view;
 
-import com.yourcompany.rentalmanagement.controller.PaymentController;
-import com.yourcompany.rentalmanagement.dao.impl.*;
-import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.chart.*;
-import javafx.scene.control.Label;
-import javafx.scene.control.PopupControl;
-import javafx.scene.control.Tooltip;
-import javafx.scene.text.Text;
-import javafx.scene.layout.VBox;
-
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
+
+import com.yourcompany.rentalmanagement.controller.PaymentController;
+import com.yourcompany.rentalmanagement.dao.impl.HostDaoImpl;
+import com.yourcompany.rentalmanagement.dao.impl.OwnerDaoImpl;
+import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
+import com.yourcompany.rentalmanagement.dao.impl.RentalAgreementDaoImpl;
+import com.yourcompany.rentalmanagement.dao.impl.TenantDaoImpl;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 public class StatisticalReportController implements Initializable {
 
@@ -123,39 +129,56 @@ public class StatisticalReportController implements Initializable {
             commercialSeries.getData().add(new XYChart.Data<>(yearLabel, commercialCount));
         }
 
-        // Clear previous data and add new series to the chart
+        // Clear previous data and add new series
         lineChart.getData().clear();
         lineChart.getData().addAll(residentialSeries, commercialSeries);
 
-        // Add hover effects for the data points
-        residentialSeries.getData().forEach(data -> {
-            Tooltip tooltip = new Tooltip("Year: " + data.getXValue() + "\nResidential: " + data.getYValue());
-            Tooltip.install(data.getNode(), tooltip);
-            data.getNode().setOnMouseEntered(event -> data.getNode().setStyle("-fx-opacity: 0.7;"));
-            data.getNode().setOnMouseExited(event -> data.getNode().setStyle("-fx-opacity: 1.0;"));
-        });
+        // Set the colors for the series
+        residentialSeries.getNode().setStyle("-fx-stroke: #1E3058;"); // Primary color
+        commercialSeries.getNode().setStyle("-fx-stroke: #DCE8F8;"); // Secondary color
 
-        commercialSeries.getData().forEach(data -> {
-            Tooltip tooltip = new Tooltip("Year: " + data.getXValue() + "\nCommercial: " + data.getYValue());
-            Tooltip.install(data.getNode(), tooltip);
-            data.getNode().setOnMouseEntered(event -> data.getNode().setStyle("-fx-opacity: 0.7;"));
-            data.getNode().setOnMouseExited(event -> data.getNode().setStyle("-fx-opacity: 1.0;"));
-        });
+        // Style the data points
+        for (XYChart.Data<String, Number> data : residentialSeries.getData()) {
+            if (data.getNode() != null) {
+                data.getNode().setStyle("-fx-background-color: #1E3058;");
+            }
+        }
+
+        for (XYChart.Data<String, Number> data : commercialSeries.getData()) {
+            if (data.getNode() != null) {
+                data.getNode().setStyle("-fx-background-color: #DCE8F8;");
+            }
+        }
     }
 
     private void loadPieChart() {
-        // Get the total counts of commercial and residential properties
         long totalCommercialProperties = propertyDaoImpl.getTotalCommercialPropertyCount();
         long totalResidentialProperties = propertyDaoImpl.getTotalResidentialPropertyCount();
 
-        // Create PieChart data
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
                 new PieChart.Data("Commercial Properties", totalCommercialProperties),
                 new PieChart.Data("Residential Properties", totalResidentialProperties)
         );
 
-        // Set the data and customize the PieChart
         pieChart.setData(pieChartData);
+
+        // Set colors for pie chart slices
+        pieChartData.get(0).getNode().setStyle("-fx-pie-color: #1E3058;"); // Commercial in primary color
+        pieChartData.get(1).getNode().setStyle("-fx-pie-color: #DCE8F8;"); // Residential in secondary color
+
+        // Add color change listener in case of updates
+        pieChart.getData().forEach(data -> {
+            data.getNode().setOnMouseEntered(event -> {
+                data.getNode().setStyle("-fx-pie-color: derive(#1E3058, 20%);");
+            });
+            data.getNode().setOnMouseExited(event -> {
+                if (data == pieChartData.get(0)) {
+                    data.getNode().setStyle("-fx-pie-color: #1E3058;");
+                } else {
+                    data.getNode().setStyle("-fx-pie-color: #DCE8F8;");
+                }
+            });
+        });
     }
 
     @Override

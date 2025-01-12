@@ -77,11 +77,11 @@
 }
 
 .trend-chart .default-color0.chart-series-line {
-    -fx-stroke: -primary-color;
+    -fx-stroke: #1E3058;
 }
 
 .trend-chart .default-color1.chart-series-line {
-    -fx-stroke: #FF6B6B;
+    -fx-stroke: #DCE8F8;
 }
 
 .trend-chart .chart-legend {
@@ -103,9 +103,30 @@
 }
 
 .distribution-chart .default-color0.chart-pie {
-    -fx-pie-color: -primary-color;
+    -fx-pie-color: #1E3058;
 }
 
 .distribution-chart .default-color1.chart-pie {
-    -fx-pie-color: -secondary-color;
+    -fx-pie-color: #DCE8F8;
+}
+
+/* Chart Labels */
+.chart-legend {
+    -fx-background-color: transparent;
+}
+
+.chart-legend-item-symbol {
+    -fx-background-radius: 0;
+}
+
+.chart-legend-item {
+    -fx-text-fill: #1E3058;
+}
+
+.chart-title {
+    -fx-text-fill: #1E3058;
+}
+
+.axis-label {
+    -fx-text-fill: #1E3058;
 }
