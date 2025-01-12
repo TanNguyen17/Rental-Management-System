@@ -52,6 +52,8 @@ public class ResidentialProperty extends Property {
         this.petFriendliness = petFriendliness;
     }
 
+
+
     @Override
     public List<Host> getHosts() {
         return hosts;

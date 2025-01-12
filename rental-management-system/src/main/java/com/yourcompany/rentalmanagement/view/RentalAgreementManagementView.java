@@ -22,7 +22,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
-public class RentalAgreementListView implements Initializable {
+public class RentalAgreementManagementView implements Initializable {
     private RentalAgreementController rentalAgreementController = new RentalAgreementController();
     private UserSession userSession = UserSession.getInstance();
     private ObservableList<RentalAgreement> rentalAgreements;
