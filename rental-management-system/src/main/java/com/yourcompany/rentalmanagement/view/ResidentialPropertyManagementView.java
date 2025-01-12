@@ -2,6 +2,7 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.ResidentialPropertyController;
 import com.yourcompany.rentalmanagement.model.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -60,8 +61,17 @@ public class ResidentialPropertyManagementView implements Initializable {
         initializeColumn();
         initializeViewMoreColumn();
         initializeDeleteColumn();
-        residentialProperties = FXCollections.observableArrayList(residentialPropertyController.getAllResidentialProperty());
-        residentialPropertyTableView.setItems(residentialProperties);
+        new Thread(() -> {
+            List<ResidentialProperty> allResidentialProperties = residentialPropertyController.getAllResidentialProperty();
+            Platform.runLater(() -> {
+                if (!allResidentialProperties.isEmpty()) {
+                    residentialProperties.addAll(allResidentialProperties);
+                    residentialPropertyTableView.setItems(residentialProperties);
+                }
+            });
+        }).start();
+//        residentialProperties = FXCollections.observableArrayList(residentialPropertyController.getAllResidentialProperty());
+//        residentialPropertyTableView.setItems(residentialProperties);
     }
 
     private void initializeColumn(){

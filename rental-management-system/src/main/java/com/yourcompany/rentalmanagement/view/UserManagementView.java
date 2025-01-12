@@ -2,8 +2,10 @@ package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.UserController;
 import com.yourcompany.rentalmanagement.model.Address;
+import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.model.UserRole;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -18,7 +20,7 @@ import java.util.List;
 
 
 public class UserManagementView {
-    List<User> users;
+    ObservableList<User> users;
     UserController userController = new UserController();
 
     @FXML
@@ -59,16 +61,22 @@ public class UserManagementView {
         configureTableColumns();
         configureRoleFilterCheckComboBox();
 
-        // Convert to ObservableList
-        ObservableList<User> users = FXCollections.observableArrayList(getAllUsers());
-
-        // Set the TableView items
-        userTableView.setItems(users);
+        new Thread(() -> {
+            ObservableList<User> allUsers = FXCollections.observableArrayList(getAllUsers());
+            Platform.runLater(() -> {
+                if (!allUsers.isEmpty()) {
+                    users.addAll(allUsers);
+                    userTableView.setItems(users);
+                }
+            });
+        }).start();
     }
 
     public List<User> getAllUsers(){
         // Combine into one list
         List<User> allUsers = new ArrayList<>();
+
+
 
         // Cast each list to List<User> and add them
         allUsers.addAll((List<User>) (List<?>) userController.getAllTenant());

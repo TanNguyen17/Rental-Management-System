@@ -1,10 +1,14 @@
 package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.RentalAgreementController;
+import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.UserSession;
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,12 +24,177 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class RentalAgreementManagementView implements Initializable {
     private RentalAgreementController rentalAgreementController = new RentalAgreementController();
     private UserSession userSession = UserSession.getInstance();
-    private ObservableList<RentalAgreement> rentalAgreements;
+    private ObservableList<RentalAgreement> rentalAgreements = new ObservableList<RentalAgreement>() {
+        @Override
+        public void addListener(ListChangeListener<? super RentalAgreement> listChangeListener) {
+
+        }
+
+        @Override
+        public void removeListener(ListChangeListener<? super RentalAgreement> listChangeListener) {
+
+        }
+
+        @Override
+        public boolean addAll(RentalAgreement... rentalAgreements) {
+            return false;
+        }
+
+        @Override
+        public boolean setAll(RentalAgreement... rentalAgreements) {
+            return false;
+        }
+
+        @Override
+        public boolean setAll(Collection<? extends RentalAgreement> collection) {
+            return false;
+        }
+
+        @Override
+        public boolean removeAll(RentalAgreement... rentalAgreements) {
+            return false;
+        }
+
+        @Override
+        public boolean retainAll(RentalAgreement... rentalAgreements) {
+            return false;
+        }
+
+        @Override
+        public void remove(int i, int i1) {
+
+        }
+
+        @Override
+        public int size() {
+            return 0;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return false;
+        }
+
+        @Override
+        public Iterator<RentalAgreement> iterator() {
+            return null;
+        }
+
+        @Override
+        public Object[] toArray() {
+            return new Object[0];
+        }
+
+        @Override
+        public <T> T[] toArray(T[] a) {
+            return null;
+        }
+
+        @Override
+        public boolean add(RentalAgreement rentalAgreement) {
+            return false;
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            return false;
+        }
+
+        @Override
+        public boolean containsAll(Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public boolean addAll(Collection<? extends RentalAgreement> c) {
+            return false;
+        }
+
+        @Override
+        public boolean addAll(int index, Collection<? extends RentalAgreement> c) {
+            return false;
+        }
+
+        @Override
+        public boolean removeAll(Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public boolean retainAll(Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public void clear() {
+
+        }
+
+        @Override
+        public RentalAgreement get(int index) {
+            return null;
+        }
+
+        @Override
+        public RentalAgreement set(int index, RentalAgreement element) {
+            return null;
+        }
+
+        @Override
+        public void add(int index, RentalAgreement element) {
+
+        }
+
+        @Override
+        public RentalAgreement remove(int index) {
+            return null;
+        }
+
+        @Override
+        public int indexOf(Object o) {
+            return 0;
+        }
+
+        @Override
+        public int lastIndexOf(Object o) {
+            return 0;
+        }
+
+        @Override
+        public ListIterator<RentalAgreement> listIterator() {
+            return null;
+        }
+
+        @Override
+        public ListIterator<RentalAgreement> listIterator(int index) {
+            return null;
+        }
+
+        @Override
+        public List<RentalAgreement> subList(int fromIndex, int toIndex) {
+            return List.of();
+        }
+
+        @Override
+        public void addListener(InvalidationListener invalidationListener) {
+
+        }
+
+        @Override
+        public void removeListener(InvalidationListener invalidationListener) {
+
+        }
+    };
 
     @FXML
     TableView<RentalAgreement> rentalAgreementTableView = new TableView<>();
@@ -65,8 +234,17 @@ public class RentalAgreementManagementView implements Initializable {
         initializeColumn();
         initializeViewMoreColumn();
         initializeDeleteColumn();
-        rentalAgreements = FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(UserRole.MANAGER, 1));
-        rentalAgreementTableView.setItems(rentalAgreements);
+        new Thread(() -> {
+                List<RentalAgreement> rentalAgreementList = rentalAgreementController.getAllRentalAgreements(UserRole.MANAGER, 1);
+            Platform.runLater(() -> {
+                if (!rentalAgreementList.isEmpty()) {
+                    rentalAgreements.addAll(rentalAgreementList);
+                    rentalAgreementTableView.setItems(rentalAgreements);
+                }
+            });
+        }).start();
+//        rentalAgreements = FXCollections.observableArrayList(rentalAgreementController.getAllRentalAgreements(UserRole.MANAGER, 1));
+//        rentalAgreementTableView.setItems(rentalAgreements);
         addNewBtn.setOnMouseClicked(e -> {
             openAddNewDataForm();
         });
