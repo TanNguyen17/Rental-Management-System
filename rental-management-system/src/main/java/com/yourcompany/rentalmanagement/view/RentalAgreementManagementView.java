@@ -70,8 +70,11 @@ public class RentalAgreementManagementView implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle bundle) {
         initializeColumn();
-        initializeViewMoreColumn();
-        initializeDeleteColumn();
+        if (userSession.getCurrentUser().getRole() == UserRole.MANAGER || userSession.getCurrentUser().getRole() == UserRole.HOST) {
+            initializeViewMoreColumn();
+            initializeDeleteColumn();
+        }
+
 
         // cai nay de check user role for add new button visibility
         UserRole currentRole = userSession.getCurrentUser().getRole();
@@ -79,7 +82,13 @@ public class RentalAgreementManagementView implements Initializable {
         addNewBtn.setManaged(currentRole == UserRole.MANAGER || currentRole == UserRole.TENANT);
 
         new Thread(() -> {
-            List<RentalAgreement> rentalAgreementList = rentalAgreementController.getAllRentalAgreements(currentRole, 1);
+            List<RentalAgreement> rentalAgreementList;
+            if (currentRole.equals(UserRole.MANAGER)) {
+                rentalAgreementList = rentalAgreementController.getAllRentalAgreements(currentRole, 1);
+            } else {
+                rentalAgreementList = rentalAgreementController.getAllRentalAgreements(currentRole, userSession.getCurrentUser().getId());
+            }
+
             Platform.runLater(() -> {
                 if (!rentalAgreementList.isEmpty()) {
                     rentalAgreements.addAll(rentalAgreementList);
@@ -93,50 +102,52 @@ public class RentalAgreementManagementView implements Initializable {
         });
 
         // Setup the view column
-        view.setCellFactory(column -> new TableCell<RentalAgreement, String>() {
-            private final Button viewButton = new Button("View More");
+        if (userSession.getCurrentUser().getRole() == UserRole.MANAGER || userSession.getCurrentUser().getRole() == UserRole.HOST) {
+            view.setCellFactory(column -> new TableCell<RentalAgreement, String>() {
+                private final Button viewButton = new Button("View More");
 
-            {
-                viewButton.getStyleClass().add("view-more-button");
-                viewButton.setOnAction(event -> {
-                    RentalAgreement agreement = getTableView().getItems().get(getIndex());
-                    openUpdateForm(agreement.getId());
-                });
-            }
-
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(viewButton);
+                {
+                    viewButton.getStyleClass().add("view-more-button");
+                    viewButton.setOnAction(event -> {
+                        RentalAgreement agreement = getTableView().getItems().get(getIndex());
+                        openUpdateForm(agreement.getId());
+                    });
                 }
-            }
-        });
 
-        // Setup the delete column
-        delete.setCellFactory(column -> new TableCell<RentalAgreement, String>() {
-            private final Button deleteButton = new Button("Delete");
-
-            {
-                deleteButton.getStyleClass().add("delete-button");
-                deleteButton.setOnAction(event -> {
-                    RentalAgreement agreement = getTableView().getItems().get(getIndex());
-                    handleDelete(agreement);
-                });
-            }
-
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(deleteButton);
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(viewButton);
+                    }
                 }
-            }
-        });
+            });
+
+            // Setup the delete column
+            delete.setCellFactory(column -> new TableCell<RentalAgreement, String>() {
+                private final Button deleteButton = new Button("Delete");
+
+                {
+                    deleteButton.getStyleClass().add("delete-button");
+                    deleteButton.setOnAction(event -> {
+                        RentalAgreement agreement = getTableView().getItems().get(getIndex());
+                        handleDelete(agreement);
+                    });
+                }
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(deleteButton);
+                    }
+                }
+            });
+        }
     }
 
 //    private void loadingData() {

@@ -114,11 +114,11 @@ public class PaymentsView implements Initializable {
 
     private void initializeCombobox() {
         ObservableList<String> methodOptions = FXCollections.observableArrayList(
-                "All",
-                "Debit Card",
-                "Credit Card",
-                "Bank Transfer"
+                "All"
         );
+        for (Payment.paymentMethod m : Payment.paymentMethod.values()) {
+            methodOptions.add(m.toString());
+        }
         methodOption.setItems(methodOptions);
         methodOption.setValue("All");
 

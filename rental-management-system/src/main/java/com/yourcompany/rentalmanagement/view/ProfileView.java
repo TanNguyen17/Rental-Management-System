@@ -154,6 +154,7 @@ public class ProfileView implements Initializable {
         }).start();
             // Load address data
             Platform.runLater(() -> {
+                System.out.println("update district choice");
                 initialAddress();
                 provinceChoice.setOnAction(event -> {
                     String selectedProvince = provinceChoice.getValue();
@@ -391,6 +392,7 @@ public class ProfileView implements Initializable {
     private void updateDistrictCombobox(String selectedProvince) {
         if (selectedProvince != null) {
             List<String> cities = AddressData.provinceCities.getOrDefault(selectedProvince, new ArrayList<>());
+            System.out.println(cities.size());
             ObservableList<String> cityList = FXCollections.observableArrayList(cities);
             districtChoice.setItems(cityList);
         } else {
