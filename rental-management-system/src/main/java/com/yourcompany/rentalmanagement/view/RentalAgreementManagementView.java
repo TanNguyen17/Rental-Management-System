@@ -56,10 +56,10 @@ public class RentalAgreementManagementView implements Initializable {
     TableColumn<RentalAgreement, String> host = new TableColumn<>();
 
     @FXML
-    private TableColumn<RentalAgreement, String> view;
+    private TableColumn<RentalAgreement, String> view = new TableColumn<>();
 
     @FXML
-    private TableColumn<RentalAgreement, String> delete;
+    private TableColumn<RentalAgreement, String> delete = new TableColumn<>();
 
     @FXML
     TableColumn<RentalAgreement, Double> rentingFee = new TableColumn<>();
@@ -73,7 +73,7 @@ public class RentalAgreementManagementView implements Initializable {
         initializeViewMoreColumn();
         initializeDeleteColumn();
 
-        // cai nay de check user role for add mew button visibility
+        // cai nay de check user role for add new button visibility
         UserRole currentRole = userSession.getCurrentUser().getRole();
         addNewBtn.setVisible(currentRole == UserRole.MANAGER || currentRole == UserRole.TENANT);
         addNewBtn.setManaged(currentRole == UserRole.MANAGER || currentRole == UserRole.TENANT);
