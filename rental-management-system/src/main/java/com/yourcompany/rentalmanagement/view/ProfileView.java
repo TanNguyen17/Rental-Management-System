@@ -41,7 +41,7 @@ import static com.yourcompany.rentalmanagement.model.Payment.*;
 public class ProfileView implements Initializable {
     private UserController userController;
     private CloudinaryService cloudinaryService = new CloudinaryService();
-    private Tenant currentUser = (Tenant) UserSession.getInstance().getCurrentUser();
+    private User currentUser = UserSession.getInstance().getCurrentUser();
 
     @FXML
     private Text username;
@@ -139,7 +139,7 @@ public class ProfileView implements Initializable {
         // Load User Data in Background
         new Thread(() -> {
             // Load user data
-            currentUser = (Tenant) userController.getUserProfile(currentUser.getId(), currentUser.getRole());
+            currentUser = userController.getUserProfile(currentUser.getId(), currentUser.getRole());
 
             // Update UI on JavaFX Application Thread
             Platform.runLater(() -> {
@@ -164,6 +164,7 @@ public class ProfileView implements Initializable {
     }
 
     private void initialProfile() {
+        System.out.println(currentUser.getUsername());
         username.setText(currentUser.getUsername());
 
         Image image = new Image(currentUser.getProfileImage() != null ? currentUser.getProfileImage() : "https://res.cloudinary.com/dqydgahsj/image/upload/v1735456851/q7ldgrgk68q8fnwqadkw.jpg");
@@ -178,10 +179,12 @@ public class ProfileView implements Initializable {
 
         paymentText.setVisible(false);
         paymentChoice.setVisible(false);
-        if (currentUser.getRole().equals(UserRole.TENANT)) {
+
+        if (currentUser.getRole() != null && currentUser.getRole().equals(UserRole.TENANT)) {
+            Tenant tenantUser = (Tenant) currentUser;
             paymentText.setVisible(true);
             paymentChoice.setVisible(true);
-            paymentChoice.setValue(currentUser.getPaymentMethod() != null ? currentUser.getPaymentMethod() : null);
+            paymentChoice.setValue(tenantUser.getPaymentMethod() != null ? tenantUser.getPaymentMethod() : null);
             ObservableList<Payment.paymentMethod> methodOptions = FXCollections.observableArrayList(Payment.paymentMethod.values());
             paymentChoice.setItems(methodOptions);
         }
