@@ -53,4 +53,6 @@ public interface PropertyDao {
     void loadPropertiesAsync(int page, int pageSize, long ownerId,
             Consumer<List<Property>> onSuccess,
             Consumer<Throwable> onError) throws CompletionException;
+
+    List<Property> getPropertiesByHostID(long hostId);
 }

@@ -1,10 +1,7 @@
 package com.yourcompany.rentalmanagement.view;
 
 import com.yourcompany.rentalmanagement.controller.PaymentController;
-import com.yourcompany.rentalmanagement.model.Payment;
-import com.yourcompany.rentalmanagement.model.Tenant;
-import com.yourcompany.rentalmanagement.model.User;
-import com.yourcompany.rentalmanagement.model.UserRole;
+import com.yourcompany.rentalmanagement.model.*;
 import com.yourcompany.rentalmanagement.util.AlertUtils;
 import com.yourcompany.rentalmanagement.util.EmailUtil;
 import com.yourcompany.rentalmanagement.util.UserSession;
@@ -55,6 +52,9 @@ public class PaymentManagementView implements Initializable {
     private PaymentView paymentView;
 
     @FXML
+    private TableView<Payment> paymentTable = new TableView<>();
+
+    @FXML
     private TableColumn<Payment, String> receipt;
 
     @FXML
@@ -76,9 +76,6 @@ public class PaymentManagementView implements Initializable {
     private ComboBox<String> statusOption;
 
     @FXML
-    private TableView<Payment> paymentTable;
-
-    @FXML
     private MFXButton findButton;
 
     @FXML
@@ -90,9 +87,17 @@ public class PaymentManagementView implements Initializable {
         initializeColumn();
         initializeActionColumn();
 
-        paymentTable.setItems(FXCollections.observableArrayList(payments));
+        new Thread(() -> {
+            List<Payment> allPayments = paymentController.getAllPayments();
+            Platform.runLater(() -> {
+                if (!allPayments.isEmpty()) {
+                    payments.addAll(allPayments);
+                    paymentTable.setItems(FXCollections.observableArrayList(payments));
+                }
+            });
+        }).start();
         paymentTable.setMaxHeight(300);
-        loadPayments(currentPageIndex);
+        // loadPayments(currentPageIndex);
 
         paymentTable.addEventFilter(ScrollEvent.ANY, event -> {
             if (!isLoading && isAtBottom() && !allDataLoaded) {
@@ -177,6 +182,11 @@ public class PaymentManagementView implements Initializable {
                         if (currentUser.getRole().equals(UserRole.TENANT)) {
                             payIcon = new FontAwesomeIconView(FontAwesomeIcon.MONEY);
                             payIcon.getStyleClass().add("action-icon");
+                            payIcon.setStyle(
+                                    "-fx-cursor: hand ;"
+                                            + "-glyph-size:20px;"
+                                            + "-fx-color: #fff"
+                            );
                         } else {
                             sendEmailIcon = new FontAwesomeIconView(FontAwesomeIcon.MAIL_REPLY);
                         }
@@ -187,11 +197,7 @@ public class PaymentManagementView implements Initializable {
                                         + "-glyph-size:20px;"
                                         + "-fx-color: #fff"
                         );
-                        payIcon.setStyle(
-                                "-fx-cursor: hand ;"
-                                        + "-glyph-size:20px;"
-                                        + "-fx-color: #fff"
-                        );
+
 
                         HBox action = null;
 

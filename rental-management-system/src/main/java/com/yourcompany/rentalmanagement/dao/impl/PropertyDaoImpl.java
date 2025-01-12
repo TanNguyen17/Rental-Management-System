@@ -11,21 +11,25 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.function.Consumer;
 
-import com.yourcompany.rentalmanagement.model.*;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Root;
-import jakarta.persistence.criteria.Predicate;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import com.yourcompany.rentalmanagement.dao.PropertyDao;
+import com.yourcompany.rentalmanagement.model.Address;
+import com.yourcompany.rentalmanagement.model.CommercialProperty;
+import com.yourcompany.rentalmanagement.model.Host;
+import com.yourcompany.rentalmanagement.model.Owner;
+import com.yourcompany.rentalmanagement.model.Property;
+import com.yourcompany.rentalmanagement.model.ResidentialProperty;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import javafx.application.Platform;
 
 public class PropertyDaoImpl implements PropertyDao {
@@ -259,20 +263,27 @@ public class PropertyDaoImpl implements PropertyDao {
         }
     }
 
-    public List<Property> getAllPropertiesByHostID(long id) {
+    @Override
+    public List<Property> getPropertiesByHostID(long hostId) {
+        List<Property> properties = new ArrayList<>();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            List<Property> properties = new ArrayList<>();
-
-            Query<ResidentialProperty> residentialQuery = session.createQuery(
-                    "FROM ResidentialProperty rp JOIN rp.hosts h WHERE h.id =: id", ResidentialProperty.class).setParameter("id", id);
-            properties.addAll(residentialQuery.list());
-
+            // Query for commercial properties
             Query<CommercialProperty> commercialQuery = session.createQuery(
-                    "FROM CommercialProperty rp JOIN rp.hosts h WHERE h.id =: id", CommercialProperty.class).setParameter("id", id);
+                    "SELECT DISTINCT cp FROM CommercialProperty cp "
+                    + "JOIN cp.hosts h WHERE h.id = :hostId", CommercialProperty.class);
+            commercialQuery.setParameter("hostId", hostId);
             properties.addAll(commercialQuery.list());
 
-            return properties;
+            // Query for residential properties
+            Query<ResidentialProperty> residentialQuery = session.createQuery(
+                    "SELECT DISTINCT rp FROM ResidentialProperty rp "
+                    + "JOIN rp.hosts h WHERE h.id = :hostId", ResidentialProperty.class);
+            residentialQuery.setParameter("hostId", hostId);
+            properties.addAll(residentialQuery.list());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return properties;
     }
 
     @Override
@@ -424,7 +435,7 @@ public class PropertyDaoImpl implements PropertyDao {
             Query<CommercialProperty> query = session.createQuery(
                     "FROM CommercialProperty", CommercialProperty.class);
             return query.list();
-        }  catch (Exception e) {
+        } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -441,11 +452,11 @@ public class PropertyDaoImpl implements PropertyDao {
             System.out.println("Get residential property successfully!");
             return query.list();
 
-        }  catch (Exception e) {
+        } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-        e.printStackTrace();
+            e.printStackTrace();
         }
         return null;
     }
@@ -636,16 +647,16 @@ public class PropertyDaoImpl implements PropertyDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // HQL query to fetch property IDs and contract dates
             Query<Object[]> query = session.createQuery(
-                    "SELECT CASE WHEN rp.id IS NOT NULL THEN rp.id ELSE cp.id END AS propertyId, " +
-                            "ra.startContractDate, ra.endContractDate " +
-                            "FROM RentalAgreement ra " +
-                            "LEFT JOIN ra.residentialProperty rp " +
-                            "LEFT JOIN ra.commercialProperty cp " +
-                            "LEFT JOIN rp.hosts r_h " +
-                            "LEFT JOIN cp.hosts c_h " +
-                            "WHERE (r_h.id = :hostId OR c_h.id = :hostId) " +
-                            "AND ra.startContractDate IS NOT NULL " +
-                            "AND ra.endContractDate IS NOT NULL",
+                    "SELECT CASE WHEN rp.id IS NOT NULL THEN rp.id ELSE cp.id END AS propertyId, "
+                    + "ra.startContractDate, ra.endContractDate "
+                    + "FROM RentalAgreement ra "
+                    + "LEFT JOIN ra.residentialProperty rp "
+                    + "LEFT JOIN ra.commercialProperty cp "
+                    + "LEFT JOIN rp.hosts r_h "
+                    + "LEFT JOIN cp.hosts c_h "
+                    + "WHERE (r_h.id = :hostId OR c_h.id = :hostId) "
+                    + "AND ra.startContractDate IS NOT NULL "
+                    + "AND ra.endContractDate IS NOT NULL",
                     Object[].class
             );
             query.setParameter("hostId", hostId);
@@ -677,26 +688,26 @@ public class PropertyDaoImpl implements PropertyDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // Query for Residential Properties
             Query<Object[]> residentialQuery = session.createQuery(
-                    "SELECT rp.id, SUM(p.amount) " +
-                            "FROM Payment p " +
-                            "JOIN p.rentalAgreement ra " +
-                            "JOIN ra.residentialProperty rp " +
-                            "JOIN rp.hosts h " +
-                            "WHERE h.id = :hostId AND p.status = 'PAID' " +
-                            "GROUP BY rp.id",
+                    "SELECT rp.id, SUM(p.amount) "
+                    + "FROM Payment p "
+                    + "JOIN p.rentalAgreement ra "
+                    + "JOIN ra.residentialProperty rp "
+                    + "JOIN rp.hosts h "
+                    + "WHERE h.id = :hostId AND p.status = 'PAID' "
+                    + "GROUP BY rp.id",
                     Object[].class
             );
             residentialQuery.setParameter("hostId", hostId);
 
             // Query for Commercial Properties
             Query<Object[]> commercialQuery = session.createQuery(
-                    "SELECT cp.id, SUM(p.amount) " +
-                            "FROM Payment p " +
-                            "JOIN p.rentalAgreement ra " +
-                            "JOIN ra.commercialProperty cp " +
-                            "JOIN cp.hosts h " +
-                            "WHERE h.id = :hostId AND p.status = 'PAID' " +
-                            "GROUP BY cp.id",
+                    "SELECT cp.id, SUM(p.amount) "
+                    + "FROM Payment p "
+                    + "JOIN p.rentalAgreement ra "
+                    + "JOIN ra.commercialProperty cp "
+                    + "JOIN cp.hosts h "
+                    + "WHERE h.id = :hostId AND p.status = 'PAID' "
+                    + "GROUP BY cp.id",
                     Object[].class
             );
             commercialQuery.setParameter("hostId", hostId);
@@ -723,7 +734,7 @@ public class PropertyDaoImpl implements PropertyDao {
         return incomeByProperty;
     }
 
-    public List<Property> getPropertiesByStatus(Property.propertyStatus status){
+    public List<Property> getPropertiesByStatus(Property.propertyStatus status) {
         return null;
     }
 }

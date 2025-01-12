@@ -135,6 +135,10 @@ public class ViewRentalPropertiesController {
 
             ownerFilterCombo.setItems(FXCollections.observableArrayList(ownerNames));
             ownerFilterCombo.setValue("All Owners");
+        } else if (currentUser.getRole() == UserRole.HOST) {
+            // For hosts, show My Managed Properties/All Properties
+            ownerFilterCombo.getItems().addAll("My Managed Properties", "All Properties");
+            ownerFilterCombo.setValue("All Properties");
         } else {
             // For non-managers, show My Properties/All Properties
             ownerFilterCombo.getItems().addAll("My Properties", "All Properties");
@@ -324,15 +328,21 @@ public class ViewRentalPropertiesController {
                 User currentUser = UserSession.getInstance().getCurrentUser();
                 UserRole userRole = currentUser.getRole();
 
+                // Add status label
+                Label statusLabel = new Label(property.getStatus().toString());
+                statusLabel.getStyleClass().addAll("status-label", "status-" + property.getStatus().toString().toLowerCase());
+                attributes.getChildren().add(statusLabel);
+
                 buttonsBox.getChildren().clear();
                 // Always show view details button
                 buttonsBox.getChildren().add(
                         createActionButton("View Details", "view-button", () -> showPropertyDetails(property))
                 );
 
-                // Show edit/delete buttons only for managers or property owners
                 boolean canEditDelete = userRole == UserRole.MANAGER
-                        || (property.getOwner().getId() == currentUser.getId());
+                        || (property.getOwner().getId() == currentUser.getId())
+                        || (userRole == UserRole.HOST && property.getHosts().stream()
+                                .anyMatch(host -> host.getId() == currentUser.getId()));
 
                 if (canEditDelete) {
                     buttonsBox.getChildren().addAll(
@@ -423,11 +433,19 @@ public class ViewRentalPropertiesController {
                     allProperties = propertyDao.getAllProperties();
                 }
             } else {
-                // Existing logic for non-managers
-                if ("My Properties".equals(ownerFilterCombo.getValue())) {
-                    allProperties = propertyDao.getPropertiesByOwner(currentUser.getId());
+                if (currentUser.getRole() == UserRole.HOST) {
+                    if ("My Managed Properties".equals(ownerFilterCombo.getValue())) {
+                        allProperties = propertyDao.getPropertiesByHostID(currentUser.getId());
+                    } else {
+                        allProperties = propertyDao.getAllProperties();
+                    }
                 } else {
-                    allProperties = propertyDao.getAllProperties();
+                    // Existing logic for non-managers
+                    if ("My Properties".equals(ownerFilterCombo.getValue())) {
+                        allProperties = propertyDao.getPropertiesByOwner(currentUser.getId());
+                    } else {
+                        allProperties = propertyDao.getAllProperties();
+                    }
                 }
             }
 

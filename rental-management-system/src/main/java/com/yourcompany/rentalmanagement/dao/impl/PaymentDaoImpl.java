@@ -67,6 +67,30 @@ public class PaymentDaoImpl implements PaymentDao {
         return payments;
     }
 
+    public List<Payment> getAllPayments() {
+        List<Payment> allPayments = new ArrayList<>();
+        Transaction transaction = null;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // Start the transaction
+            transaction = session.beginTransaction();
+
+            // Execute the query to fetch all Payment records
+            Query<Payment> query = session.createQuery("from Payment", Payment.class);
+            allPayments = query.list();
+
+            // Commit the transaction
+            transaction.commit();
+        } catch (Exception e) {
+            // Rollback transaction in case of an error
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return allPayments;
+    }
+
     @Override
     public Map<String, String> createPayment(Payment payment, long rentalAgreementId) {
         Payment lastPayment = null;
