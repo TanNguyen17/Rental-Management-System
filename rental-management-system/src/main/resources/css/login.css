@@ -12,10 +12,9 @@
 
 /* Tab Pane Styling */
 .login-tab-pane {
-    -fx-tab-min-width: 170px;
-    -fx-tab-max-width: 250px;
+    -fx-tab-min-width: 230px;
+    -fx-tab-max-width: 400px;
     -fx-background-color: transparent;
-    -fx-pref-width: 500;
 }
 
 .login-tab-pane .tab-header-area {
@@ -45,13 +44,7 @@
 
 .tab {
     -fx-background-color: transparent;
-    -fx-background-radius: 0;
-    -fx-border-width: 0 0 1 0;
-    -fx-border-color: transparent;
-    -fx-padding: 10px 20px;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-    -fx-cursor: hand;
+    -fx-padding: 10px 15px;
 }
 
 .tab:hover {
@@ -93,11 +86,10 @@
 .text-field,
 .password-field {
     -fx-background-color: white;
-    -fx-background-radius: 4px;
-    -fx-border-color: #1E3058;
+    -fx-border-color: #E0E0E0;
     -fx-border-radius: 4px;
-    -fx-border-width: 1px;
-    -fx-padding: 8px;
+    -fx-background-radius: 4px;
+    -fx-pref-height: 40px;
     -fx-font-size: 14px;
 }
 
@@ -125,10 +117,9 @@
 .button {
     -fx-background-color: #1E3058;
     -fx-text-fill: white;
-    -fx-background-radius: 4px;
+    -fx-pref-height: 40px;
     -fx-font-size: 14px;
-    -fx-cursor: hand;
-    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
 }
 
 .button:hover {
@@ -149,16 +140,18 @@
 
 /* Welcome Text */
 .welcome-text {
-    -fx-fill: #1E3058;
     -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-margin-bottom: 20px;
+    -fx-fill: #1E3058;
 }
 
 /* Form Container */
 .form-container {
-    -fx-spacing: 15px;
-    -fx-padding: 30px 20px;
+    -fx-spacing: 20px;
+    -fx-padding: 20px 20px;
+    -fx-alignment: CENTER;
+    -fx-min-width: 500px;
+    -fx-pref-width: 550px;
 }
 
 /* Error Message */
@@ -170,17 +163,24 @@
 /* Add these styles */
 .image-container {
     -fx-background-color: #DCE8F8;
+    -fx-min-width: 45%;
+    -fx-padding: 0;
+    -fx-background-insets: 0;
 }
 
-.image-container ImageView {
-    -fx-fit-width: 780px;
-    -fx-fit-height: 720px;
+.login-image {
+    -fx-fit-width: 100%;
+    -fx-fit-height: 100%;
 }
 
 /* Form side */
 .form-side {
     -fx-background-color: white;
-    -fx-padding: 40px;
+    -fx-padding: 60px 40px;
+    -fx-min-width: 600px;
+    -fx-max-width: 700px;
+    -fx-alignment: CENTER;
+    -fx-background-insets: 0;
 }
 
 /* Add spacing between form elements */
@@ -190,6 +190,8 @@
 .button {
     -fx-pref-height: 40px;
     -fx-margin: 10px 0;
+    -fx-max-width: infinity;
+    -fx-min-width: 500px;
 }
 
 /* Hide the tab dropdown button completely */
@@ -209,4 +211,25 @@
     -fx-max-width: 0;
     -fx-pref-width: 0;
     -fx-min-width: 0;
+}
+
+/* Text styling */
+.link-text {
+    -fx-fill: #1E3058;
+    -fx-cursor: hand;
+}
+
+.prompt-text {
+    -fx-fill: #757575;
+}
+
+.signup-prompt {
+    -fx-spacing: 5;
+}
+
+/* Add HBox styling */
+.root>HBox {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-spacing: 0;
 }
