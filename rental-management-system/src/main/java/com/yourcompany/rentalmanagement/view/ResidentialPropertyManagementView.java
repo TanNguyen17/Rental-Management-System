@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class ResidentialPropertyManagementView implements Initializable {
-    ObservableList<ResidentialProperty> residentialProperties;
+    List<ResidentialProperty> residentialProperties = new ArrayList<>();
     ResidentialPropertyController residentialPropertyController = new ResidentialPropertyController();
 
 
@@ -66,7 +66,7 @@ public class ResidentialPropertyManagementView implements Initializable {
             Platform.runLater(() -> {
                 if (!allResidentialProperties.isEmpty()) {
                     residentialProperties.addAll(allResidentialProperties);
-                    residentialPropertyTableView.setItems(residentialProperties);
+                    residentialPropertyTableView.setItems(FXCollections.observableArrayList(residentialProperties));
                 }
             });
         }).start();

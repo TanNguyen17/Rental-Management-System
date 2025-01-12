@@ -20,7 +20,7 @@ import java.util.List;
 
 
 public class UserManagementView {
-    ObservableList<User> users;
+    List<User> users = new ArrayList<>();
     UserController userController = new UserController();
 
     @FXML
@@ -62,11 +62,11 @@ public class UserManagementView {
         configureRoleFilterCheckComboBox();
 
         new Thread(() -> {
-            ObservableList<User> allUsers = FXCollections.observableArrayList(getAllUsers());
+            List<User> allUsers = getAllUsers();
             Platform.runLater(() -> {
                 if (!allUsers.isEmpty()) {
                     users.addAll(allUsers);
-                    userTableView.setItems(users);
+                    userTableView.setItems(FXCollections.observableArrayList(users));
                 }
             });
         }).start();
