@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.yourcompany.rentalmanagement.model.Host;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -65,6 +66,18 @@ public class OwnerDaoImpl implements UserDao {
         }
         return ownerNames;
     }
+
+    public List<Owner> getAllOwners() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Owner> query = session.createQuery("FROM Owner", Owner.class);
+            return query.list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 
     @Override
     public long getTotalUsers() {

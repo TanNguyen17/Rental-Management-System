@@ -3,6 +3,7 @@ package com.yourcompany.rentalmanagement;
 import org.hibernate.SessionFactory;
 
 import com.yourcompany.rentalmanagement.model.UserRole;
+import com.yourcompany.rentalmanagement.service.PaymentScheduler;
 import com.yourcompany.rentalmanagement.util.AddressData;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.UserSession;
@@ -16,17 +17,20 @@ import javafx.stage.Stage;
 public class MainApp extends Application {
 
     private LoginViewController loginViewController = new LoginViewController();
-    private FXMLLoader loader;
+    private PaymentScheduler paymentScheduler = new PaymentScheduler();
+    private FXMLLoader loader = new FXMLLoader();
 
     @Override
     public void start(Stage primaryStage) {
+        new Thread(() -> {
+            paymentScheduler.startPaymentGeneration();
+        });
+        new Thread(() -> {
+            // Load address data
+            AddressData.fetchProvinceData();
+            System.out.println("Province Data fetched: ");
 
-//        new Thread(() -> {
-//            // Load address data
-//            AddressData.fetchProvinceData();
-//            System.out.println("Province Data fetched: ");
-//
-//        }).start();
+        }).start();
 
         try {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -45,17 +49,21 @@ public class MainApp extends Application {
                 } else if (userSession.getCurrentUser().getRole() == UserRole.OWNER) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/OwnerView.fxml"));
                 } else if (userSession.getCurrentUser().getRole() == UserRole.HOST) {
-                    loader = new FXMLLoader(getClass().getResource("/fxml/HostView.fxml"));
+                    loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
+                }  else if (userSession.getCurrentUser().getRole() == UserRole.MANAGER) {
+                    loader = new FXMLLoader(getClass().getResource("/fxml/ManagerView.fxml"));
                 }
             } else {
                 loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
             }
-             //If no valid stored session --> show login view
-
+            // If no valid stored session --> show login view
             Scene scene = new Scene(loader.load());
             scene.getStylesheets().addAll(
                     getClass().getResource("/css/property-list.css").toExternalForm(),
-                    getClass().getResource("/css/side-menu.css").toExternalForm()
+                    getClass().getResource("/css/side-menu.css").toExternalForm(),
+                    getClass().getResource("/css/property-form.css").toExternalForm(),
+                    getClass().getResource("/css/components/loading-spinner.css").toExternalForm(),
+                    getClass().getResource("/css/components/toast.css").toExternalForm()
             );
             primaryStage.setScene(scene);
             primaryStage.setTitle("Rental Management System - Login");

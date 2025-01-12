@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement.dao;
 
+import com.yourcompany.rentalmanagement.model.Owner;
+
 import java.util.List;
 
 import java.util.Map;

@@ -2,6 +2,7 @@ package com.yourcompany.rentalmanagement.dao.impl;
 
 import com.yourcompany.rentalmanagement.dao.UserDao;
 import com.yourcompany.rentalmanagement.model.Address;
+import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.TimeFormat;
@@ -34,6 +35,16 @@ public class TenantDaoImpl implements UserDao {
 
     @Override
     public List<String> getAllUserName(){
+        return null;
+    }
+
+    public List<Tenant> getAllTenants() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Tenant> query = session.createQuery("FROM Tenant", Tenant.class);
+            return query.list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

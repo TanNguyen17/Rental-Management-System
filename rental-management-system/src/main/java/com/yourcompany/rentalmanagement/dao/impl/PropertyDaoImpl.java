@@ -424,7 +424,13 @@ public class PropertyDaoImpl implements PropertyDao {
             Query<CommercialProperty> query = session.createQuery(
                     "FROM CommercialProperty", CommercialProperty.class);
             return query.list();
+        }  catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
         }
+        return null;
     }
 
     @Override
@@ -432,8 +438,16 @@ public class PropertyDaoImpl implements PropertyDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<ResidentialProperty> query = session.createQuery(
                     "FROM ResidentialProperty", ResidentialProperty.class);
+            System.out.println("Get residential property successfully!");
             return query.list();
+
+        }  catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        e.printStackTrace();
         }
+        return null;
     }
 
     @Override
