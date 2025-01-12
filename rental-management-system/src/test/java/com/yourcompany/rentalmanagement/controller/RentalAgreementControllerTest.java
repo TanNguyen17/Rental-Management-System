@@ -114,7 +114,7 @@ class RentalAgreementControllerTest {
                 eq(rentalAgreement), eq(1L), eq(property), eq(2L), eq(3L), anyList())
         ).thenReturn(mockData);
 
-        rentalAgreementController.createRentalAgreement(rentalAgreement, 1L, property, 2L, 3L, List.of(4L));
+        rentalAgreementController.createRentalAgreement(rentalAgreement, 1L, property, 1L, 1L, List.of(2L));
 
         verify(rentalAgreementDaoMock, times(1)).createRentalAgreement(
                 eq(rentalAgreement), eq(1L), eq(property), eq(2L), eq(3L), anyList()
