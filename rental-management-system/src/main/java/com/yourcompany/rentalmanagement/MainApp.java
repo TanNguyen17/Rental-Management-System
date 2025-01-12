@@ -49,7 +49,7 @@ public class MainApp extends Application {
                 } else if (userSession.getCurrentUser().getRole() == UserRole.OWNER) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/OwnerView.fxml"));
                 } else if (userSession.getCurrentUser().getRole() == UserRole.HOST) {
-                    loader = new FXMLLoader(getClass().getResource("/fxml/HostDashboardView.fxml"));
+                    loader = new FXMLLoader(getClass().getResource("/fxml/HostView.fxml"));
                 }  else if (userSession.getCurrentUser().getRole() == UserRole.MANAGER) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/ManagerView.fxml"));
                 }
