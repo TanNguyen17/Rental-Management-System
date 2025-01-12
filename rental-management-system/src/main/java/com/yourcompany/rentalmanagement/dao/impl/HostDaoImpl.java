@@ -1,5 +1,9 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
+/**
+ * @author FTech
+ */
+
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -55,10 +59,13 @@ public class HostDaoImpl implements HostDao {
                 host.setDob(LocalDate.parse((String) profile.get("dob")));
                 host.setEmail((String) profile.get("email"));
                 host.setPhoneNumber(profile.get("phoneNumber").toString());
+                result.put("status", "success");
+                result.put("message", "Address updated successfully");
+                transaction.commit();
+                return result;
             }
             transaction.commit();
-            result.put("status", "success");
-            result.put("message", "Address updated successfully");
+            result.put("status", "failed");
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -80,10 +87,13 @@ public class HostDaoImpl implements HostDao {
             if (host != null) {
                 host.setProfileImage(imageLink);
                 session.persist(host);
+                transaction.commit();
+                result.put("status", "success");
+                result.put("message", "Image updated successfully");
+                return result;
             }
             transaction.commit();
-            result.put("status", "success");
-            result.put("message", "Image updated successfully");
+            result.put("status", "failed");
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -110,8 +120,7 @@ public class HostDaoImpl implements HostDao {
                     address.setDistrict(data.get("district").toString());
                     address.setWard(data.get("ward").toString());
                     address.setNumber(data.get("streetNumber").toString());
-                    address.setStreet(data.get("streetNam" +
-                            "e").toString());
+                    address.setStreet(data.get("streetName").toString());
                 } else {
                     Address address = new Address();
                     address.setCity(data.get("province").toString());
@@ -121,11 +130,14 @@ public class HostDaoImpl implements HostDao {
                     address.setStreet(data.get("streetName").toString());
                     host.setAddress(address);
                 }
+                transaction.commit();
+                result.put("status", "success");
+                result.put("message", "Address updated successfully");
+                return result;
             }
 
             transaction.commit();
-            result.put("status", "success");
-            result.put("message", "Address updated successfully");
+            result.put("status", "failed");
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -150,6 +162,26 @@ public class HostDaoImpl implements HostDao {
                 result.put("message", "Password does not match");
                 return result;
             }
+            transaction.commit();
+            result.put("status", "success");
+            result.put("message", "Password changed successfully");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            result.put("status", "failed");
+            result.put("message", e.getMessage());
+        }
+        return result;
+    }
+
+    public Map<String, Object> setPassword(long id, String newPassword) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            host = session.get(Host.class, id);
+            host.setHashedPassword(newPassword);
             transaction.commit();
             result.put("status", "success");
             result.put("message", "Password changed successfully");

@@ -1,5 +1,9 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
+/**
+ * @author FTech
+ */
+
 import com.yourcompany.rentalmanagement.model.*;
 import com.yourcompany.rentalmanagement.dao.RentalAgreementDao;
 import com.yourcompany.rentalmanagement.model.Payment;
@@ -369,11 +373,6 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
         );
     }
 
-    public static void main(String[] args) {
-        RentalAgreementDaoImpl dao = new RentalAgreementDaoImpl();
-        dao.printMonthlyRentalCounts("commercial");
-        dao.printMonthlyRentalCounts("residential");
-    }
     @Override
     public Map<String, Object> createRentalAgreement(Map<String, Object> data){
         try (Session session = HibernateUtil.getSessionFactory().openSession()){
@@ -452,4 +451,11 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
         return result;
     }
 
+    public static void main(String[] args) {
+        RentalAgreementDaoImpl dao = new RentalAgreementDaoImpl();
+        HostDaoImpl hostDao = new HostDaoImpl();
+        for (int i = 20; i < 50 ; i++) {
+            dao.getRentalAgreementById(i).setHost(hostDao.getHostById(58));
+        }
+    }
 }

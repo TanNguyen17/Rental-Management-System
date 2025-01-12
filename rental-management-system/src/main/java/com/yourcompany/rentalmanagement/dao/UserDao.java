@@ -1,5 +1,9 @@
 package com.yourcompany.rentalmanagement.dao;
 
+/**
+ * @author FTech
+ */
+
 import com.yourcompany.rentalmanagement.model.Owner;
 
 import java.util.List;
@@ -15,8 +19,6 @@ public interface UserDao {
     void loadData();
 
     public long getTotalUsers();
-
-    public List<String> getAllUserName();
 
     public Map<String, Object> updateProfile(long id, Map<String, Object> profile);
 

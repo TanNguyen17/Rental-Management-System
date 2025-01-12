@@ -1,5 +1,10 @@
 package com.yourcompany.rentalmanagement.dao.impl;
 
+
+/**
+ * @author FTech
+ */
+
 import com.yourcompany.rentalmanagement.dao.PaymentDao;
 import com.yourcompany.rentalmanagement.model.*;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;

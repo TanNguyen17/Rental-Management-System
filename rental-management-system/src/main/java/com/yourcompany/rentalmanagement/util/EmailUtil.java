@@ -1,4 +1,7 @@
 package com.yourcompany.rentalmanagement.util;
+/**
+ * @author FTech
+ */
 import io.github.cdimascio.dotenv.Dotenv;
 
 import javax.mail.*;

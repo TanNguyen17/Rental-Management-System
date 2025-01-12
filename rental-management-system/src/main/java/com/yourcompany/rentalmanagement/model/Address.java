@@ -1,5 +1,9 @@
 package com.yourcompany.rentalmanagement.model;
 
+/**
+ * @author FTech
+ */
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +36,16 @@ public class Address {
 
     @Column(name = "city", nullable = false)
     private String city;
+
+    public Address() {
+    }
+    public Address(String number, String street, String ward, String district, String city) {
+        this.number = number;
+        this.street = street;
+        this.ward = ward;
+        this.district = district;
+        this.city = city;
+    }
 
     public long getId() {
         return id;

@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement.view;
-
+/**
+ * @author FTech
+ */
 import com.yourcompany.rentalmanagement.util.UserSession;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

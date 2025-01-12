@@ -1,5 +1,9 @@
 package com.yourcompany.rentalmanagement.model;
 
+/**
+ * @author FTech
+ */
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;

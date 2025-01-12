@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement.data;
-
+/**
+ * @author FTech
+ */
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

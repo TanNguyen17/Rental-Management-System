@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement.dao.impl;
-
+/**
+ * @author FTech
+ */
 import com.yourcompany.rentalmanagement.model.Manager;
 import com.yourcompany.rentalmanagement.model.UserRole;
 import org.hibernate.JDBCException;

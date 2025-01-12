@@ -1,5 +1,7 @@
 package com.yourcompany.rentalmanagement.view;
-
+/**
+ * @author FTech
+ */
 import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.util.TimeFormat;
 import javafx.fxml.FXML;

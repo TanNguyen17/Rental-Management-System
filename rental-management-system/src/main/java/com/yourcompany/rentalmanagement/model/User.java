@@ -1,5 +1,9 @@
 package com.yourcompany.rentalmanagement.model;
 
+/**
+ * @author FTech
+ */
+
 import java.time.LocalDate;
 
 import org.mindrot.jbcrypt.BCrypt;
