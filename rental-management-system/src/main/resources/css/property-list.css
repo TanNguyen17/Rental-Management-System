@@ -161,8 +161,76 @@
 
 .main-container {
     -fx-background-color: white;
-    -fx-padding: 0;
-    -fx-fill-width: true;
+    -fx-padding: 32px;
+}
+
+.header-section {
+    -fx-padding: 0 0 16 0;
+}
+
+.page-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-fill: #1E3058;
+}
+
+.filter-section {
+    -fx-background-color: #DCE8F8;
+    -fx-padding: 24px;
+    -fx-background-radius: 8px;
+}
+
+.filter-group {
+    -fx-min-width: 200px;
+}
+
+.filter-label {
+    -fx-font-size: 14px;
+    -fx-fill: #1E3058;
+    -fx-font-weight: bold;
+}
+
+.filter-choice {
+    -fx-background-color: white;
+    -fx-border-color: #1E3058;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-pref-width: 200px;
+    -fx-pref-height: 40px;
+}
+
+.filter-choice:hover {
+    -fx-cursor: hand;
+}
+
+.find-button {
+    -fx-background-color: #1E3058;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 24;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+    -fx-min-height: 40px;
+    -fx-translate-y: 24px;
+}
+
+.find-button:hover {
+    -fx-background-color: derive(#1E3058, 10%);
+}
+
+.property-scroll {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+.property-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.property-list-view {
+    -fx-background-color: transparent;
+    -fx-padding: 8px;
 }
 
 .property-scroll {

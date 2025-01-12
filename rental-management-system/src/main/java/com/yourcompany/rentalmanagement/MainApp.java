@@ -28,7 +28,6 @@ public class MainApp extends Application {
         }).start();
 
         new Thread(() -> {
-            // Load address data
             AddressData.fetchProvinceData();
             System.out.println("Province Data fetched: ");
         }).start();
@@ -38,26 +37,25 @@ public class MainApp extends Application {
             if (sessionFactory != null) {
                 System.out.println("Hibernate initialized successfully!");
             }
-            // Check stored token
+
             UserSession userSession = UserSession.getInstance();
             if (userSession.getCurrentUser() != null) {
                 System.out.println("Found stored session for user: "
                         + userSession.getCurrentUser().getUsername());
 
-                // Ae co j implement cai nay when ae tao main view nhe
                 if (userSession.getCurrentUser().getRole() == UserRole.TENANT) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/TenantView.fxml"));
                 } else if (userSession.getCurrentUser().getRole() == UserRole.OWNER) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/OwnerView.fxml"));
                 } else if (userSession.getCurrentUser().getRole() == UserRole.HOST) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/HostView.fxml"));
-                }  else if (userSession.getCurrentUser().getRole() == UserRole.MANAGER) {
+                } else if (userSession.getCurrentUser().getRole() == UserRole.MANAGER) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/ManagerView.fxml"));
                 }
             } else {
                 loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
             }
-            // If no valid stored session --> show login view
+
             Scene scene = new Scene(loader.load());
             scene.getStylesheets().addAll(
                     getClass().getResource("/css/property-list.css").toExternalForm(),
@@ -66,19 +64,28 @@ public class MainApp extends Application {
                     getClass().getResource("/css/components/loading-spinner.css").toExternalForm(),
                     getClass().getResource("/css/components/toast.css").toExternalForm()
             );
+
+            // Set default window size
+            primaryStage.setWidth(1280);
+            primaryStage.setHeight(720);
+
+            // Set minimum dimensions
+            primaryStage.setMinWidth(1024);
+            primaryStage.setMinHeight(768);
+
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Rental Management System - Login");
+            String title = userSession.getCurrentUser() != null
+                    ? "Rental Management System - " + userSession.getCurrentUser().getRole()
+                    : "Rental Management System - Login";
+            primaryStage.setTitle(title);
 
-            // minimum dimensions
-            primaryStage.setMinWidth(800);
-            primaryStage.setMinHeight(600);
+            // Center on screen before maximizing
+            primaryStage.centerOnScreen();
 
-            primaryStage.setResizable(true);
-
-            // default
+            // Set to maximized
             primaryStage.setMaximized(true);
-
             primaryStage.show();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
