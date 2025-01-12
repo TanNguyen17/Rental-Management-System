@@ -12,6 +12,7 @@ import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.UserSession;
 import com.yourcompany.rentalmanagement.view.components.Toast;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -157,45 +158,48 @@ public class LoginViewController {
     public void navigateToMainView() {
         try {
             User currentUser = UserSession.getInstance().getCurrentUser();
+            FXMLLoader loader = null;
 
-            if (currentUser instanceof Owner) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OwnerView.fxml"));
+            if (currentUser instanceof Tenant) {
+                loader = new FXMLLoader(getClass().getResource("/fxml/TenantView.fxml"));
+            } else if (currentUser instanceof Owner) {
+                loader = new FXMLLoader(getClass().getResource("/fxml/OwnerView.fxml"));
+            } else if (currentUser instanceof Manager) {
+                loader = new FXMLLoader(getClass().getResource("/fxml/ManagerView.fxml"));
+            } else if (currentUser instanceof Host) {
+                loader = new FXMLLoader(getClass().getResource("/fxml/HostView.fxml"));
+            }
+
+            if (loader != null) {
+                Stage stage = (Stage) messageLabel.getScene().getWindow();
                 Scene scene = new Scene(loader.load());
 
+                // Add stylesheets
                 scene.getStylesheets().addAll(
-                        getClass().getResource("/css/common.css").toExternalForm(),
-                        getClass().getResource("/css/property-list.css").toExternalForm()
+                        getClass().getResource("/css/property-list.css").toExternalForm(),
+                        getClass().getResource("/css/side-menu.css").toExternalForm(),
+                        getClass().getResource("/css/property-form.css").toExternalForm(),
+                        getClass().getResource("/css/components/loading-spinner.css").toExternalForm(),
+                        getClass().getResource("/css/components/toast.css").toExternalForm()
                 );
 
-                Stage stage = (Stage) messageLabel.getScene().getWindow();
+                stage.setMaximized(false);
+                stage.setWidth(1280);
+                stage.setHeight(720);
+
+                stage.setMinWidth(1024);
+                stage.setMinHeight(768);
+
                 stage.setScene(scene);
-                stage.setTitle("Rental Management System");
-                stage.show();
-            } else if (currentUser instanceof Tenant) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TenantView.fxml"));
-                Scene scene = new Scene(loader.load());
-                Stage stage = (Stage) messageLabel.getScene().getWindow();
-                stage.setScene(scene);
-                stage.setTitle("Rental Management System");
-                stage.show();
-            } else if (currentUser instanceof Manager) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ManagerView.fxml"));
-                Scene scene = new Scene(loader.load());
-                Stage stage = (Stage) messageLabel.getScene().getWindow();
-                stage.setScene(scene);
-                stage.setTitle("Rental Management System");
+                stage.setTitle("Rental Management System - " + currentUser.getRole());
+
+                stage.centerOnScreen();
+
                 stage.show();
 
-            } else if (currentUser instanceof Host) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HostView.fxml"));
-                Scene scene = new Scene(loader.load());
-                Stage stage = (Stage) messageLabel.getScene().getWindow();
-                stage.setScene(scene);
-                stage.setTitle("Rental Management System");
-                stage.show();
-            } else {
-                // Load for different roles
-                showSuccessMessage("Login successful! Other views will be implemented later...");
+                Platform.runLater(() -> {
+                    stage.setMaximized(true);
+                });
             }
         } catch (IOException e) {
             showErrorMessage("Error loading view: " + e.getMessage());
