@@ -1,4 +1,5 @@
 package com.yourcompany.rentalmanagement.view;
+
 /**
  * @author FTech
  */
@@ -92,8 +93,6 @@ public class PropertyFormController {
     private ComboBox<Host> hostComboBox;
     private final HostDao hostDao;
 
-    private LoadingSpinner loadingSpinner;
-
     private boolean isEditMode = false;
     private Property propertyToEdit;
 
@@ -129,7 +128,6 @@ public class PropertyFormController {
         });
 
         setupFilters();
-        setupLoadingSpinner();
 
         priceField.textProperty().addListener((obs, old, newValue) -> {
             if (!newValue.matches("\\d*\\.?\\d*")) {
@@ -145,9 +143,6 @@ public class PropertyFormController {
                 showWarning("Warning: Without a host, tenants can only view the property");
             }
         });
-
-        // loading spinner
-        setupLoadingSpinner();
 
         propertyTypeCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
             updateFieldVisibility(newVal);
@@ -248,49 +243,31 @@ public class PropertyFormController {
             return;
         }
 
-        loadingSpinner.show();
-
-        // Upload image in background
-        CompletableFuture.supplyAsync(() -> {
-            try {
-                if (selectedImage != null) {
-                    return cloudinaryService.uploadImage(selectedImage);
-                } else if (isEditMode) {
-                    return propertyToEdit.getImageLink();
-                }
-                throw new IllegalStateException("Please select an image");
-            } catch (Exception e) {
-                throw new CompletionException(e);
+        try {
+            if (selectedImage != null) {
+                String imageUrl = cloudinaryService.uploadImage(selectedImage);
+            } else if (isEditMode) {
+                String imageUrl = propertyToEdit.getImageLink();
             }
-        }).thenAcceptAsync(imageUrl -> {
-            try {
-                if (isEditMode) {
-                    updateProperty(imageUrl);
-                } else {
-                    createNewProperty(imageUrl);
-                }
 
-                Platform.runLater(() -> {
-                    showSuccess(isEditMode ? "Property updated successfully!" : "Property created successfully!");
-                    ((Stage) titleField.getScene().getWindow()).close();
-                });
-            } catch (Exception e) {
-                Platform.runLater(() -> showError("Error: " + e.getMessage()));
-            } finally {
-                Platform.runLater(() -> loadingSpinner.hide());
+            if (isEditMode) {
+                updateProperty();
+            } else {
+                createNewProperty();
             }
-        }, Platform::runLater).exceptionally(throwable -> {
+
             Platform.runLater(() -> {
-                showError(throwable.getMessage());
-                loadingSpinner.hide();
+                showSuccess(isEditMode ? "Property updated successfully!" : "Property created successfully!");
+                ((Stage) titleField.getScene().getWindow()).close();
             });
-            return null;
-        });
+        } catch (Exception e) {
+            Platform.runLater(() -> showError("Error: " + e.getMessage()));
+        }
     }
 
-    private void createCommercialProperty(String imageUrl) {
+    private void createCommercialProperty() {
         CommercialProperty property = new CommercialProperty();
-        setCommonProperties(property, imageUrl);
+        setCommonProperties(property);
 
         property.setBusinessType(businessTypeField.getText());
         property.setParkingSpace(parkingSpaceCheck.isSelected());
@@ -299,9 +276,9 @@ public class PropertyFormController {
         propertyDao.createCommercialProperty(property);
     }
 
-    private void createResidentialProperty(String imageUrl) {
+    private void createResidentialProperty() {
         ResidentialProperty property = new ResidentialProperty();
-        setCommonProperties(property, imageUrl);
+        setCommonProperties(property);
 
         property.setNumberOfBedrooms(Integer.parseInt(bedroomsField.getText()));
         property.setGardenAvailability(gardenCheck.isSelected());
@@ -310,12 +287,11 @@ public class PropertyFormController {
         propertyDao.createResidentialProperty(property);
     }
 
-    private void setCommonProperties(Property property, String imageUrl) {
+    private void setCommonProperties(Property property) {
         property.setTitle(titleField.getText());
         property.setDescription(descriptionField.getText());
         property.setPrice(Double.parseDouble(priceField.getText()));
         property.setStatus(statusCombo.getValue());
-        property.setImageLink(imageUrl);
 
         Address address = new Address();
         address.setStreet(streetField.getText());
@@ -509,17 +485,17 @@ public class PropertyFormController {
         setupFilters(); // This will handle the status combo setup
     }
 
-    private void updateProperty(String imageUrl) {
+    private void updateProperty() {
         if (propertyToEdit instanceof ResidentialProperty) {
             ResidentialProperty property = (ResidentialProperty) propertyToEdit;
-            setCommonProperties(property, imageUrl);
+            setCommonProperties(property);
             property.setNumberOfBedrooms(Integer.parseInt(bedroomsField.getText()));
             property.setGardenAvailability(gardenCheck.isSelected());
             property.setPetFriendliness(petFriendlyCheck.isSelected());
             propertyDao.updateProperty(property);
         } else if (propertyToEdit instanceof CommercialProperty) {
             CommercialProperty property = (CommercialProperty) propertyToEdit;
-            setCommonProperties(property, imageUrl);
+            setCommonProperties(property);
             property.setBusinessType(businessTypeField.getText());
             property.setParkingSpace(parkingSpaceCheck.isSelected());
             property.setSquareFootage(Double.parseDouble(squareFootageField.getText()));
@@ -527,11 +503,11 @@ public class PropertyFormController {
         }
     }
 
-    private void createNewProperty(String imageUrl) {
+    private void createNewProperty() {
         if ("Commercial".equals(propertyTypeCombo.getValue())) {
-            createCommercialProperty(imageUrl);
+            createCommercialProperty();
         } else {
-            createResidentialProperty(imageUrl);
+            createResidentialProperty();
         }
     }
 
@@ -553,41 +529,6 @@ public class PropertyFormController {
         parkingSpaceCheck.setManaged(!isResidential);
         squareFootageField.setVisible(!isResidential);
         squareFootageField.setManaged(!isResidential);
-    }
-
-    private void setupLoadingSpinner() {
-        loadingSpinner = new LoadingSpinner();
-
-        Platform.runLater(() -> {
-            if (titleField.getScene() != null) {
-                // Get the root ScrollPane
-                ScrollPane scrollPane = (ScrollPane) titleField.getScene().getRoot();
-                Node originalContent = scrollPane.getContent();
-
-                // Create a container for the spinner and content
-                StackPane container = new StackPane();
-                container.getStyleClass().add("form-container");
-
-                // Add the original content and spinner to the container
-                container.getChildren().addAll(originalContent, loadingSpinner);
-
-                // Configure spinner
-                loadingSpinner.setVisible(false);
-                loadingSpinner.setMouseTransparent(true);
-                loadingSpinner.toFront();
-
-                // Set size bindings
-                loadingSpinner.prefWidthProperty().bind(container.widthProperty());
-                loadingSpinner.prefHeightProperty().bind(container.heightProperty());
-
-                // Set the container as the ScrollPane's content
-                scrollPane.setContent(container);
-
-                // Add method to show/hide spinner
-                loadingSpinner.show();
-                loadingSpinner.hide();
-            }
-        });
     }
 
     private void initializeAddressFields() {
