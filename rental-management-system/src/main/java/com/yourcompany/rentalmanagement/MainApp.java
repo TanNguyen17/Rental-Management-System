@@ -2,10 +2,10 @@ package com.yourcompany.rentalmanagement;
 /**
  * @author FTech
  */
+import com.yourcompany.rentalmanagement.model.User;
 import org.hibernate.SessionFactory;
 
-import com.yourcompany.rentalmanagement.model.UserRole;
-import com.yourcompany.rentalmanagement.service.PaymentScheduler;
+//import com.yourcompany.rentalmanagement.service.PaymentScheduler;
 import com.yourcompany.rentalmanagement.util.AddressData;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.UserSession;
@@ -19,15 +19,15 @@ import javafx.stage.Stage;
 public class MainApp extends Application {
 
     private LoginViewController loginViewController = new LoginViewController();
-    private PaymentScheduler paymentScheduler = new PaymentScheduler();
+//    private PaymentScheduler paymentScheduler = new PaymentScheduler();
     private FXMLLoader loader = new FXMLLoader();
 
     @Override
     public void start(Stage primaryStage) {
-        new Thread(() -> {
-            paymentScheduler.startPaymentGeneration();
-            System.out.println("Payment generation started");
-        }).start();
+//        new Thread(() -> {
+//            paymentScheduler.startPaymentGeneration();
+//            System.out.println("Payment generation started");
+//        }).start();
 
         new Thread(() -> {
             AddressData.fetchProvinceData();
@@ -35,23 +35,23 @@ public class MainApp extends Application {
         }).start();
 
         try {
-            SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-            if (sessionFactory != null) {
-                System.out.println("Hibernate initialized successfully!");
-            }
+//            SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+//            if (sessionFactory != null) {
+//                System.out.println("Hibernate initialized successfully!");
+//            }
 
             UserSession userSession = UserSession.getInstance();
             if (userSession.getCurrentUser() != null) {
                 System.out.println("Found stored session for user: "
                         + userSession.getCurrentUser().getUsername());
 
-                if (userSession.getCurrentUser().getRole() == UserRole.TENANT) {
+                if (userSession.getCurrentUser().getRole() ==  User.UserRole.TENANT) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/TenantView.fxml"));
-                } else if (userSession.getCurrentUser().getRole() == UserRole.OWNER) {
+                } else if (userSession.getCurrentUser().getRole() == User.UserRole.OWNER) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/OwnerView.fxml"));
-                } else if (userSession.getCurrentUser().getRole() == UserRole.HOST) {
+                } else if (userSession.getCurrentUser().getRole() == User.UserRole.HOST) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/HostView.fxml"));
-                } else if (userSession.getCurrentUser().getRole() == UserRole.MANAGER) {
+                } else if (userSession.getCurrentUser().getRole() == User.UserRole.MANAGER) {
                     loader = new FXMLLoader(getClass().getResource("/fxml/ManagerView.fxml"));
                 }
             } else {

@@ -4,27 +4,25 @@ package com.yourcompany.rentalmanagement.model;
  * @author FTech
  */
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.JoinTable;
+import com.yourcompany.rentalmanagement.service.UserEventListener;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.System.*;
 
+//@EntityListeners(UserEventListener.class)
 @Entity
 @Table(name = "Host", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
 public class Host extends User {
     @ManyToMany(mappedBy = "hosts", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Owner> owners = new ArrayList<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
     @JoinTable(
             name = "Host_ResidentialProperty",
             joinColumns = {
@@ -35,7 +33,10 @@ public class Host extends User {
     )
     private List<ResidentialProperty> residentialProperties = new ArrayList<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
     @JoinTable(
             name = "Host_CommercialProperty",
             joinColumns = {
@@ -46,7 +47,7 @@ public class Host extends User {
     )
     private List<CommercialProperty> commercialProperties = new ArrayList<>();
 
-    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "host")
     private List<RentalAgreement> rentalAgreements = new ArrayList<>();
 
     public List<Owner> getOwners() {

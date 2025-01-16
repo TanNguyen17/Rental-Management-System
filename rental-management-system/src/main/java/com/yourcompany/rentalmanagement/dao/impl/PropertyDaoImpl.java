@@ -320,7 +320,7 @@ public class PropertyDaoImpl implements PropertyDao {
     }
 
     @Override
-    public List<Property> getPropertiesAvailableForRenting(Property.propertyStatus status) {
+    public List<Property> getPropertiesAvailableForRenting(Property.PropertyStatus status) {
         String cacheKey = "available_" + status;
         if (propertyCache.containsKey(cacheKey) && isCacheValid()) {
             return propertyCache.get(cacheKey);
@@ -360,7 +360,7 @@ public class PropertyDaoImpl implements PropertyDao {
     }
 
     @Override
-    public List<Property> getPropertiesAvailableForRenting(Property.propertyStatus status, Map<String, Object> filter) {
+    public List<Property> getPropertiesAvailableForRenting(Property.PropertyStatus status, Map<String, Object> filter) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
@@ -738,7 +738,7 @@ public class PropertyDaoImpl implements PropertyDao {
         return incomeByProperty;
     }
 
-    public List<Property> getPropertiesByStatus(Property.propertyStatus status) {
+    public List<Property> getPropertiesByStatus(Property.PropertyStatus status) {
         return null;
     }
 }

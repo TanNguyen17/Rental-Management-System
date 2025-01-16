@@ -7,14 +7,20 @@ package com.yourcompany.rentalmanagement.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.yourcompany.rentalmanagement.service.UserEventListener;
 import jakarta.persistence.*;
 
+//@EntityListeners(UserEventListener.class)
 @Entity
 @Table(name = "Tenant", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"id"})})
 public class Tenant extends User {
 
-    @ManyToMany(targetEntity = RentalAgreement.class, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(
+            targetEntity = RentalAgreement.class,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
     @JoinTable(
             name = "Tenant_RentalAgreement",
             joinColumns = {
@@ -26,7 +32,7 @@ public class Tenant extends User {
     )
     private List<RentalAgreement> rentalAgreements = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tenant", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @OneToMany(mappedBy = "tenant", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<Payment> payments = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

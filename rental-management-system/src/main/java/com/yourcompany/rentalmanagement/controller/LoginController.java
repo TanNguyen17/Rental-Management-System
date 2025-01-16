@@ -5,7 +5,6 @@ package com.yourcompany.rentalmanagement.controller;
  */
 
 import com.yourcompany.rentalmanagement.model.User;
-import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.service.AuthService;
 import com.yourcompany.rentalmanagement.util.UserSession;
 import com.yourcompany.rentalmanagement.view.LoginViewController;
@@ -35,7 +34,7 @@ public class LoginController {
         }
     }
 
-    public void handleSignup(String username, String password, String email, UserRole role) {
+    public void handleSignup(String username, String password, String email, User.UserRole role) {
         try {
             User user = authService.registerUser(username, password, email, role);
             String token = authService.generateToken(user);

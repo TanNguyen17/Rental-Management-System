@@ -117,7 +117,7 @@ public class PropertyView implements Initializable {
         loadingSpinner.show();
         //Handle exceptions from the controller
         try {
-            properties = propertyController.getPropertyByStatus(Property.propertyStatus.AVAILABLE, data);
+            properties = propertyController.getPropertyByStatus(Property.PropertyStatus.AVAILABLE, data);
             propertyList.setItems(FXCollections.observableList(properties));
         } catch (Exception e) {
             System.err.println("Error loading properties: " + e.getMessage());

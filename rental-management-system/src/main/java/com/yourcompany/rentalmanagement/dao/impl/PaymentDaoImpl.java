@@ -126,7 +126,7 @@ public class PaymentDaoImpl implements PaymentDao {
     }
 
     @Override
-    public List<Payment> loadDataByRole(int pageNumber, Map<String, String> filterValue, UserRole userRole, long userId) {
+    public List<Payment> loadDataByRole(int pageNumber, Map<String, String> filterValue, User.UserRole userRole, long userId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
@@ -136,11 +136,10 @@ public class PaymentDaoImpl implements PaymentDao {
 
             List<Predicate> predicates = new ArrayList<>();
 
+            // Filter base on condition
             if (filterValue != null) {
                 String method = filterValue.get("method");
                 String status = filterValue.get("status");
-
-                Predicate predicate = null;
 
                 if (method != null) {
                     predicates.add(criteriaBuilder.equal(paymentRoot.get("method"), method));
@@ -150,27 +149,26 @@ public class PaymentDaoImpl implements PaymentDao {
                 }
             }
 
+            // Filtering based on userRole
             if (userRole != null) {
-                // Filtering based on userRole
-                if (userRole.equals(UserRole.TENANT)) {
-                    // Many to one relationship
+                if (userRole.equals(User.UserRole.TENANT)) {
                     Join<Payment, Tenant> tenant = paymentRoot.join("tenant", JoinType.INNER);
                     predicates.add(criteriaBuilder.equal(tenant.get("id"), userId));
-//                    criteriaQuery.select(paymentRoot);
-//                    criteriaQuery.where(criteriaBuilder.equal(tenant.get("id"), userId));
-                } else if (userRole.equals(UserRole.HOST)) {
+                } else if (userRole.equals(User.UserRole.HOST)) {
                     Join<Payment, RentalAgreement> rentalAgreementJoin = paymentRoot.join("rentalAgreement", JoinType.INNER);
                     Join<RentalAgreement, Host> rentalAgreementHostJoin = rentalAgreementJoin.join("host", JoinType.INNER);
                     predicates.add(criteriaBuilder.equal(rentalAgreementHostJoin.get("id"), userId));
                 }
             }
 
+            // Add predicate to the query
             if (!predicates.isEmpty()) {
-                criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
+                criteriaQuery.where(predicates.toArray(new Predicate[0]));
             }
 
             TypedQuery<Payment> query = session.createQuery(criteriaQuery);
 
+            // Get the result from a range
             if (pageNumber > 0) {
                 query.setFirstResult((pageNumber - 1) * 10);
                 query.setMaxResults(10);
@@ -226,29 +224,53 @@ public class PaymentDaoImpl implements PaymentDao {
 
 
     @Override
-    public Long getPaymentCount(Map<String, String> filterValue) {
+    public Long getPaymentCountByRole(Map<String, String> filterValue, User.UserRole userRole, long userId) {
         Long count = null;
         Query<Long> paymentCount = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            paymentCount = session.createQuery("SELECT COUNT(*) FROM Payment", Long.class);
+            // Set up criteria query
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+            Root<Payment> paymentRoot = criteriaQuery.from(Payment.class);
+            // Set up criteria query count
+            criteriaQuery.select(criteriaBuilder.count(paymentRoot));
+
+            List<Predicate> predicates = new ArrayList<>();
+
+            // Filter base on condition
             if (filterValue != null) {
                 String method = filterValue.get("method");
                 String status = filterValue.get("status");
-                System.out.println(method);
-                System.out.println(status);
-                if (method != null && status != null) {
-                    paymentCount = session.createQuery("SELECT COUNT(*) FROM Payment WHERE method = :method AND status = :status", Long.class);
-                    paymentCount.setParameter("method", method);
-                    paymentCount.setParameter("status", status);
-                } else if (status != null) {
-                    paymentCount = session.createQuery("SELECT COUNT(*) FROM Payment WHERE status = :status", Long.class);
-                    paymentCount.setParameter("status", status);
-                } else if (method != null) {
-                    paymentCount = session.createQuery("SELECT COUNT(*) FROM Payment WHERE method = :method", Long.class);
-                    paymentCount.setParameter("method", method);
+
+                if (method != null) {
+                    predicates.add(criteriaBuilder.equal(paymentRoot.get("method"), method));
+                }
+                if (status != null) {
+                    predicates.add(criteriaBuilder.equal(paymentRoot.get("status"), status));
                 }
             }
-            count = paymentCount.uniqueResult();
+
+            // Filtering based on userRole
+            if (userRole != null) {
+                if (userRole.equals(User.UserRole.TENANT)) {
+                    Join<Payment, Tenant> tenant = paymentRoot.join("tenant", JoinType.INNER);
+                    predicates.add(criteriaBuilder.equal(tenant.get("id"), userId));
+                } else if (userRole.equals(User.UserRole.HOST)) {
+                    Join<Payment, RentalAgreement> rentalAgreementJoin = paymentRoot.join("rentalAgreement", JoinType.INNER);
+                    Join<RentalAgreement, Host> rentalAgreementHostJoin = rentalAgreementJoin.join("host", JoinType.INNER);
+                    predicates.add(criteriaBuilder.equal(rentalAgreementHostJoin.get("id"), userId));
+                }
+            }
+
+            // Add predicate to the query
+            if (!predicates.isEmpty()) {
+                criteriaQuery.where(predicates.toArray(new Predicate[0]));
+            }
+
+            paymentCount = session.createQuery(criteriaQuery);
+            count = paymentCount.getSingleResult();
+
+            if (count == null) return 0L;
         } catch (Exception e) {
             e.printStackTrace();
         }

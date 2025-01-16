@@ -9,11 +9,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.yourcompany.rentalmanagement.controller.PaymentController;
-import com.yourcompany.rentalmanagement.dao.impl.HostDaoImpl;
-import com.yourcompany.rentalmanagement.dao.impl.OwnerDaoImpl;
-import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
-import com.yourcompany.rentalmanagement.dao.impl.RentalAgreementDaoImpl;
-import com.yourcompany.rentalmanagement.dao.impl.TenantDaoImpl;
+import com.yourcompany.rentalmanagement.dao.impl.*;
+//import com.yourcompany.rentalmanagement.dao.impl.RentalAgreementDaoImpl;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

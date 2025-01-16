@@ -3,9 +3,6 @@ package com.yourcompany.rentalmanagement.dao.impl;
  * @author FTech
  */
 import com.yourcompany.rentalmanagement.model.Manager;
-import com.yourcompany.rentalmanagement.model.UserRole;
-import org.hibernate.JDBCException;
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

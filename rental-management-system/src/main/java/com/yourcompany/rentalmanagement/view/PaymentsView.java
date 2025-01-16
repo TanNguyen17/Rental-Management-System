@@ -6,7 +6,6 @@ import com.yourcompany.rentalmanagement.controller.PaymentController;
 import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.model.User;
-import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.AlertUtils;
 import com.yourcompany.rentalmanagement.util.EmailUtil;
 import com.yourcompany.rentalmanagement.util.UserSession;
@@ -33,10 +32,7 @@ import javafx.util.Callback;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,10 +40,13 @@ public class PaymentsView implements Initializable {
 
     private PaymentController paymentController = new PaymentController();
     private ObservableList<Payment> payments = FXCollections.observableArrayList();
+    List<Payment> paymentList = new ArrayList<>();
     private Map<Integer, List<Payment>> pageCache = new HashMap<>();
     private Map<String, String> filter = new HashMap<>();
-    private UserSession userSession = UserSession.getInstance();
-    private User currentUser = userSession.getCurrentUser();
+    private User currentUser = UserSession.getInstance().getCurrentUser();
+    private long tableDataCount;
+    private int pageSize = 10;
+    private double lastTableViewHeight = 0;
 //    private User currentUser = UserSession.getInstance().getCurrentUser();
 
     private int currentPageIndex = 1;
@@ -93,17 +92,51 @@ public class PaymentsView implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeCombobox();
         initializeColumn();
+        initializeStatusColumn();
         initializeActionColumn();
 
+        // Set up payment table
         paymentTable.setItems(payments);
-        paymentTable.setMaxHeight(300);
-        loadPayments(currentPageIndex);
+        // Get total number of data
+        tableDataCount = paymentController.getPaymentCount(filter, currentUser.getRole(), currentUser.getId());
 
-        paymentTable.addEventFilter(ScrollEvent.ANY, event -> {
-            if (!isLoading && isAtBottom() && !allDataLoaded) {
+        if (tableDataCount != 0) {
+            // Load data
+            loadPayments(currentPageIndex);
+
+            // Check if the data not exceed table row, load more data
+            paymentTable.heightProperty().addListener((obs, oldHeight, newHeight) -> {
+                if (newHeight.doubleValue() != lastTableViewHeight) {
+                    lastTableViewHeight = newHeight.doubleValue();
+                    loadVisibleData();
+                }
+            });
+
+            // On scroll loading
+            paymentTable.addEventFilter(ScrollEvent.ANY, event -> {
+                if (!isLoading && isAtBottom() && !allDataLoaded) {
+                    loadMore();
+                }
+            });
+        }
+    }
+
+    private void loadVisibleData() {
+        if (!isLoading) {
+            isLoading = true;
+            int visibleRowCount = (int) Math.ceil(paymentTable.getHeight() / paymentTable.getFixedCellSize());
+            if (paymentTable.getFixedCellSize() <= 0) {
+                isLoading = false;
+                return;
+            }
+
+            int neededItems = Math.max(visibleRowCount + pageSize, paymentTable.getItems().size());
+
+            while (paymentList.size() < neededItems && paymentList.size() < tableDataCount) {
                 loadMore();
             }
-        });
+            isLoading = false;
+        }
     }
 
     public void refreshData() {
@@ -115,6 +148,7 @@ public class PaymentsView implements Initializable {
     }
 
     private void initializeCombobox() {
+        // Initialize method combobox
         ObservableList<String> methodOptions = FXCollections.observableArrayList(
                 "All"
         );
@@ -124,6 +158,7 @@ public class PaymentsView implements Initializable {
         methodOption.setItems(methodOptions);
         methodOption.setValue("All");
 
+        // Initialize status combobox
         ObservableList<String> statusOptions = FXCollections.observableArrayList("All");
         for (Payment.paymentStatus status : Payment.paymentStatus.values()) {
             statusOptions.add(status.toString());
@@ -136,6 +171,9 @@ public class PaymentsView implements Initializable {
         receipt.setCellValueFactory(new PropertyValueFactory<Payment, String>("receipt"));
         method.setCellValueFactory(new PropertyValueFactory<Payment, String>("method"));
         amount.setCellValueFactory(new PropertyValueFactory<Payment, Double>("amount"));
+    }
+
+    private void initializeStatusColumn() {
         status.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getStatus().toString()));
         status.setCellFactory(column -> {
             return new TableCell<Payment, String>() {
@@ -179,7 +217,7 @@ public class PaymentsView implements Initializable {
                         FontAwesomeIconView payIcon = null;
                         FontAwesomeIconView sendEmailIcon = null;
 
-                        if (currentUser.getRole().equals(UserRole.TENANT)) {
+                        if (currentUser.getRole().equals(User.UserRole.TENANT)) {
                             payIcon = new FontAwesomeIconView(FontAwesomeIcon.MONEY);
                             payIcon.getStyleClass().add("action-icon");
                             payIcon.setStyle(
@@ -327,7 +365,7 @@ public class PaymentsView implements Initializable {
         }
         isLoading = true;
         new Thread(() -> {
-            List<Payment> paymentList = paymentController.getPaymentsByRole(page, filter, currentUser.getRole(), currentUser.getId());
+            paymentList = paymentController.getPaymentsByRole(page, filter, currentUser.getRole(), currentUser.getId());
 
             Platform.runLater(() -> {
                 if (!paymentList.isEmpty()) {

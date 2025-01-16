@@ -3,10 +3,7 @@ package com.yourcompany.rentalmanagement.view;
  * @author FTech
  */
 import com.yourcompany.rentalmanagement.controller.UserController;
-import com.yourcompany.rentalmanagement.model.Address;
-import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.model.User;
-import com.yourcompany.rentalmanagement.model.UserRole;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -47,7 +44,7 @@ public class UserManagementView {
     private TableColumn<User, String> phoneNumCol;
 
     @FXML
-    private TableColumn<User, UserRole> roleSpaceCol;
+    private TableColumn<User, User.UserRole> roleSpaceCol;
 
     @FXML
     private TableColumn<User, Button> viewMoreCol;

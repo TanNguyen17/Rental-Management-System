@@ -7,7 +7,7 @@ package com.yourcompany.rentalmanagement.controller;
 import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
-import com.yourcompany.rentalmanagement.view.RentalAgreementCreationView;
+//import com.yourcompany.rentalmanagement.view.RentalAgreementCreationView;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class PropertyController {
     private List<Property> propertyList;
     private PropertyDaoImpl propertyDao;
     private Map<String, Object> data = new HashMap<>();
-    private RentalAgreementCreationView rentalAgreementCreationView ;
+//    private RentalAgreementCreationView rentalAgreementCreationView ;
 
     public PropertyController() {
         propertyDao = new PropertyDaoImpl();
@@ -30,7 +30,7 @@ public class PropertyController {
         return propertyDao.getAllProperties();
     }
 
-    public List<Property> getPropertyByStatus(Property.propertyStatus propertyStatus, Map<String, Object> filter) {
+    public List<Property> getPropertyByStatus(Property.PropertyStatus propertyStatus, Map<String, Object> filter) {
         return propertyDao.getPropertiesAvailableForRenting(propertyStatus, filter);
     }
 

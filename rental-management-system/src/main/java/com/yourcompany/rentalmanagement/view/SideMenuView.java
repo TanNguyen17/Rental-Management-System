@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.yourcompany.rentalmanagement.model.User;
-import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.UserSession;
 import com.yourcompany.rentalmanagement.view.components.Toast;
 
@@ -66,7 +65,7 @@ public class SideMenuView implements Initializable {
     private boolean showingUsername = false;
     private User currentUser;
 
-    private Map<UserRole, Map<String, String>> menuConfig = new HashMap<>();
+    private Map<User.UserRole, Map<String, String>> menuConfig = new HashMap<>();
 
     private Button activeButton = null;
 
@@ -78,25 +77,25 @@ public class SideMenuView implements Initializable {
     }
 
     private void configureMenu() {
-        menuConfig.put(UserRole.OWNER, new LinkedHashMap<>(Map.of(
+        menuConfig.put(User.UserRole.OWNER, new LinkedHashMap<>(Map.of(
                 "Profile", "/fxml/ProfileView.fxml",
                 "Home", "/fxml/ViewRentalProperties.fxml",
                 "Rental Agreements", "/fxml/RentalAgreementListView.fxml"
         )));
-        menuConfig.put(UserRole.TENANT, new LinkedHashMap<>(Map.of(
+        menuConfig.put(User.UserRole.TENANT, new LinkedHashMap<>(Map.of(
                 "Profile", "/fxml/ProfileView.fxml",
                 "Home", "/fxml/PropertiesView.fxml",
                 "Rental Agreements", "/fxml/RentalAgreementListView.fxml",
                 "Payments", "/fxml/PaymentsView.fxml"
         )));
-        menuConfig.put(UserRole.HOST, new LinkedHashMap<>(Map.of(
+        menuConfig.put(User.UserRole.HOST, new LinkedHashMap<>(Map.of(
                 "Dashboard", "/fxml/HostDashboardView.fxml",
                 "Property", "/fxml/ViewRentalProperties.fxml",
                 "Rental Agreements", "/fxml/RentalAgreementListView.fxml",
                 "Payments", "/fxml/PaymentsView.fxml",
                 "Profile", "/fxml/ProfileView.fxml"
         )));
-        menuConfig.put(UserRole.MANAGER, new LinkedHashMap<>(Map.of(
+        menuConfig.put(User.UserRole.MANAGER, new LinkedHashMap<>(Map.of(
                 "Profile", "/fxml/ProfileView.fxml",
                 "Dashboard", "/fxml/manager/ManagerDashBoard.fxml",
                 "Statistical Report", "/fxml/StatisticalReport.fxml",
@@ -109,20 +108,20 @@ public class SideMenuView implements Initializable {
             return;
         }
 
-        UserRole role = userSession.getCurrentUser().getRole();
+        User.UserRole role = userSession.getCurrentUser().getRole();
         Map<String, String> roleMenu = menuConfig.getOrDefault(role, new LinkedHashMap<>());
 
         navBar.getChildren().clear();
 
         List<String> buttonOrder = new ArrayList<>();
 
-        if (role.equals(UserRole.OWNER)) {
+        if (role.equals(User.UserRole.OWNER)) {
             buttonOrder.addAll(Arrays.asList("Home", "Rental Agreements", "Profile"));
-        } else if (role.equals(UserRole.TENANT)) {
+        } else if (role.equals(User.UserRole.TENANT)) {
             buttonOrder.addAll(Arrays.asList("Home", "Rental Agreements", "Payments", "Profile"));
-        } else if (role.equals(UserRole.HOST)) {
+        } else if (role.equals(User.UserRole.HOST)) {
             buttonOrder.addAll(Arrays.asList("Dashboard", "Property", "Rental Agreements", "Payments", "Profile"));
-        } else if (role.equals(UserRole.MANAGER)) {
+        } else if (role.equals(User.UserRole.MANAGER)) {
             buttonOrder.addAll(Arrays.asList("Dashboard", "Statistical Report", "Property", "Profile"));
         }
 

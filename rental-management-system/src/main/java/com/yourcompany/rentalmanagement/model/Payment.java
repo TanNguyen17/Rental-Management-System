@@ -5,19 +5,11 @@ package com.yourcompany.rentalmanagement.model;
  */
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "Payment", uniqueConstraints = {
@@ -36,7 +28,7 @@ public class Payment {
     @Column(name = "method", nullable = false)
     private paymentMethod method;
 
-    @Column(name = "amount", nullable = false, length = 10)
+    @Column(name = "amount", nullable = false, length = 18)
     private double amount;
 
     @Enumerated(EnumType.STRING)
@@ -46,13 +38,28 @@ public class Payment {
     @Column(name = "dueDate", nullable = false)
     private LocalDate dueDate;
 
-    @ManyToOne(targetEntity = Tenant.class)
+    @ManyToOne(
+            targetEntity = Tenant.class,
+            fetch = FetchType.LAZY
+    )
     @JoinColumn(name = "tenant_id", nullable = false)
     private Tenant tenant;
 
-    @OneToOne(targetEntity = RentalAgreement.class)
+    @OneToOne(
+            targetEntity = RentalAgreement.class,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
     @JoinColumn(name = "rental_agreement_id")
     private RentalAgreement rentalAgreement;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
     public long getId() {
         return id;

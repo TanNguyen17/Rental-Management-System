@@ -142,12 +142,12 @@ public class HostDashboardViewController implements Initializable {
                 }
 
                 if (!properties.isEmpty()) {
-                    Map<Property.propertyStatus, Integer> statusCounts = new HashMap<>();
+                    Map<Property.PropertyStatus, Integer> statusCounts = new HashMap<>();
                     for (Property property : properties) {
                         statusCounts.put(property.getStatus(), statusCounts.getOrDefault(property.getStatus(), 0) + 1);
                     }
                     ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-                    for (Map.Entry<Property.propertyStatus, Integer> entry : statusCounts.entrySet()) {
+                    for (Map.Entry<Property.PropertyStatus, Integer> entry : statusCounts.entrySet()) {
                         pieChartData.add(new PieChart.Data(entry.getKey().toString(), entry.getValue()));
                     }
                     pieChart.setData(pieChartData);

@@ -58,7 +58,7 @@ public class PropertyFormController {
     @FXML
     private ComboBox<String> propertyTypeCombo;
     @FXML
-    private ComboBox<Property.propertyStatus> statusCombo;
+    private ComboBox<Property.PropertyStatus> statusCombo;
     @FXML
     private TextField priceField;
 
@@ -141,7 +141,7 @@ public class PropertyFormController {
         loadHosts();
 
         statusCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == Property.propertyStatus.AVAILABLE && hostComboBox.getValue() == null) {
+            if (newVal == Property.PropertyStatus.AVAILABLE && hostComboBox.getValue() == null) {
                 showWarning("Warning: Without a host, tenants can only view the property");
             }
         });
@@ -182,18 +182,18 @@ public class PropertyFormController {
         // Status setup
         statusCombo.getItems().clear();
         statusCombo.getItems().addAll(
-                Property.propertyStatus.AVAILABLE,
-                Property.propertyStatus.UNDER_MAINTENANCE
+                Property.PropertyStatus.AVAILABLE,
+                Property.PropertyStatus.UNDER_MAINTENANCE
         );
-        statusCombo.setValue(Property.propertyStatus.AVAILABLE);
+        statusCombo.setValue(Property.PropertyStatus.AVAILABLE);
 
         if (isEditMode && propertyToEdit != null) {
             String propertyType = propertyToEdit instanceof ResidentialProperty ? "Residential" : "Commercial";
             propertyTypeCombo.setValue(propertyType);
 
-            if (propertyToEdit.getStatus() == Property.propertyStatus.RENTED) {
+            if (propertyToEdit.getStatus() == Property.PropertyStatus.RENTED) {
                 statusCombo.setDisable(true);
-                statusCombo.setValue(Property.propertyStatus.RENTED);
+                statusCombo.setValue(Property.PropertyStatus.RENTED);
             } else {
                 statusCombo.setValue(propertyToEdit.getStatus());
             }

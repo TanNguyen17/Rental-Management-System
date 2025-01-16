@@ -10,7 +10,6 @@ import com.yourcompany.rentalmanagement.model.Manager;
 import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.model.User;
-import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.UserSession;
 import com.yourcompany.rentalmanagement.view.components.Toast;
 
@@ -40,7 +39,7 @@ public class LoginViewController {
     @FXML
     private TextField signupEmail;
     @FXML
-    private ComboBox<UserRole> roleComboBox;
+    private ComboBox<User.UserRole> roleComboBox;
     @FXML
     private Label messageLabel;
     @FXML
@@ -51,7 +50,7 @@ public class LoginViewController {
     @FXML
     public void initialize() {
         controller = new LoginController(this);
-        roleComboBox.getItems().addAll(UserRole.TENANT, UserRole.HOST, UserRole.OWNER, UserRole.MANAGER);
+        roleComboBox.getItems().addAll(User.UserRole.TENANT, User.UserRole.HOST, User.UserRole.OWNER, User.UserRole.MANAGER);
 
         // "Enter" --> Login
         loginUsername.setOnKeyPressed(e -> handleLoginKeyPress(e));
@@ -131,7 +130,7 @@ public class LoginViewController {
             String username = signupUsername.getText();
             String password = signupPassword.getText();
             String email = signupEmail.getText();
-            UserRole role = roleComboBox.getValue();
+            User.UserRole role = roleComboBox.getValue();
 
             System.out.println("Attempting signup with username: " + username + ", role: " + role);
             controller.handleSignup(username, password, email, role);

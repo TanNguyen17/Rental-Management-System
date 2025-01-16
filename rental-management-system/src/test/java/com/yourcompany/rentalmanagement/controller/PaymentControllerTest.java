@@ -4,7 +4,6 @@ import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
 import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.model.Tenant;
-import com.yourcompany.rentalmanagement.model.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

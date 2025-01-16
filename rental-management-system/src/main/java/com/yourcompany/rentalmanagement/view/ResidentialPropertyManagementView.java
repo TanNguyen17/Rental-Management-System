@@ -45,7 +45,7 @@ public class ResidentialPropertyManagementView implements Initializable {
     TableColumn<ResidentialProperty, Double> priceCol = new TableColumn<>();
 
     @FXML
-    TableColumn<ResidentialProperty, Property.propertyStatus> statusCol = new TableColumn<>();
+    TableColumn<ResidentialProperty, Property.PropertyStatus> statusCol = new TableColumn<>();
 
     @FXML
     TableColumn<ResidentialProperty, Boolean> gardenAvailabilityCol = new TableColumn<>();

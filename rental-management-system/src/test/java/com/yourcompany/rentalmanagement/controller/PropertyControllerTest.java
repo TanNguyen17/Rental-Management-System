@@ -4,7 +4,7 @@ import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
 import com.yourcompany.rentalmanagement.model.CommercialProperty;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.ResidentialProperty;
-import com.yourcompany.rentalmanagement.model.Property.propertyStatus;
+import com.yourcompany.rentalmanagement.model.Property.PropertyStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -54,7 +54,7 @@ class PropertyControllerTest {
 
     @Test
     void testGetPropertyByStatus() {
-        propertyStatus status = propertyStatus.AVAILABLE;
+        PropertyStatus status = PropertyStatus.AVAILABLE;
         Map<String, Object> filter = new HashMap<>();
         filter.put("city", "New York");
 

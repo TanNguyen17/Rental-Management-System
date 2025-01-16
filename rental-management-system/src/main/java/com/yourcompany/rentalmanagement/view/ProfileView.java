@@ -2,29 +2,16 @@ package com.yourcompany.rentalmanagement.view;
 /**
  * @author FTech
  */
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
 
 import com.yourcompany.rentalmanagement.controller.UserController;
 import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.Payment.paymentMethod;
 import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.model.User;
-import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.AddressData;
 import com.yourcompany.rentalmanagement.util.AlertUtils;
 import com.yourcompany.rentalmanagement.util.CloudinaryService;
 import com.yourcompany.rentalmanagement.util.UserSession;
-
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -32,16 +19,19 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.*;
 
 
 public class ProfileView implements Initializable {
@@ -154,20 +144,20 @@ public class ProfileView implements Initializable {
                 }
             });
         }).start();
-            // Load address data
-            Platform.runLater(() -> {
-                System.out.println("update district choice");
-                initialAddress();
-                provinceChoice.setOnAction(event -> {
-                    String selectedProvince = provinceChoice.getValue();
-                    updateDistrictCombobox(selectedProvince);
-                });
 
-                districtChoice.setOnAction(event -> {
-                    String selectedCity = districtChoice.getValue();
-                    updateWardCombobox(selectedCity);
-                });
+        // Update UI when address data loaded
+        Platform.runLater(() -> {
+            initialAddress();
+            provinceChoice.setOnAction(event -> {
+                String selectedProvince = provinceChoice.getValue();
+                updateDistrictCombobox(selectedProvince);
             });
+
+            districtChoice.setOnAction(event -> {
+                String selectedCity = districtChoice.getValue();
+                updateWardCombobox(selectedCity);
+            });
+        });
     }
 
     private void initialProfile() {
@@ -187,7 +177,7 @@ public class ProfileView implements Initializable {
         paymentText.setVisible(false);
         paymentChoice.setVisible(false);
 
-        if (currentUser.getRole() != null && currentUser.getRole().equals(UserRole.TENANT)) {
+        if (currentUser.getRole() != null && currentUser.getRole().equals(User.UserRole.TENANT)) {
             Tenant tenantUser = (Tenant) currentUser;
             paymentText.setVisible(true);
             paymentChoice.setVisible(true);
@@ -220,7 +210,8 @@ public class ProfileView implements Initializable {
 
                 } else {
                     System.err.println("City/Province not found in ComboBox: " + currentUser.getAddress().getCity());
-                }          }
+                }
+            }
         } else {
             streetName.setText("Street");
             streetNumber.setText("Street Number");

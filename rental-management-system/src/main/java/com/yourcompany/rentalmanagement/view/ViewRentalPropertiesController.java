@@ -17,7 +17,6 @@ import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.ResidentialProperty;
 import com.yourcompany.rentalmanagement.model.User;
-import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.UserSession;
 import com.yourcompany.rentalmanagement.view.components.LoadingSpinner;
 import com.yourcompany.rentalmanagement.view.components.Toast;
@@ -121,7 +120,7 @@ public class ViewRentalPropertiesController {
     private void setupFilters() {
         User currentUser = UserSession.getInstance().getCurrentUser();
 
-        if (currentUser.getRole() == UserRole.MANAGER) {
+        if (currentUser.getRole() == User.UserRole.MANAGER) {
             List<Object> userList = userDao.loadAll();
             List<Owner> owners = new ArrayList<>();
 
@@ -137,7 +136,7 @@ public class ViewRentalPropertiesController {
 
             ownerFilterCombo.setItems(FXCollections.observableArrayList(ownerNames));
             ownerFilterCombo.setValue("All Owners");
-        } else if (currentUser.getRole() == UserRole.HOST) {
+        } else if (currentUser.getRole() == User.UserRole.HOST) {
             // For hosts, show My Managed Properties/All Properties
             ownerFilterCombo.getItems().addAll("My Managed Properties", "All Properties");
             ownerFilterCombo.setValue("All Properties");
@@ -328,7 +327,7 @@ public class ViewRentalPropertiesController {
 
                 // Get current user and role
                 User currentUser = UserSession.getInstance().getCurrentUser();
-                UserRole userRole = currentUser.getRole();
+                User.UserRole userRole = currentUser.getRole();
 
                 // Add status label
                 Label statusLabel = new Label(property.getStatus().toString());
@@ -341,9 +340,9 @@ public class ViewRentalPropertiesController {
                         createActionButton("View Details", "view-button", () -> showPropertyDetails(property))
                 );
 
-                boolean canEditDelete = userRole == UserRole.MANAGER
+                boolean canEditDelete = userRole == User.UserRole.MANAGER
                         || (property.getOwner().getId() == currentUser.getId())
-                        || (userRole == UserRole.HOST && property.getHosts().stream()
+                        || (userRole == User.UserRole.HOST && property.getHosts().stream()
                                 .anyMatch(host -> host.getId() == currentUser.getId()));
 
                 if (canEditDelete) {
@@ -415,7 +414,7 @@ public class ViewRentalPropertiesController {
         try {
             User currentUser = UserSession.getInstance().getCurrentUser();
 
-            if (currentUser.getRole() == UserRole.MANAGER) {
+            if (currentUser.getRole() == User.UserRole.MANAGER) {
                 String selectedOwnerName = ownerFilterCombo.getValue();
                 if (selectedOwnerName != null && !"All Owners".equals(selectedOwnerName)) {
                     // Find the owner by username
@@ -435,7 +434,7 @@ public class ViewRentalPropertiesController {
                     allProperties = propertyDao.getAllProperties();
                 }
             } else {
-                if (currentUser.getRole() == UserRole.HOST) {
+                if (currentUser.getRole() == User.UserRole.HOST) {
                     if ("My Managed Properties".equals(ownerFilterCombo.getValue())) {
                         allProperties = propertyDao.getPropertiesByHostID(currentUser.getId());
                     } else {
@@ -679,7 +678,7 @@ public class ViewRentalPropertiesController {
     @FXML
     public void handleAddProperty() {
         User currentUser = UserSession.getInstance().getCurrentUser();
-        if (currentUser.getRole() != UserRole.OWNER && currentUser.getRole() != UserRole.MANAGER) {
+        if (currentUser.getRole() != User.UserRole.OWNER && currentUser.getRole() != User.UserRole.MANAGER) {
             showError("Only owners and managers can add properties");
             return;
         }

@@ -12,36 +12,49 @@ import java.util.Map;
 import com.yourcompany.rentalmanagement.dao.impl.RentalAgreementDaoImpl;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
-import com.yourcompany.rentalmanagement.model.UserRole;
+import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.view.RentalAgreementCreationView;
 
 public class RentalAgreementController {
 
     private RentalAgreementDaoImpl rentalAgreementDao;
     private RentalAgreementCreationView rentalAgreementCreationView;
-    private Map<String, Object> data;
+    private Map<String, Object> result;
 
     public RentalAgreementController() {
         rentalAgreementDao = new RentalAgreementDaoImpl();
-        data = new HashMap<>();
+        result = new HashMap<>();
     }
 
-    public List<RentalAgreement> getAllRentalAgreements(UserRole userRole, long userId) {
-        if (userRole.equals(UserRole.TENANT)) {
-            return rentalAgreementDao.getRentalAgreementsByRole(userRole, userId);
+    public List<RentalAgreement> getAllRentalAgreements(User.UserRole userRole, long userId) {
+
+        if (userRole.equals(User.UserRole.TENANT)) {
+            result = rentalAgreementDao.getRentalAgreementsByRole(userRole, userId);
+            if (result.get("status").equals("success")) {
+                return (List<RentalAgreement>) result.get("rentalAgreements");
+            }
         } else {
-            return rentalAgreementDao.getAllRentalAgreements();
+            result = rentalAgreementDao.getAllRentalAgreements();
+            if (result.get("status").equals("success")) {
+                return (List<RentalAgreement>) result.get("rentalAgreements");
+            }
         }
+
+        return null;
     }
 
     public List<RentalAgreement> getActiveRentalAgreements(LocalDate today) {
-        return rentalAgreementDao.getActiveRentalAgreements(today);
+        result = rentalAgreementDao.getActiveRentalAgreements(today);
+        if (result.get("status").equals("success")) {
+            return (List<RentalAgreement>) result.get("rentalAgreements");
+        }
+        return null;
     }
 
     public void createRentalAgreement(RentalAgreement rentalAgreement, long tenantId, Property propertyId, long ownerId, long hostId, List<Long> subTenantIds) {
-        data = rentalAgreementDao.createRentalAgreement(rentalAgreement, tenantId, propertyId, ownerId, hostId, subTenantIds);
+        result = rentalAgreementDao.createRentalAgreement(rentalAgreement, tenantId, propertyId, ownerId, hostId, subTenantIds);
         rentalAgreementCreationView = new RentalAgreementCreationView();
-        if (data.get("status") == "success") {
+        if (result.get("status") == "success") {
             rentalAgreementCreationView.showSuccessAlert("Rental Agreement Creation", "Rental Agreement has been created successfully.");
         } else {
             rentalAgreementCreationView.showSuccessAlert("Rental Agreement Creation", "Rental Agreement failed to create.");
@@ -62,8 +75,15 @@ public class RentalAgreementController {
     }
 
     public RentalAgreement getRentalAgreementById(long id) {
-        return rentalAgreementDao.getRentalAgreementById(id);
+        result = rentalAgreementDao.getRentalAgreementById(id);
+        if (result.get("status").equals("success")) {
+            return (RentalAgreement) result.get("rentalAgreement");
+        }
+        return null;
     }
 
-
+    public Map<String, Object> getFullRentalAgreementById(long id) {
+        result = rentalAgreementDao.getFullRentalAgreement(id);
+        return result;
+    }
 }

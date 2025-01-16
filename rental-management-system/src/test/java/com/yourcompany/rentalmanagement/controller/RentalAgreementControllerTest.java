@@ -18,12 +18,14 @@ class RentalAgreementControllerTest {
     private RentalAgreementController rentalAgreementController;
     private RentalAgreementDaoImpl rentalAgreementDaoMock;
     private RentalAgreementCreationView rentalAgreementCreationViewMock;
+    private Map<String, Object> result;
 
     @BeforeEach
     void setup() {
         rentalAgreementDaoMock = mock(RentalAgreementDaoImpl.class);
         rentalAgreementCreationViewMock = mock(RentalAgreementCreationView.class);
         rentalAgreementController = new RentalAgreementController();
+        result = new HashMap<>();
 
         // Inject mocks using reflection
         try {
@@ -41,31 +43,31 @@ class RentalAgreementControllerTest {
 
     @Test
     void testGetAllRentalAgreementsAsTenant() {
-        UserRole userRole = UserRole.TENANT;
+        User.UserRole userRole = User.UserRole.TENANT;
         long userId = 1L;
         List<RentalAgreement> mockAgreements = Arrays.asList(new RentalAgreement());
 
-        when(rentalAgreementDaoMock.getRentalAgreementsByRole(userRole, userId)).thenReturn(mockAgreements);
+        when(rentalAgreementDaoMock.getRentalAgreementsByRole(userRole, userId)).thenReturn(result);
 
-        List<RentalAgreement> result = rentalAgreementController.getAllRentalAgreements(userRole, userId);
+        List<RentalAgreement> rentalAgreements = rentalAgreementController.getAllRentalAgreements(userRole, userId);
 
-        assertNotNull(result);
-        assertEquals(1, result.size());
+        assertNotNull(rentalAgreements);
+        assertEquals(1, rentalAgreements.size());
         verify(rentalAgreementDaoMock, times(1)).getRentalAgreementsByRole(userRole, userId);
     }
 
     @Test
     void testGetAllRentalAgreementsAsOwner() {
-        UserRole userRole = UserRole.OWNER;
+        User.UserRole userRole = User.UserRole.OWNER;
         long userId = 2L;
         List<RentalAgreement> mockAgreements = Arrays.asList(new RentalAgreement(), new RentalAgreement());
 
-        when(rentalAgreementDaoMock.getAllRentalAgreements()).thenReturn(mockAgreements);
+        when(rentalAgreementDaoMock.getAllRentalAgreements()).thenReturn(result);
 
-        List<RentalAgreement> result = rentalAgreementController.getAllRentalAgreements(userRole, userId);
+        List<RentalAgreement> rentalAgreements = rentalAgreementController.getAllRentalAgreements(userRole, userId);
 
-        assertNotNull(result);
-        assertEquals(2, result.size());
+        assertNotNull(rentalAgreements);
+        assertEquals(2, rentalAgreements.size());
         verify(rentalAgreementDaoMock, times(1)).getAllRentalAgreements();
     }
 
@@ -74,12 +76,12 @@ class RentalAgreementControllerTest {
         LocalDate today = LocalDate.now();
         List<RentalAgreement> mockAgreements = Collections.singletonList(new RentalAgreement());
 
-        when(rentalAgreementDaoMock.getActiveRentalAgreements(today)).thenReturn(mockAgreements);
+        when(rentalAgreementDaoMock.getActiveRentalAgreements(today)).thenReturn(result);
 
-        List<RentalAgreement> result = rentalAgreementController.getActiveRentalAgreements(today);
+        List<RentalAgreement> rentalAgreements = rentalAgreementController.getActiveRentalAgreements(today);
 
-        assertNotNull(result);
-        assertEquals(1, result.size());
+        assertNotNull(rentalAgreements);
+        assertEquals(1, rentalAgreements.size());
         verify(rentalAgreementDaoMock, times(1)).getActiveRentalAgreements(today);
     }
 
@@ -127,7 +129,6 @@ class RentalAgreementControllerTest {
     void testUpdateRentalAgreementById() {
         long id = 1L;
         Map<String, Object> mockData = new HashMap<>();
-        mockData.put("status", "updated");
 
         rentalAgreementController.updateRentalAgreementById(id, mockData);
 
@@ -148,11 +149,11 @@ class RentalAgreementControllerTest {
         long id = 1L;
         RentalAgreement mockAgreement = new RentalAgreement();
 
-        when(rentalAgreementDaoMock.getRentalAgreementById(id)).thenReturn(mockAgreement);
+        when(rentalAgreementDaoMock.getRentalAgreementById(id)).thenReturn(result);
 
-        RentalAgreement result = rentalAgreementController.getRentalAgreementById(id);
+        mockAgreement = rentalAgreementController.getRentalAgreementById(id);
 
-        assertNotNull(result);
+        assertNotNull(mockAgreement);
         verify(rentalAgreementDaoMock, times(1)).getRentalAgreementById(id);
     }
 }

@@ -40,7 +40,7 @@ public class PaymentController {
         return paymentDao.getAllPayments();
     }
 
-    public List<Payment> getPaymentsByRole(int pageNumber, Map<String, String> filterValue, UserRole userRole, long tenantId) {
+    public List<Payment> getPaymentsByRole(int pageNumber, Map<String, String> filterValue, User.UserRole userRole, long tenantId) {
         return paymentDao.loadDataByRole(pageNumber, filterValue, userRole, tenantId);
     }
 
@@ -56,8 +56,10 @@ public class PaymentController {
         return paymentDao.getTenant(paymentId);
     }
 
-    public long getPaymentCount(Map<String, String> filterValue) {
-        return paymentDao.getPaymentCount(filterValue);
+    public long getPaymentCount(Map<String, String> filterValue, User.UserRole userRole, long userId) {
+        Long count = paymentDao.getPaymentCountByRole(filterValue, userRole, userId);
+        if (count == null) return 0L;
+        return count;
     }
 
     public boolean changePaymentStatus(long paymentId) {

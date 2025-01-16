@@ -45,14 +45,14 @@ public class UserController {
         this.users = new ArrayList<>();
     }
 
-    public User getUserProfile(long id, UserRole role) {
-        if (role == UserRole.TENANT) {
+    public User getUserProfile(long id, User.UserRole role) {
+        if (role == User.UserRole.TENANT) {
             user = tenantDao.getUserById(id);
-        } else if (role == UserRole.HOST) {
+        } else if (role == User.UserRole.HOST) {
             user = ownerDao.getUserById(id);
-        } else if (role == UserRole.OWNER) {
+        } else if (role == User.UserRole.OWNER) {
             user = ownerDao.getUserById(id);
-        } else if (role == UserRole.MANAGER) {
+        } else if (role == User.UserRole.MANAGER) {
             user = managerDao.read(id);
         }
         return user;
@@ -62,16 +62,16 @@ public class UserController {
         return tenantDao.loadAll();
     }
 
-    public void updateProfile(long userId, Map<String, Object> data, UserRole role) {
+    public void updateProfile(long userId, Map<String, Object> data, User.UserRole role) {
         profileView = new ProfileView();
 
-        if (role == UserRole.TENANT) {
+        if (role == User.UserRole.TENANT) {
             result = tenantDao.updateProfile(userId, data);
-        } else if (role == UserRole.HOST) {
+        } else if (role == User.UserRole.HOST) {
             result = hostDao.updateProfile(userId, data);
-        } else if (role == UserRole.OWNER) {
+        } else if (role == User.UserRole.OWNER) {
             result = ownerDao.updateProfile(userId, data);
-        } else if (role == UserRole.MANAGER) {
+        } else if (role == User.UserRole.MANAGER) {
             result = hostDao.updateProfile(userId, data);
         }
 
@@ -82,16 +82,16 @@ public class UserController {
         }
     }
 
-    public void updateAddress(long userId, Map<String, Object> data, UserRole role) {
+    public void updateAddress(long userId, Map<String, Object> data, User.UserRole role) {
         profileView = new ProfileView();
 
-        if (role == UserRole.TENANT) {
+        if (role == User.UserRole.TENANT) {
             result = tenantDao.updateAddress(userId, data);
-        } else if (role == UserRole.HOST) {
+        } else if (role == User.UserRole.HOST) {
             result = hostDao.updateAddress(userId, data);
-        } else if (role == UserRole.OWNER) {
+        } else if (role == User.UserRole.OWNER) {
             result = ownerDao.updateAddress(userId, data);
-        } else if (role == UserRole.MANAGER) {
+        } else if (role == User.UserRole.MANAGER) {
             result = hostDao.updateAddress(userId, data);
         }
 
@@ -102,16 +102,16 @@ public class UserController {
         }
     }
 
-    public void updateImageLink(long userId, String imageLink, UserRole role) {
+    public void updateImageLink(long userId, String imageLink, User.UserRole role) {
         profileView = new ProfileView();
 
-        if (role == UserRole.TENANT) {
+        if (role == User.UserRole.TENANT) {
             result = tenantDao.updateUserImage(userId, imageLink);
-        } else if (role == UserRole.HOST) {
+        } else if (role == User.UserRole.HOST) {
             result = hostDao.updateUserImage(userId, imageLink);
-        } else if (role == UserRole.OWNER) {
+        } else if (role == User.UserRole.OWNER) {
             result = ownerDao.updateUserImage(userId, imageLink);
-        } else if (role == UserRole.MANAGER) {
+        } else if (role == User.UserRole.MANAGER) {
             result = hostDao.updateUserImage(userId, imageLink);
         }
 
@@ -122,10 +122,10 @@ public class UserController {
         }
     }
 
-    public void updatePassword(long userId, String oldPassword, String newPassword, UserRole role) {
+    public void updatePassword(long userId, String oldPassword, String newPassword, User.UserRole role) {
         profileView = new ProfileView();
 
-        if (role == UserRole.TENANT) {
+        if (role == User.UserRole.TENANT) {
             result = tenantDao.updatePassword(userId, oldPassword, newPassword);
         }
 

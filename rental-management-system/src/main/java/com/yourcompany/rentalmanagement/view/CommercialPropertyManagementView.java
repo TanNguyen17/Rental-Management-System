@@ -44,7 +44,7 @@ public class CommercialPropertyManagementView implements Initializable {
     TableColumn<CommercialProperty, Double> priceCol = new TableColumn<>();
 
     @FXML
-    TableColumn<CommercialProperty, Property.propertyStatus> statusCol = new TableColumn<>();
+    TableColumn<CommercialProperty, Property.PropertyStatus> statusCol = new TableColumn<>();
 
     @FXML
     TableColumn<CommercialProperty, String> businessTypeCol = new TableColumn<>();

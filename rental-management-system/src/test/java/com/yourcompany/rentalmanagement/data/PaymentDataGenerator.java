@@ -18,7 +18,6 @@ import com.yourcompany.rentalmanagement.model.Payment;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
 import com.yourcompany.rentalmanagement.model.Tenant;
-import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
 public class PaymentDataGenerator {

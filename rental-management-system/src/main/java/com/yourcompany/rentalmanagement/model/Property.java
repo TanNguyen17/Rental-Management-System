@@ -21,6 +21,8 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Transient;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @MappedSuperclass
 public abstract class Property {
@@ -30,38 +32,55 @@ public abstract class Property {
     @Column(name = "id", unique = true, updatable = false, nullable = false, length = 10)
     private long id;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "address_id")
-    private Address address;
-
-    @Column(name = "price", nullable = false)
-    private double price;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private propertyStatus status;
-
-    @Column(name = "imageLink", nullable = false)
-    private String imageLink;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "owner_id", nullable = false)
-    private Owner owner;
-
-    @OneToOne(targetEntity = RentalAgreement.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "rental_agreement_id", referencedColumnName = "id", unique = true)
-    private RentalAgreement rentalAgreement;
-
     @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "price", nullable = false)
+    private double price;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private PropertyStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private PropertyType type;
+
+    @Column(name = "imageLink", nullable = false)
+    private String imageLink;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    private Address address;
+
+    @ManyToOne(
+            targetEntity = Owner.class,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(name = "owner_id", nullable = false)
+    private Owner owner;
+
+    @OneToOne(
+            targetEntity = RentalAgreement.class,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(
+            name = "rental_agreement_id",
+            referencedColumnName = "id",
+            unique = true
+    )
+    private RentalAgreement rentalAgreement;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "last_updated")
+    @UpdateTimestamp
+    @Column(name = "last_updated", nullable = false )
     private LocalDateTime lastUpdated;
 
     @Transient
@@ -91,12 +110,20 @@ public abstract class Property {
         this.price = price;
     }
 
-    public propertyStatus getStatus() {
+    public PropertyStatus getStatus() {
         return status;
     }
 
-    public void setStatus(propertyStatus status) {
+    public void setStatus(PropertyStatus status) {
         this.status = status;
+    }
+
+    public PropertyType getType() {
+        return type;
+    }
+
+    public void setType(PropertyType type) {
+        this.type = type;
     }
 
     public Owner getOwner() {
@@ -168,10 +195,15 @@ public abstract class Property {
         createdAt = LocalDateTime.now();
     }
 
-    public enum propertyStatus {
+    public enum PropertyStatus {
         AVAILABLE,
         RENTED,
         UNDER_MAINTENANCE
+    }
+
+    public enum PropertyType {
+        COMMERCIAL_PROPERTY,
+        RESIDENTIAL_PROPERTY,
     }
 
     public abstract List<Host> getHosts();

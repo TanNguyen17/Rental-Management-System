@@ -5,8 +5,11 @@ package com.yourcompany.rentalmanagement.model;
  */
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,28 +29,39 @@ public class RentalAgreement {
     @Column(name = "startContractDate", nullable = false)
     private LocalDate startContractDate;
 
-    @Column(name = "endContractDate")
+    @Column(name = "endContractDate", nullable = false)
     private LocalDate endContractDate;
 
     @Column(name = "rentingFee", nullable = false)
     private double rentingFee;
 
-    @ManyToOne(targetEntity = Owner.class, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "owner_id")
+    @ManyToOne(
+            targetEntity = Owner.class,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(name = "owner_id", nullable = false)
     private Owner owner;
 
-    @ManyToOne(targetEntity = Host.class, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(
+            targetEntity = Host.class,
+            fetch = FetchType.LAZY
+    )
     @JoinColumn(name = "host_id", nullable = false)
     private Host host;
 
-    @ManyToMany(mappedBy = "rentalAgreements")
+    @ManyToMany(
+            mappedBy = "rentalAgreements",
+            fetch = FetchType.LAZY
+    )
     private List<Tenant> tenants = new ArrayList<>();
 
-    @OneToOne(mappedBy = "rentalAgreement")
-    private CommercialProperty commercialProperty;
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-    @OneToOne(mappedBy = "rentalAgreement")
-    private ResidentialProperty residentialProperty;
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
     public long getId() {
         return id;
@@ -91,22 +105,6 @@ public class RentalAgreement {
 
     public void setHost(Host host) {
         this.host = host;
-    }
-
-    public CommercialProperty getCommercialProperty() {
-        return commercialProperty;
-    }
-
-    public void setCommercialProperty(CommercialProperty commercialProperty) {
-        this.commercialProperty = commercialProperty;
-    }
-
-    public ResidentialProperty getResidentialProperty() {
-        return residentialProperty;
-    }
-
-    public void setResidentialProperty(ResidentialProperty residentialProperty) {
-        this.residentialProperty = residentialProperty;
     }
 
     public rentalAgreementStatus getStatus() {

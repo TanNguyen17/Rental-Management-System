@@ -4,12 +4,9 @@ package com.yourcompany.rentalmanagement.dao.impl;
  */
 import com.yourcompany.rentalmanagement.model.Address;
 import com.yourcompany.rentalmanagement.model.Owner;
-import com.yourcompany.rentalmanagement.model.User;
-import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -28,8 +28,9 @@ public class ResidentialProperty extends Property {
     private boolean petFriendliness;
 
     @ManyToMany(mappedBy = "residentialProperties",
-            fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}
+    )
     private List<Host> hosts = new ArrayList<>();
 
     public int getNumberOfBedrooms() {

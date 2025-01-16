@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
 
 import com.yourcompany.rentalmanagement.controller.RentalAgreementController;
 import com.yourcompany.rentalmanagement.model.RentalAgreement;
-import com.yourcompany.rentalmanagement.model.UserRole;
+import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.util.UserSession;
 
 import javafx.application.Platform;
@@ -72,20 +72,20 @@ public class RentalAgreementManagementView implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle bundle) {
         initializeColumn();
-        if (userSession.getCurrentUser().getRole() == UserRole.MANAGER || userSession.getCurrentUser().getRole() == UserRole.HOST) {
+        if (userSession.getCurrentUser().getRole() == User.UserRole.MANAGER || userSession.getCurrentUser().getRole() == User.UserRole.HOST) {
             initializeViewMoreColumn();
             initializeDeleteColumn();
         }
 
 
         // cai nay de check user role for add new button visibility
-        UserRole currentRole = userSession.getCurrentUser().getRole();
-        addNewBtn.setVisible(currentRole == UserRole.MANAGER || currentRole == UserRole.TENANT);
-        addNewBtn.setManaged(currentRole == UserRole.MANAGER || currentRole == UserRole.TENANT);
+        User.UserRole currentRole = userSession.getCurrentUser().getRole();
+        addNewBtn.setVisible(currentRole == User.UserRole.MANAGER || currentRole == User.UserRole.TENANT);
+        addNewBtn.setManaged(currentRole == User.UserRole.MANAGER || currentRole == User.UserRole.TENANT);
 
         new Thread(() -> {
             List<RentalAgreement> rentalAgreementList;
-            if (currentRole.equals(UserRole.MANAGER)) {
+            if (currentRole.equals(User.UserRole.MANAGER)) {
                 rentalAgreementList = rentalAgreementController.getAllRentalAgreements(currentRole, 1);
             } else {
                 rentalAgreementList = rentalAgreementController.getAllRentalAgreements(currentRole, userSession.getCurrentUser().getId());
@@ -104,7 +104,7 @@ public class RentalAgreementManagementView implements Initializable {
         });
 
         // Setup the view column
-        if (userSession.getCurrentUser().getRole() == UserRole.MANAGER || userSession.getCurrentUser().getRole() == UserRole.HOST) {
+        if (userSession.getCurrentUser().getRole() == User.UserRole.MANAGER || userSession.getCurrentUser().getRole() == User.UserRole.HOST) {
             view.setCellFactory(column -> new TableCell<RentalAgreement, String>() {
                 private final Button viewButton = new Button("View More");
 

@@ -3,7 +3,6 @@ package com.yourcompany.rentalmanagement.service;
  * @author FTech
  */
 
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
@@ -20,11 +19,9 @@ import com.yourcompany.rentalmanagement.model.Manager;
 import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.Tenant;
 import com.yourcompany.rentalmanagement.model.User;
-import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +81,7 @@ public class AuthService {
                 .compact();
     }
 
-    public User registerUser(String username, String password, String email, UserRole role) {
+    public User registerUser(String username, String password, String email, User.UserRole role) {
         System.out.println("Attempting to register user: " + username + " with role: " + role);
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -158,7 +155,7 @@ public class AuthService {
                     .getBody();
 
             String username = claims.get("username", String.class);
-            UserRole role = UserRole.valueOf(claims.get("role", String.class));
+            User.UserRole role = User.UserRole.valueOf(claims.get("role", String.class));
 
             try (Session session = HibernateUtil.getSessionFactory().openSession()) {
                 // Find user based on role

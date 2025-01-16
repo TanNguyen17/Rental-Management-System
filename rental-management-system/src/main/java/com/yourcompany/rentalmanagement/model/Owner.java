@@ -7,37 +7,52 @@ package com.yourcompany.rentalmanagement.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import com.yourcompany.rentalmanagement.service.UserEventListener;
+import jakarta.persistence.*;
 
+//@EntityListeners(UserEventListener.class)
 @Entity
 @Table(name = "Owner", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"id"})})
 public class Owner extends User {
 
-    @ManyToMany(targetEntity = Host.class, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(
+            targetEntity = Host.class,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
     @JoinTable(
             name = "Owner_Host",
             joinColumns = {
                 @JoinColumn(name = "owner_id")},
             inverseJoinColumns = {
-                @JoinColumn(name = "host_id")}
+                @JoinColumn(name = "host_id")},
+            uniqueConstraints = {
+                    @UniqueConstraint(columnNames = {"owner_id", "host_id"})
+            }
     )
     private List<Host> hosts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "owner",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
     private List<RentalAgreement> rentalAgreements = new ArrayList<>();
 
-    @OneToMany(mappedBy = "owner", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(
+            mappedBy = "owner",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
     private List<ResidentialProperty> residentialProperties = new ArrayList<>();
 
-    @OneToMany(mappedBy = "owner", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(
+            mappedBy = "owner",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
     private List<CommercialProperty> commercialProperties = new ArrayList<>();
 
     public List<Host> getHosts() {

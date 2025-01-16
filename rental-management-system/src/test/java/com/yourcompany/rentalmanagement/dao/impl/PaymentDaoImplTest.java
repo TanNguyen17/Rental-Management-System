@@ -73,7 +73,7 @@ class PaymentDaoImplTest {
         Map<String, String> filter = new HashMap<>();
         filter.put("status", "PAID");
 
-        List<Payment> payments = paymentDao.loadDataByRole(1, filter, UserRole.TENANT, 1L);
+        List<Payment> payments = paymentDao.loadDataByRole(1, filter, User.UserRole.TENANT, 1L);
 
         assertNotNull(payments);
         payments.forEach(payment -> assertEquals("PAID", payment.getStatus()));

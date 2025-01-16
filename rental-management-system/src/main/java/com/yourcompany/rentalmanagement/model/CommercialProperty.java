@@ -28,9 +28,10 @@ public class CommercialProperty extends Property {
     @Column(name = "square_footage", nullable = false)
     private double squareFootage;
 
-    @ManyToMany(mappedBy = "commercialProperties",
-            fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(
+            mappedBy = "commercialProperties",
+            fetch = FetchType.EAGER
+    )
     private List<Host> hosts = new ArrayList<>();
 
 

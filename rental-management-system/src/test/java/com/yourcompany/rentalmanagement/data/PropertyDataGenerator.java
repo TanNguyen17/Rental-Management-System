@@ -17,7 +17,6 @@ import com.yourcompany.rentalmanagement.model.Host;
 import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.ResidentialProperty;
-import com.yourcompany.rentalmanagement.model.UserRole;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 
 public class PropertyDataGenerator {

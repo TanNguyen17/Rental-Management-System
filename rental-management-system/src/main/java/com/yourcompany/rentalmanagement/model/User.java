@@ -5,22 +5,16 @@ package com.yourcompany.rentalmanagement.model;
  */
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.usertype.UserVersionType;
 import org.mindrot.jbcrypt.BCrypt;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.OneToOne;
-
 @MappedSuperclass
+@EntityListeners(UserVersionType.class)
 public class User {
 
     @Id
@@ -28,10 +22,10 @@ public class User {
     @Column(name = "id", nullable = false, unique = true, updatable = false, length = 10)
     private long id;
 
-    @Column(name = "username", nullable = false, unique = true, length = 50)
+    @Column(name = "username", nullable = false, unique = true, length = 30)
     private String username;
 
-    @Column(name = "password", nullable = false, length = 100)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "dob", nullable = true) // test
@@ -40,13 +34,13 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "phoneNumber", nullable = true, unique = true) //test
+    @Column(name = "phoneNumber", nullable = true, unique = true, length = 10) //test
     private String phoneNumber;
 
     @Column(name = "profileImage", nullable = true)
     private String profileImage;
 
-    @OneToOne(targetEntity = Address.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(targetEntity = Address.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
@@ -56,6 +50,14 @@ public class User {
 
     @Column(name = "salt", nullable = true, length = 100)
     private String salt;
+
+    @CreationTimestamp
+    @Column(name = "createdAt", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "UpdatedAt", nullable = false)
+    private LocalDateTime updatedAt;
 
     public long getId() {
         return id;
@@ -144,6 +146,29 @@ public class User {
 
     public boolean checkPassword(String plainPassword) {
         return BCrypt.checkpw(plainPassword, this.password);
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public enum UserRole {
+        TENANT,
+        HOST,
+        OWNER,
+        MANAGER,
     }
 
     @Override

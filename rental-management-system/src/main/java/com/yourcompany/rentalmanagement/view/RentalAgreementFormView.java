@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import org.controlsfx.control.CheckComboBox;
 
@@ -30,12 +31,14 @@ import javafx.stage.Stage;
 
 public class RentalAgreementFormView implements Initializable {
 
-    RentalAgreement rentalAgreement;
-    RentalAgreementController rentalAgreementController = new RentalAgreementController();
-    PropertyController propertyController = new PropertyController();
-    UserController userController = new UserController();
-    Map<String, Object> renderedData = new HashMap<>();
-    private long rentalAgreementID;
+    private RentalAgreement rentalAgreement;
+    private RentalAgreementController rentalAgreementController = new RentalAgreementController();
+    private PropertyController propertyController = new PropertyController();
+    private UserController userController = new UserController();
+    private Map<String, Object> renderedData = new HashMap<>();
+    private Map<String, Object> result = new HashMap<>();
+
+    private Long rentalAgreementID = null;
     boolean isAddingNewData;
 
     @FXML
@@ -73,7 +76,9 @@ public class RentalAgreementFormView implements Initializable {
         if (isAddingNewData) {
             addInformation();
         } else {
-            updateInformation(1); // How to pass id
+            if (rentalAgreementID != null) {
+                updateInformation(rentalAgreementID);
+            }
         }
     }
 
@@ -90,16 +95,14 @@ public class RentalAgreementFormView implements Initializable {
     }
 
     public void showRentalAgreementByIdForUpdate(long id) {
-        rentalAgreement = rentalAgreementController.getRentalAgreementById(id);
+        // set chosen rental agreement id
+        this.rentalAgreementID = id;
 
+        // get rental agreement data along with property
+        result = rentalAgreementController.getFullRentalAgreementById(id);
+        rentalAgreement = (RentalAgreement) result.get("rentalAgreement");
+        Property property = (Property) result.get("property");
         if (rentalAgreement != null) {
-            Property property = null;
-            if (rentalAgreement.getCommercialProperty() != null) {
-                property = rentalAgreement.getCommercialProperty();
-            } else if (rentalAgreement.getResidentialProperty() != null) {
-                property = rentalAgreement.getResidentialProperty();
-            }
-
             if (property != null) {
                 List<Property> otherProperties = propertyController.getPropertyList();
                 propertyInput.setItems(FXCollections.observableArrayList(otherProperties));
@@ -128,13 +131,6 @@ public class RentalAgreementFormView implements Initializable {
                 List<Tenant> otherTenants = userController.getTenants();
                 if (otherTenants != null && !otherTenants.isEmpty()) {
                     subTenantInput.getItems().addAll(FXCollections.observableArrayList(otherTenants));
-//                    if (rentalAgreement.getTenants() != null) {
-//                        for (Tenant tenant : rentalAgreement.getTenants()) {
-//                            subTenantInput.getCheckModel().check(tenant);
-//                        }
-//
-//                        // subTenantInput.getCheckModel().getCheckedItems().addAll(rentalAgreement.getTenants());
-//                    }
                 }
 
                 RentalAgreement.rentalAgreementStatus status = rentalAgreement.getStatus();
@@ -157,9 +153,15 @@ public class RentalAgreementFormView implements Initializable {
         checkAddingNewData(false);
         int monthsToAdd = contractedTimeInput.getValue();
         rentalAgreementID = id;
-        Property newProperty = propertyInput.getValue();
-        List<Tenant> newSubTenants = subTenantInput.getCheckModel().getCheckedItems();
-        Host newHost = hostInput.getValue();
+        Long newPropertyId = propertyInput.getValue().getId();
+        Long newOwnerId = propertyInput.getValue().getOwner().getId();
+        List<Long> newSubTenantIds = subTenantInput
+                .getCheckModel()
+                .getCheckedItems()
+                .stream()
+                .map(Tenant::getId)
+                .collect(Collectors.toList());
+        Long newHostId = hostInput.getValue().getId();
         LocalDate newStartDate = LocalDate.now();
         LocalDate newEndDate = ChronoUnit.MONTHS.addTo(newStartDate, monthsToAdd);
         // LocalDate newEndDate = LocalDate.now();
@@ -167,10 +169,10 @@ public class RentalAgreementFormView implements Initializable {
         RentalAgreement.rentalAgreementStatus newStatus = statusInput.getValue();
 
         Map<String, Object> updatedData = new HashMap<>();
-        updatedData.put("property", newProperty);
-        updatedData.put("host", newHost);
-        updatedData.put("owner", newProperty.getOwner());
-        updatedData.put("subTenants", newSubTenants);
+        updatedData.put("property", newPropertyId);
+        updatedData.put("host", newHostId);
+        updatedData.put("owner", newOwnerId);
+        updatedData.put("subTenants", newSubTenantIds);
         updatedData.put("startDate", newStartDate);
         updatedData.put("endDate", newEndDate);
         updatedData.put("rentingFee", newRentingFee);
