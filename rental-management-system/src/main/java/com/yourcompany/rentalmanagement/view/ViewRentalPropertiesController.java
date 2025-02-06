@@ -1,4 +1,5 @@
 package com.yourcompany.rentalmanagement.view;
+
 /**
  * @author FTech
  */
@@ -18,7 +19,6 @@ import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.model.ResidentialProperty;
 import com.yourcompany.rentalmanagement.model.User;
 import com.yourcompany.rentalmanagement.util.UserSession;
-import com.yourcompany.rentalmanagement.view.components.LoadingSpinner;
 import com.yourcompany.rentalmanagement.view.components.Toast;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -77,7 +77,6 @@ public class ViewRentalPropertiesController {
     private static final int PAGE_SIZE = 10;
     private int currentPage = 0;
     private List<Property> allProperties;
-    private LoadingSpinner loadingSpinner;
     private Label noPropertiesLabel;
 
     public ViewRentalPropertiesController() {
@@ -90,7 +89,6 @@ public class ViewRentalPropertiesController {
     public void initialize() {
         System.out.println("ViewRentalPropertiesController initialize called");
         try {
-            setupLoadingSpinner();
             setupFilters();
             setupPropertyList();
             setupNoPropertiesLabel();
@@ -98,21 +96,6 @@ public class ViewRentalPropertiesController {
             updatePaginationControls();
         } catch (Exception e) {
             System.err.println("Error initializing ViewRentalPropertiesController: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void setupLoadingSpinner() {
-        try {
-            loadingSpinner = new LoadingSpinner();
-            VBox mainContainer = (VBox) propertyList.getParent();
-            loadingSpinner.prefWidthProperty().bind(mainContainer.widthProperty());
-            loadingSpinner.prefHeightProperty().bind(mainContainer.heightProperty());
-            mainContainer.getChildren().add(loadingSpinner);
-            loadingSpinner.setViewOrder(-1000);
-            loadingSpinner.toFront();
-        } catch (Exception e) {
-            System.err.println("Error setting up loading spinner: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -410,14 +393,12 @@ public class ViewRentalPropertiesController {
     }
 
     private void loadProperties() {
-        loadingSpinner.show();
         try {
             User currentUser = UserSession.getInstance().getCurrentUser();
 
             if (currentUser.getRole() == User.UserRole.MANAGER) {
                 String selectedOwnerName = ownerFilterCombo.getValue();
                 if (selectedOwnerName != null && !"All Owners".equals(selectedOwnerName)) {
-                    // Find the owner by username
                     List<Object> userList = userDao.loadAll();
                     Optional<Owner> selectedOwner = userList.stream()
                             .filter(obj -> obj instanceof Owner)
@@ -441,7 +422,6 @@ public class ViewRentalPropertiesController {
                         allProperties = propertyDao.getAllProperties();
                     }
                 } else {
-                    // Existing logic for non-managers
                     if ("My Properties".equals(ownerFilterCombo.getValue())) {
                         allProperties = propertyDao.getPropertiesByOwner(currentUser.getId());
                     } else {
@@ -453,8 +433,6 @@ public class ViewRentalPropertiesController {
             applyFiltersAndUpdateList();
         } catch (Exception e) {
             showError("Error loading properties: " + e.getMessage());
-        } finally {
-            loadingSpinner.hide();
         }
     }
 
@@ -594,15 +572,14 @@ public class ViewRentalPropertiesController {
     }
 
     private void refreshProperties() {
-        loadingSpinner.show();
         currentPage = 0;
 
         // Use Platform.runLater to allow the UI to update before loading
         Platform.runLater(() -> {
             try {
                 loadProperties();
-            } finally {
-                loadingSpinner.hide();
+            } catch (Exception e) {
+                showError("Error refreshing properties: " + e.getMessage());
             }
         });
     }
@@ -689,7 +666,6 @@ public class ViewRentalPropertiesController {
 
             scene.getStylesheets().addAll(
                     getClass().getResource("/css/property-form.css").toExternalForm(),
-                    getClass().getResource("/css/components/loading-spinner.css").toExternalForm(),
                     getClass().getResource("/css/components/toast.css").toExternalForm()
             );
 
@@ -702,14 +678,7 @@ public class ViewRentalPropertiesController {
             stage.setMinHeight(600);
 
             stage.setOnHidden(e -> {
-                loadingSpinner.show();
-                Platform.runLater(() -> {
-                    try {
-                        loadProperties();
-                    } finally {
-                        loadingSpinner.hide();
-                    }
-                });
+                Platform.runLater(this::loadProperties);
             });
 
             stage.show();

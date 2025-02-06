@@ -1,10 +1,18 @@
 # Rental Management System
 
 ## Project Overview
-// Put later
+The project involves developing a comprehensive Rental Management System designed to enhance and streamline rental operations for various user roles. Building upon the previous A1, the system introduces five distinct user types: Visitor, Tenant, Host, Owner, and Manager, each with specific functionalities tailored to their responsibilities. 
 
 ## Features
-// Put later
+Visitors can browse and filter available rental properties without the need to log in. 
+
+Tenants have the ability to manage their personal information, view rental agreements, and access payment details. 
+
+Hosts can oversee their properties, modify rental agreements, track unpaid payments, and access property-specific statistics. 
+
+Owners are empowered to add new properties, including uploading images, ensuring efficient storage and display within the system. 
+
+Managers possess full control, enabling CRUD (Create, Read, Update, Delete) operations on all entities and access to comprehensive system-wide statistics. 
 
 ## Technologies Used
 
@@ -40,9 +48,6 @@ Run the following commands in your terminal to clone the repository and navigate
 
 `cd further-programming-assignment-2-build-a-backend-FTECH\rental-management-system`
 
-### Configure the Database
-// Put later
-
 ### Build the Project
 
 Run the following command to build the project:
@@ -65,15 +70,15 @@ We follow a structured branching strategy to facilitate collaboration among our 
 
 
 ## Report
-// Put later
+https://drive.google.com/file/d/1hJM9WzyUtLU19-9PV0oD609yWkpi_Wam/view?usp=sharing
 
 ## Video Demonstration
 
-// Put later
+https://youtu.be/a1C-4T2JEJk
 
 ## GitHub Repository
 
-// Put Later
+https://github.com/RMIT-Vietnam-Teaching/further-programming-assignment-2-build-a-backend-FTECH
 
 ## License
 

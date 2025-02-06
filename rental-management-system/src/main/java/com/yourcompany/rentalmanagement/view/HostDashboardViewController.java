@@ -1,4 +1,5 @@
 package com.yourcompany.rentalmanagement.view;
+
 /**
  * @author FTech
  */
@@ -12,7 +13,6 @@ import com.yourcompany.rentalmanagement.dao.impl.PaymentDaoImpl;
 import com.yourcompany.rentalmanagement.dao.impl.PropertyDaoImpl;
 import com.yourcompany.rentalmanagement.model.Property;
 import com.yourcompany.rentalmanagement.util.UserSession;
-import com.yourcompany.rentalmanagement.view.components.LoadingSpinner;
 import com.yourcompany.rentalmanagement.view.components.Toast;
 
 import javafx.application.Platform;
@@ -21,7 +21,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -48,7 +47,6 @@ public class HostDashboardViewController implements Initializable {
     Map<Long, Double> averageStayByProperty = new HashMap<>();
     String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-    private LoadingSpinner loadingSpinner;
 
     @FXML
     private BorderPane borderPane;
@@ -115,7 +113,6 @@ public class HostDashboardViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        setupLoadingSpinner();
         new Thread(() -> {
             initializeLineChart();
             initializePieChart();
@@ -194,9 +191,7 @@ public class HostDashboardViewController implements Initializable {
 
     private void loadingData() {
         System.out.println("Loading data...");
-        loadingSpinner.show();
         try {
-
             long hostId = userSession.getCurrentUser().getId();
             expectedRevenue = paymentDaoImpl.getMonthlyPayment(hostId, "expected");
             actualRevenue = paymentDaoImpl.getMonthlyPayment(hostId, "actual");
@@ -208,26 +203,6 @@ public class HostDashboardViewController implements Initializable {
         } catch (Exception e) {
             System.err.println("Error loading properties: " + e.getMessage());
             Platform.runLater(() -> showError("Error loading properties: " + e.getMessage()));
-        } finally {
-            loadingSpinner.hide();
-        }
-    }
-
-    private void setupLoadingSpinner() {
-        try {
-            loadingSpinner = new LoadingSpinner();
-            loadingSpinner.prefWidthProperty().bind(borderPane.widthProperty());
-            loadingSpinner.prefHeightProperty().bind(borderPane.heightProperty());
-
-            Platform.runLater(() -> {
-                borderPane.getChildren().add(loadingSpinner);
-                BorderPane.setAlignment(loadingSpinner, Pos.CENTER);
-                loadingSpinner.setViewOrder(-1);
-                loadingSpinner.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
-            });
-        } catch (Exception e) {
-            System.err.println("Error setting up loading spinner: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
