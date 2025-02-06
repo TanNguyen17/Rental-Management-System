@@ -44,9 +44,9 @@ Managers possess full control, enabling CRUD (Create, Read, Update, Delete) oper
 
 Run the following commands in your terminal to clone the repository and navigate into the project directory:
 
-`git clone https://github.com/RMIT-Vietnam-Teaching/further-programming-assignment-2-build-a-backend-FTECH.git`
+`git clone https://github.com/TanNguyen17/Rental-Management-System`
 
-`cd further-programming-assignment-2-build-a-backend-FTECH\rental-management-system`
+`cd rental-management-system`
 
 ### Build the Project
 
@@ -78,7 +78,7 @@ https://youtu.be/a1C-4T2JEJk
 
 ## GitHub Repository
 
-https://github.com/RMIT-Vietnam-Teaching/further-programming-assignment-2-build-a-backend-FTECH
+https://github.com/TanNguyen17/Rental-Management-System
 
 ## License
 
