@@ -114,20 +114,6 @@ public class RentalAgreementDaoImpl implements RentalAgreementDao {
     }
 
     @Override
-    public void loadData() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            rentalAgreements = session.createQuery("from RentalAgreement ", RentalAgreement.class).list();
-            //rentalAgreements.forEach(System.out::println);
-            System.out.println(rentalAgreements.size());
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public Map<String, Object> getRentalAgreementsByHostId(long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             result.clear();

@@ -21,8 +21,6 @@ public interface RentalAgreementDao {
 
     public Map<String, Object> createRentalAgreement(Map<String, Object> data);
 
-    public void loadData();
-
     public Map<String, Object> getRentalAgreementsByHostId(long id);
 
     public Map<String, Object> getFullRentalAgreement(long id);

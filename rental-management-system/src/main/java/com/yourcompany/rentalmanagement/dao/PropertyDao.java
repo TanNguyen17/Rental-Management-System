@@ -16,20 +16,20 @@ import com.yourcompany.rentalmanagement.model.ResidentialProperty;
 public interface PropertyDao {
 
     // Basic CRUD operations
-    public void createProperty(Property property);
+    public boolean createProperty(Property property);
 
-    public Map<String, Object> getResidentialPropertyById(long id);
+    public ResidentialProperty getResidentialPropertyById(long id);
 
-    public Map<String, Object> getCommercialPropertyById(long id);
+    public CommercialProperty getCommercialPropertyById(long id);
 
-    public void updateProperty(Property property);
+    public boolean updateProperty(Property property);
 
-    public void deleteProperty(Property property);
+    public boolean deleteProperty(Property property);
 
     // Specific property type operations
-    public void createCommercialProperty(CommercialProperty property);
+    public boolean createCommercialProperty(CommercialProperty property);
 
-    public void createResidentialProperty(ResidentialProperty property);
+    public boolean createResidentialProperty(ResidentialProperty property);
 
     // Query operations
     public List<Property> getAllProperties();

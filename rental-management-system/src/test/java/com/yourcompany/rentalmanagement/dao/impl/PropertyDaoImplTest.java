@@ -30,7 +30,7 @@ class PropertyDaoImplTest {
         property.setTitle("Luxury Apartment");
         property.setDescription("A spacious luxury apartment");
         property.setPrice(1500000.0);
-        property.setStatus(Property.propertyStatus.AVAILABLE);
+        property.setStatus(Property.PropertyStatus.AVAILABLE);
         property.setCreatedAt(LocalDateTime.now());
         property.setLastUpdated(LocalDateTime.now());
 
@@ -50,7 +50,7 @@ class PropertyDaoImplTest {
         property.setTitle("Downtown Office");
         property.setDescription("Prime location office space");
         property.setPrice(5000000.0);
-        property.setStatus(Property.propertyStatus.AVAILABLE);
+        property.setStatus(Property.PropertyStatus.AVAILABLE);
         property.setCreatedAt(LocalDateTime.now());
         property.setLastUpdated(LocalDateTime.now());
 
@@ -87,20 +87,20 @@ class PropertyDaoImplTest {
     @Order(5)
     void testGetResidentialPropertyById() {
         long propertyId = 22; // Assume a property with this ID exists
-        Map<String, Object> propertyData = propertyDao.getResidentialPropertyById(propertyId);
+        ResidentialProperty propertyData = propertyDao.getResidentialPropertyById(propertyId);
 
         assertNotNull(propertyData, "Property data should not be null");
-        assertEquals(propertyId, ((ResidentialProperty) propertyData.get("property")).getId(), "IDs should match");
+        assertEquals(propertyId, propertyData.getId(), "IDs should match");
     }
 
     @Test
     @Order(6)
     void testGetCommercialPropertyById() {
         long propertyId = 29; // Assume a property with this ID exists
-        Map<String, Object> propertyData = propertyDao.getCommercialPropertyById(propertyId);
+        CommercialProperty propertyData = propertyDao.getCommercialPropertyById(propertyId);
 
         assertNotNull(propertyData, "Property data should not be null");
-        assertEquals(propertyId, ((CommercialProperty) propertyData.get("property")).getId(), "IDs should match");
+        assertEquals(propertyId, propertyData.getId(), "IDs should match");
     }
 
     @Test
@@ -126,7 +126,7 @@ class PropertyDaoImplTest {
     @Test
     @Order(9)
     void testGetPropertiesAvailableForRenting() {
-        Property.propertyStatus status = Property.propertyStatus.AVAILABLE;
+        Property.PropertyStatus status = Property.PropertyStatus.AVAILABLE;
         List<Property> properties = propertyDao.getPropertiesAvailableForRenting(status);
 
         assertNotNull(properties, "Properties list should not be null");

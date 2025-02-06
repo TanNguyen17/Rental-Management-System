@@ -7,18 +7,16 @@ package com.yourcompany.rentalmanagement.dao.impl;
 
 import com.yourcompany.rentalmanagement.dao.PaymentDao;
 import com.yourcompany.rentalmanagement.model.*;
+import com.yourcompany.rentalmanagement.util.DataAccessException;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.*;
 
 public class PaymentDaoImpl implements PaymentDao {
@@ -29,100 +27,68 @@ public class PaymentDaoImpl implements PaymentDao {
     private Query<Payment> query;
     public static final int PAGE_SIZE = 10;
     private Map<String, String> data = new HashMap<>();
+    private Tenant tenant;
+    private Long count = null;
 
     public PaymentDaoImpl() {
         transaction = null;
         payments = new ArrayList<Payment>();
     }
 
-    @Override
-    public List<Payment> loadData(int pageNumber, Map<String, String> filterValue) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            query = session.createQuery("from Payment", Payment.class);
-            if (filterValue != null) {
-                String method = filterValue.get("method");
-                String status = filterValue.get("status");
-
-                if (method != null && status != null) {
-                    query = session.createQuery("from Payment where method = :method AND status = :status", Payment.class);
-                    query.setParameter("method", method);
-                    query.setParameter("status", status);
-                } else if (status != null) {
-                    query = session.createQuery("from Payment where status = :status", Payment.class);
-                    query.setParameter("status", status);
-                } else if (method != null) {
-                    query = session.createQuery("from Payment where method = :method", Payment.class);
-                    query.setParameter("method", method);
-                }
-
-            }
-            if (pageNumber > 0) {
-                query.setFirstResult((pageNumber - 1) * 10);
-                query.setMaxResults(10);
-            }
-            payments = query.list();
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return payments;
-    }
-
     public List<Payment> getAllPayments() {
-        List<Payment> allPayments = new ArrayList<>();
-        Transaction transaction = null;
-
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // Start the transaction
             transaction = session.beginTransaction();
 
             // Execute the query to fetch all Payment records
-            Query<Payment> query = session.createQuery("from Payment", Payment.class);
-            allPayments = query.list();
+            Query<Payment> query = session.createQuery("FROM Payment", Payment.class);
+            payments = query.list();
+
+            if (payments.isEmpty()) throw new DataAccessException("No payment found");
 
             // Commit the transaction
             transaction.commit();
-        } catch (Exception e) {
+
+            return payments;
+        } catch (HibernateException e) {
             // Rollback transaction in case of an error
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
+            throw new DataAccessException("Error getting all payments", e);
         }
-        return allPayments;
     }
 
     @Override
-    public Map<String, String> createPayment(Payment payment, long rentalAgreementId) {
-        Payment lastPayment = null;
+    public boolean createPayment(Payment payment, long rentalAgreementId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            Query<RentalAgreement> query = session.createQuery("SELECT ra FROM RentalAgreement ra LEFT JOIN FETCH ra.tenants WHERE ra.id = :id", RentalAgreement.class);
+
+            // Get rental agreement
+            Query<RentalAgreement> query = session.createQuery("SELECT ra FROM RentalAgreement ra JOIN FETCH ra.tenants WHERE ra.id = :id", RentalAgreement.class);
             query.setParameter("id", rentalAgreementId);
             RentalAgreement rentalAgreement = query.getSingleResult();
+
+            if (rentalAgreement == null) throw new DataAccessException("No rental agreement found");
+
             Tenant tenant = rentalAgreement.getTenants().get(0);
-            if (rentalAgreement != null) {
-                System.out.println(rentalAgreement.getId());
-                payment.setMethod(tenant.getPaymentMethod() != null ? tenant.getPaymentMethod() : Payment.paymentMethod.CASH);
-                payment.setRentalAgreement(rentalAgreement);
-                payment.setTenant(rentalAgreement.getTenants().get(0));
-                session.persist(payment);
-                data.put("status", "success");
-            }
+            if (tenant == null) throw new DataAccessException("No tenant found");
+
+            payment.setMethod(tenant.getPaymentMethod() != null ? tenant.getPaymentMethod() : Payment.paymentMethod.CASH);
+            payment.setRentalAgreement(rentalAgreement);
+            payment.setTenant(rentalAgreement.getTenants().get(0));
+            session.persist(payment);
 
             transaction.commit();
-        } catch (Exception e) {
+            return true;
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-            data.put("status", "failed");
+            throw new DataAccessException("Error creating payment", e);
         }
-        return data;
     }
 
     @Override
@@ -175,59 +141,67 @@ public class PaymentDaoImpl implements PaymentDao {
             }
 
             payments = query.getResultList();
+
+            if (payments.isEmpty()) throw new DataAccessException("No payment found");
+
             transaction.commit();
-        } catch (Exception e) {
+            return payments;
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
+            throw new DataAccessException("Error loading data", e);
         }
-        return payments;
     }
 
 
     @Override
     public Tenant getTenant(long paymentId) {
-        Tenant tenant = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            payment = session.get(Payment.class, paymentId);
-            if (payment != null) {
-                tenant = payment.getTenant();
-            }
+            transaction = session.beginTransaction();
 
-        } catch (Exception e) {
+            Query<Payment> paymentQuery = session.createQuery(
+                    "SELECT p FROM Payment p JOIN FETCH p.tenant t WHERE t.id = :id",
+                    Payment.class
+            );
+            paymentQuery.setParameter("id", paymentId);
+            payment = paymentQuery.getSingleResult();
+
+            if (payment == null) throw new DataAccessException("No payment found");
+            transaction.commit();
+            return payment.getTenant();
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
+            throw new DataAccessException("Error getting tenant", e);
         }
-        return tenant;
     }
 
     @Override
     public Payment getLatestPayment(RentalAgreement rentalAgreement, LocalDate today) {
-        Payment lastPayment = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<Payment> query = session.createQuery("SELECT p FROM Payment p LEFT JOIN FETCH RentalAgreement rA ON rA.id = :agreement ORDER BY dueDate DESC", Payment.class);
             query.setParameter("agreement", rentalAgreement.getId());
             query.setMaxResults(1);
-            lastPayment = query.uniqueResult();
-
+            payment = query.uniqueResult();
+            return payment;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
+            throw new DataAccessException("Error getting latest payment", e);
         }
-        return lastPayment;
     }
 
 
     @Override
     public Long getPaymentCountByRole(Map<String, String> filterValue, User.UserRole userRole, long userId) {
-        Long count = null;
-        Query<Long> paymentCount = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
             // Set up criteria query
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
@@ -267,63 +241,64 @@ public class PaymentDaoImpl implements PaymentDao {
                 criteriaQuery.where(predicates.toArray(new Predicate[0]));
             }
 
-            paymentCount = session.createQuery(criteriaQuery);
+            Query<Long> paymentCount = session.createQuery(criteriaQuery);
             count = paymentCount.getSingleResult();
 
             if (count == null) return 0L;
+            return count;
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             e.printStackTrace();
+            throw new DataAccessException("Error getting payment count", e);
         }
-        return count;
     }
 
     @Override
-    public Map<String, String> updatePaymentStatus(long paymentId) {
+    public boolean updatePaymentStatus(long paymentId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             Query<Payment> query = session.createQuery("SELECT p FROM Payment p WHERE p.id = :id", Payment.class);
             query.setParameter("id", paymentId);
             Payment payment = query.uniqueResult();
 
-            if (payment != null) {
-                System.out.println(payment.getId());
-                payment.setStatus(Payment.paymentStatus.PAID);
-                session.persist(payment);
-            } else {
-                System.out.println("None");
-            }
+            if (payment == null) throw new DataAccessException("No payment found");
+
+            payment.setStatus(Payment.paymentStatus.PAID);
+            session.merge(payment);
+
             transaction.commit();
-            data.put("status", "success");
+            return true;
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            throw new DataAccessException("Error updating payment status", e);
+        }
+    }
+
+    @Override
+    public List<Payment> getPaymentsByStatus(Payment.paymentStatus status) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Query<Payment> query = session.createQuery(
+                    "SELECT p FROM Payment p WHERE p.status = :status",
+                    Payment.class
+            );
+            query.setParameter("status", status);
+            payments = query.list();
+            transaction.commit();
+            return payments;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-            data.put("status", "failed");
+            throw new DataAccessException("Error loading data", e);
         }
-        return data;
-    }
-
-    @Override
-    public List<Payment> getAllPaidPayments(Payment.paymentStatus status) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction transaction = session.beginTransaction();
-
-            try {
-                Query<Payment> query = session.createQuery("from Payment where status = :status", Payment.class);
-                query.setParameter("status", status);
-                payments = query.list();
-                transaction.commit();
-            } catch (Exception e) {
-                if (transaction != null) {
-                    transaction.rollback();
-                }
-                throw e; // Re-throw the exception to allow higher-level handling
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return payments;
     }
 
     public List<Double> getMonthlyPayment(long id, String type) {
@@ -363,15 +338,37 @@ public class PaymentDaoImpl implements PaymentDao {
                 monthlyPayments.set(month - 1, totalPayment); // Update the corresponding month index
             }
 
-            // Debugging: Print the list
-            for (int i = 0; i < monthlyPayments.size(); i++) {
-                System.out.println("Month: " + (i + 1) + ", Total Payment: " + monthlyPayments.get(i));
-            }
             transaction.commit();
+
+            return monthlyPayments;
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            throw new DataAccessException("Error retrieving monthly payments", e);
+        }
+    }
+
+    @Override
+    public List<Payment> getAllPaidPayments(Payment.paymentStatus status) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            try {
+                Query<Payment> query = session.createQuery("from Payment where status = :status", Payment.class);
+                query.setParameter("status", status);
+                payments = query.list();
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                throw e; // Re-throw the exception to allow higher-level handling
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return monthlyPayments;
+        return payments;
     }
 }

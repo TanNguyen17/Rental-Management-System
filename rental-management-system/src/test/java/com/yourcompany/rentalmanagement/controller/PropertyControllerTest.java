@@ -75,42 +75,35 @@ class PropertyControllerTest {
     @Test
     void testGetResidentialPropertyData() {
         long propertyId = 1L;
-        Map<String, Object> mockData = new HashMap<>();
-        mockData.put("type", "residential");
-        mockData.put("number_of_bedrooms", 3);
-        mockData.put("garden_availability", true);
-        mockData.put("pet_friendliness", true);
+        ResidentialProperty mockData = new ResidentialProperty();
 
         when(propertyDaoMock.getResidentialPropertyById(propertyId)).thenReturn(mockData);
 
-        Map<String, Object> result = propertyController.getResidentialPropertyData(propertyId);
+        ResidentialProperty result = propertyController.getResidentialPropertyData(propertyId);
 
         assertNotNull(result);
-        assertEquals("residential", result.get("type"));
-        assertEquals(3, result.get("number_of_bedrooms"));
-        assertTrue((boolean) result.get("garden_availability"));
-        assertTrue((boolean) result.get("pet_friendliness"));
+        assertEquals(3, result.getNumberOfBedrooms());
+        assertTrue(result.isPetFriendliness());
+        assertTrue(result.isGardenAvailability());
         verify(propertyDaoMock, times(1)).getResidentialPropertyById(propertyId);
     }
 
     @Test
     void testGetCommercialPropertyData() {
         long propertyId = 2L;
-        Map<String, Object> mockData = new HashMap<>();
-        mockData.put("type", "commercial");
-        mockData.put("business_type", "Retail");
-        mockData.put("parking_space", true);
-        mockData.put("square_footage", 2000.0);
+        CommercialProperty mockData = new CommercialProperty();
+        mockData.setBusinessType("Retail");
+        mockData.setParkingSpace(true);
+        mockData.setSquareFootage(2000.0);
 
         when(propertyDaoMock.getCommercialPropertyById(propertyId)).thenReturn(mockData);
 
-        Map<String, Object> result = propertyController.getCommercialPropertyData(propertyId);
+        CommercialProperty result = propertyController.getCommercialPropertyData(propertyId);
 
         assertNotNull(result);
-        assertEquals("commercial", result.get("type"));
-        assertEquals("Retail", result.get("business_type"));
-        assertTrue((boolean) result.get("parking_space"));
-        assertEquals(2000.0, result.get("square_footage"));
+        assertEquals("Retail", result.getBusinessType());
+        assertTrue(result.isParkingSpace());
+        assertEquals(result.getSquareFootage(), 2000.0);
         verify(propertyDaoMock, times(1)).getCommercialPropertyById(propertyId);
     }
 }

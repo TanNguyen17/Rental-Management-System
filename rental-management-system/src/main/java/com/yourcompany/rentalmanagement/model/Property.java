@@ -26,7 +26,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @MappedSuperclass
 public abstract class Property {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, updatable = false, nullable = false, length = 10)

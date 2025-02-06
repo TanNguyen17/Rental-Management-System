@@ -16,17 +16,15 @@ public interface UserDao {
 
     public <T extends Object> T getUserById(long id);
 
-    void loadData();
+    public long getNumberOfUser();
 
-    public long getTotalUsers();
+    public boolean updateProfile(long id, Map<String, Object> profile);
 
-    public Map<String, Object> updateProfile(long id, Map<String, Object> profile);
+    public boolean updateUserImage(long id, String imageLink);
 
-    public Map<String, Object> updateUserImage(long id, String imageLink);
+    public boolean updateAddress(long id, Map<String, Object> address);
 
-    public Map<String, Object> updateAddress(long id, Map<String, Object> address);
-
-    public Map<String, Object> updatePassword(long id, String oldPassword, String newPassword);
+    public boolean updatePassword(long id, String oldPassword, String newPassword);
 
 
 }

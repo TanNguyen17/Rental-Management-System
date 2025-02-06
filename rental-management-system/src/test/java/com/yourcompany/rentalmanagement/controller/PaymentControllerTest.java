@@ -110,10 +110,10 @@ class PaymentControllerTest {
         Map<String, String> filterValue = new HashMap<>();
         long count = 10L;
 
-        when(paymentDao.getPaymentCount(filterValue)).thenReturn(count);
+        when(paymentDao.getPaymentCountByRole(filterValue, null, 0L)).thenReturn(count);
 
-        assertEquals(count, paymentController.getPaymentCount(filterValue));
-        verify(paymentDao, times(1)).getPaymentCount(filterValue);
+        assertEquals(count, paymentController.getPaymentCount(filterValue, null, 0L));
+        verify(paymentDao, times(1)).getPaymentCountByRole(filterValue, null, 0L);
     }
 
     @Test

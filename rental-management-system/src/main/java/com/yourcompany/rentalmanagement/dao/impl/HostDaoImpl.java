@@ -4,211 +4,199 @@ package com.yourcompany.rentalmanagement.dao.impl;
  * @author FTech
  */
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.yourcompany.rentalmanagement.dao.UserDao;
 import com.yourcompany.rentalmanagement.model.Address;
+import com.yourcompany.rentalmanagement.model.Host;
+import com.yourcompany.rentalmanagement.util.DataAccessException;
+import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.TimeFormat;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import com.yourcompany.rentalmanagement.dao.HostDao;
-import com.yourcompany.rentalmanagement.model.Host;
-import com.yourcompany.rentalmanagement.util.HibernateUtil;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class HostDaoImpl implements HostDao {
+public class HostDaoImpl implements UserDao {
     private Transaction transaction = null;
     private Host host = null;
+    private List<Host> hosts = new ArrayList<>();
     private Map<String, Object> result = new HashMap<>();
 
     @Override
-    public List<Host> getAllHosts() {
+    public List<Host> loadAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
             Query<Host> query = session.createQuery("FROM Host", Host.class);
-            return query.list();
-        } catch (Exception e) {
+            hosts = query.getResultList();
+            if (hosts.isEmpty()) {
+                throw new DataAccessException("No hosts found");
+            }
+            return hosts;
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             e.printStackTrace();
+            throw new DataAccessException("Error while retrieving all hosts" + e.getMessage());
         }
-        return null;
     }
 
     @Override
-    public Host getHostById(long id) {
+    public Host getUserById(long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.get(Host.class, id);
-        } catch (Exception e) {
+            transaction = session.beginTransaction();
+            host = session.get(Host.class, id);
+            if (host != null) {
+                throw new DataAccessException("No host found with id " + id);
+            }
+            transaction.commit();
+            return host;
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             e.printStackTrace();
+            throw new DataAccessException("Error retrieving host from database " + e.getMessage());
         }
-        return null;
     }
 
     @Override
-    public Map<String, Object> updateProfile(long id, Map<String, Object> profile) {
+    public boolean updateProfile(long id, Map<String, Object> profile) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            host = session.find(Host.class, id);
+
+            if (host == null) throw new DataAccessException("No host found with id " + id);
+
+            host.setUsername((String) profile.get("username"));
+            host.setDob(TimeFormat.stringToDate((String) profile.get("dob")));
+            host.setDob(LocalDate.parse((String) profile.get("dob")));
+            host.setEmail((String) profile.get("email"));
+            host.setPhoneNumber(profile.get("phoneNumber").toString());
+            result.put("status", "success");
+            result.put("message", "Address updated successfully");
+            session.merge(host);
+            transaction.commit();
+
+            return true;
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            throw new DataAccessException("Error while updating profile " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean updateUserImage(long id, String imageLink) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
             host = session.get(Host.class, id);
 
-            if (host != null) {
-                host.setUsername((String) profile.get("username"));
-                host.setDob(TimeFormat.stringToDate((String) profile.get("dob")));
-                host.setDob(LocalDate.parse((String) profile.get("dob")));
-                host.setEmail((String) profile.get("email"));
-                host.setPhoneNumber(profile.get("phoneNumber").toString());
-                result.put("status", "success");
-                result.put("message", "Address updated successfully");
-                transaction.commit();
-                return result;
-            }
+            if (host == null) throw new DataAccessException("No host found with id " + id);
+            host.setProfileImage(imageLink);
+            session.persist(host);
             transaction.commit();
-            result.put("status", "failed");
+
+            return true;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-            result.put("status", "failed");
-            result.put("message", e.getMessage());
+            throw new DataAccessException("Error while updating user image " + e.getMessage());
         }
-        return result;
     }
 
     @Override
-    public Map<String, Object> updateUserImage(long id, String imageLink) {
+    public boolean updateAddress(long id, Map<String, Object> data) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-
-            host = session.get(Host.class, id);
-
-            if (host != null) {
-                host.setProfileImage(imageLink);
-                session.persist(host);
-                transaction.commit();
-                result.put("status", "success");
-                result.put("message", "Image updated successfully");
-                return result;
-            }
-            transaction.commit();
-            result.put("status", "failed");
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            result.put("status", "failed");
-            result.put("message", e.getMessage());
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    @Override
-    public Map<String, Object> updateAddress(long id, Map<String, Object> data) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            Query<Host> query = session.createQuery("SELECT h from Host h where h.id = :id", Host.class);
+            Query<Host> query = session.createQuery(
+                    "SELECT h FROM Host h JOIN FETCH h.address WHERE h.id = :id",
+                    Host.class
+            );
             query.setParameter("id", id);
             host = query.uniqueResult();
 
-            if (host != null) {
-                if (host.getAddress() != null) {
-                    Address address = host.getAddress();
-                    address.setCity(data.get("province").toString());
-                    address.setDistrict(data.get("district").toString());
-                    address.setWard(data.get("ward").toString());
-                    address.setNumber(data.get("streetNumber").toString());
-                    address.setStreet(data.get("streetName").toString());
-                } else {
-                    Address address = new Address();
-                    address.setCity(data.get("province").toString());
-                    address.setDistrict(data.get("district").toString());
-                    address.setWard(data.get("ward").toString());
-                    address.setNumber(data.get("streetNumber").toString());
-                    address.setStreet(data.get("streetName").toString());
-                    host.setAddress(address);
-                }
-                transaction.commit();
-                result.put("status", "success");
-                result.put("message", "Address updated successfully");
-                return result;
+            if (host == null) {
+                throw new DataAccessException("No host found with id " + id);
             }
 
+            Address address = host.getAddress();
+            if (address == null) {
+                address = new Address();
+                host.setAddress(address);
+            }
+
+            address.setCity(data.get("province").toString());
+            address.setDistrict(data.get("district").toString());
+            address.setWard(data.get("ward").toString());
+            address.setNumber(data.get("streetNumber").toString());
+            address.setStreet(data.get("streetName").toString());
+            session.merge(host);
             transaction.commit();
-            result.put("status", "failed");
-        } catch (Exception e) {
+
+            return true;
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-            result.put("status", "failed");
-            result.put("message", e.getMessage());
+            throw new DataAccessException("Error while updating address" + e.getMessage());
         }
-        return result;
     }
 
     @Override
-    public Map<String, Object> updatePassword(long id, String oldPassword, String newPassword) {
+    public boolean updatePassword(long id, String oldPassword, String newPassword) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
             host = session.get(Host.class, id);
-            if (host.checkPassword(oldPassword)) {
-                host.setPassword(newPassword);
-            } else {
-                result.put("status", "failed");
-                result.put("message", "Password does not match");
-                return result;
+            if (host == null) {
+                throw new DataAccessException("No host found with id " + id);
             }
+
+            if (!host.checkPassword(oldPassword)) {
+                throw new DataAccessException("Password not match");
+            }
+
+            host.setPassword(newPassword);
+            session.merge(host);
             transaction.commit();
-            result.put("status", "success");
-            result.put("message", "Password changed successfully");
-        } catch (Exception e) {
+            return true;
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-            result.put("status", "failed");
-            result.put("message", e.getMessage());
+            throw new DataAccessException("Error while updating password from database " + e.getMessage());
         }
-        return result;
     }
 
-    public Map<String, Object> setPassword(long id, String newPassword) {
+    @Override
+    public long getNumberOfUser() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-
-            host = session.get(Host.class, id);
-            host.setHashedPassword(newPassword);
+            Query<Long> query = session.createQuery("SELECT count(*) FROM Host");
+            Long count = query.getSingleResult();
             transaction.commit();
-            result.put("status", "success");
-            result.put("message", "Password changed successfully");
-        } catch (Exception e) {
+
+            return count;
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-            result.put("status", "failed");
-            result.put("message", e.getMessage());
+            throw new DataAccessException("Error while retrieving total hosts from database " + e.getMessage());
         }
-        return result;
-    }
-
-    @Override
-    public List<String> getAllUserName() {
-        return getAllHosts().stream().map(Host::getUsername).collect(Collectors.toList());
-    }
-
-    @Override
-    public long getTotalUsers() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Long> query = session.createQuery("select count(*) from Host");
-            return query.getSingleResult();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
     }
 }

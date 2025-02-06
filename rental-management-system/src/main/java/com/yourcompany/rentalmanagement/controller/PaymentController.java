@@ -25,11 +25,7 @@ public class PaymentController {
     }
 
     public boolean createPayment(Payment payment, long rentalAgreementId) {
-        data = paymentDao.createPayment(payment, rentalAgreementId);
-        if (data.get("status") == "failed") {
-            return false;
-        }
-        return true;
+        return paymentDao.createPayment(payment, rentalAgreementId);
     }
 
     public List<Payment> getPayments(int pageNumber, Map<String, String> filterValue) {
@@ -63,11 +59,7 @@ public class PaymentController {
     }
 
     public boolean changePaymentStatus(long paymentId) {
-        data = paymentDao.updatePaymentStatus(paymentId);
-        if (data.get("status") == "failed") {
-            return false;
-        }
-        return true;
+        return paymentDao.updatePaymentStatus(paymentId);
     }
     public String getTotalIncome() {
         List<Payment> payments = paymentDao.getAllPaidPayments(Payment.paymentStatus.PAID);

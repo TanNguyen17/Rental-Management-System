@@ -50,6 +50,13 @@ import javafx.util.StringConverter;
 import javafx.event.ActionEvent;
 
 public class PropertyFormController {
+    private HostDaoImpl hostDaoImpl;
+    private LoadingSpinner loadingSpinner;
+    private boolean isEditMode = false;
+    private Property propertyToEdit;
+    private File selectedImage;
+    private final CloudinaryService cloudinaryService;
+    private final PropertyDao propertyDao;
 
     @FXML
     private TextField titleField;
@@ -85,17 +92,8 @@ public class PropertyFormController {
     @FXML
     private Label messageLabel;
 
-    private File selectedImage;
-    private final CloudinaryService cloudinaryService;
-    private final PropertyDao propertyDao;
     @FXML
     private ComboBox<Host> hostComboBox;
-    private final HostDao hostDao;
-
-    private LoadingSpinner loadingSpinner;
-
-    private boolean isEditMode = false;
-    private Property propertyToEdit;
 
     @FXML
     private Button submitButton;
@@ -115,7 +113,7 @@ public class PropertyFormController {
     public PropertyFormController() {
         cloudinaryService = new CloudinaryService();
         propertyDao = new PropertyDaoImpl();
-        hostDao = new HostDaoImpl();
+        hostDaoImpl = new HostDaoImpl();
     }
 
     @FXML
@@ -419,7 +417,7 @@ public class PropertyFormController {
 
     private void loadHosts() {
         try {
-            List<Host> hosts = hostDao.getAllHosts();
+            List<Host> hosts = hostDaoImpl.loadAll();
             hostComboBox.getItems().addAll(hosts);
             hostComboBox.setCellFactory(param -> new ListCell<Host>() {
                 @Override

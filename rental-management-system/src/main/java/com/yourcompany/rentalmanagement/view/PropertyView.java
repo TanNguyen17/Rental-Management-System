@@ -322,11 +322,11 @@ public class PropertyView implements Initializable {
 
             if (property instanceof ResidentialProperty) {
                 ResidentialProperty residentialProperty = (ResidentialProperty) property;
-                data = propertyController.getResidentialPropertyData(residentialProperty.getId());
+                ResidentialProperty propertyData = propertyController.getResidentialPropertyData(residentialProperty.getId());
 
             } else if (property instanceof CommercialProperty) {
                 CommercialProperty commercialProperty = (CommercialProperty) property;
-                data = propertyController.getCommercialPropertyData(commercialProperty.getId());
+                CommercialProperty propertyData = propertyController.getCommercialPropertyData(commercialProperty.getId());
             }
 
             RentalAgreementCreationView controller = loader.getController();

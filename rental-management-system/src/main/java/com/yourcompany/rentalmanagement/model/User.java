@@ -7,6 +7,7 @@ package com.yourcompany.rentalmanagement.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.yourcompany.rentalmanagement.service.UserEventListener;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -14,7 +15,7 @@ import org.hibernate.usertype.UserVersionType;
 import org.mindrot.jbcrypt.BCrypt;
 
 @MappedSuperclass
-@EntityListeners(UserVersionType.class)
+@EntityListeners(UserEventListener.class)
 public class User {
 
     @Id
@@ -34,7 +35,7 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "phoneNumber", nullable = true, unique = true, length = 10) //test
+    @Column(name = "phoneNumber", nullable = true, unique = true, length = 10)
     private String phoneNumber;
 
     @Column(name = "profileImage", nullable = true)

@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Map;
 
 public interface PaymentDao {
-    public List<Payment> loadData(int pageNumber, Map<String, String> filterValue);
-    public Map<String, String> createPayment(Payment payment, long rentalAgreementId);
+    public boolean createPayment(Payment payment, long rentalAgreementId);
     public List<Payment> loadDataByRole(int pageNumber, Map<String, String> filterValue, User.UserRole userRole, long userId);
     public Tenant getTenant(long paymentId);
     public Payment getLatestPayment(RentalAgreement rentalAgreement, LocalDate today);
     public Long getPaymentCountByRole(Map<String, String> filterValue, User.UserRole userRole, long userId);
-    public Map<String, String> updatePaymentStatus(long paymentId);
+    public boolean updatePaymentStatus(long paymentId);
+    public List<Payment> getPaymentsByStatus(Payment.paymentStatus status);
     public List<Payment> getAllPaidPayments(Payment.paymentStatus status);
 }
 

@@ -11,19 +11,17 @@ import com.yourcompany.rentalmanagement.model.Host;
 
 public interface HostDao {
 
-    List<String> getAllUserName();
+    public List<Host> getAllHosts();
 
-    List<Host> getAllHosts();
+    public Host getHostById(long id);
 
-    Host getHostById(long id);
+    public boolean updateProfile(long id, Map<String, Object> profile);
 
-    Map<String, Object> updateProfile(long id, Map<String, Object> profile);
+    public boolean updateUserImage(long id, String imageLink);
 
-    Map<String, Object> updateUserImage(long id, String imageLink);
+    public boolean updateAddress(long id, Map<String, Object> data);
 
-    Map<String, Object> updateAddress(long id, Map<String, Object> data);
+    public boolean updatePassword(long id, String oldPassword, String newPassword);
 
-    Map<String, Object> updatePassword(long id, String oldPassword, String newPassword);
-
-    long getTotalUsers();
+    public long getNumberOfUser();
 }

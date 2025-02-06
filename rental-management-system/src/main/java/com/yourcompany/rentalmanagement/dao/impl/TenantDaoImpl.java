@@ -7,11 +7,11 @@ package com.yourcompany.rentalmanagement.dao.impl;
 import com.yourcompany.rentalmanagement.dao.UserDao;
 import com.yourcompany.rentalmanagement.model.Address;
 import com.yourcompany.rentalmanagement.model.Payment;
-import com.yourcompany.rentalmanagement.model.Owner;
 import com.yourcompany.rentalmanagement.model.Tenant;
+import com.yourcompany.rentalmanagement.util.DataAccessException;
 import com.yourcompany.rentalmanagement.util.HibernateUtil;
 import com.yourcompany.rentalmanagement.util.TimeFormat;
-import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -35,209 +35,184 @@ public class TenantDaoImpl implements UserDao {
         tenants = new ArrayList<>();
     }
 
-    @Override
-    public void loadData(){}
-
-    public Map<String, Object> createTenant(Tenant tenant) {
+    public boolean createTenant(Tenant tenant) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            session.beginTransaction();
+            transaction = session.beginTransaction();
             session.persist(tenant);
-            session.getTransaction().commit();
-            result.put("status", "success");
-        } catch (Exception e) {
-            result.put("status", "failed");
-            e.printStackTrace();
-            throw e;
-        }
-        return result;
-    }
+            transaction.commit();
 
-    public List<Tenant> getAllTenants() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Tenant> query = session.createQuery("FROM Tenant", Tenant.class);
-            return query.list();
-        } catch (Exception e) {
+            return true;
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             e.printStackTrace();
+            throw new DataAccessException("Failed to create tenant.", e);
         }
-        return null;
     }
 
     @Override
     public List<Tenant> loadAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            tenants = session.createQuery("from Tenant", Tenant.class).list();
+            transaction = session.beginTransaction();
+
+            Query<Tenant> query = session.createQuery("FROM Tenant", Tenant.class);
+            tenants = query.list();
+            if (tenants == null) throw new DataAccessException("Failed to get all tenants.");
+
+            transaction.commit();
+            return query.list();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
+            throw new DataAccessException("Failed to get all tenants.", e);
         }
-        return tenants;
     }
 
     @Override
     public Tenant getUserById(long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Tenant> query = session.createQuery("from Tenant where id = :id", Tenant.class);
+            transaction = session.beginTransaction();
+            Query<Tenant> query = session.createQuery("FROM Tenant WHERE id = :id", Tenant.class);
             query.setParameter("id", id);
             tenant = query.uniqueResult();
 
-            if (tenant != null) {
-                Hibernate.initialize(tenant.getAddress());
-            }
+            if (tenant == null) throw new DataAccessException("Failed to get tenant.");
 
-        } catch (Exception e) {
+            transaction.commit();
+            return tenant;
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
+            throw new DataAccessException("Failed to get tenant.", e);
         }
-        return tenant;
     }
 
     @Override
-    public long getTotalUsers() {
+    public long getNumberOfUser() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Long> query = session.createQuery("select count(*) from Tenant");
+            Query<Long> query = session.createQuery("SELECT count(*) FROM Tenant");
             return query.getSingleResult();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    @Override
-    public Map<String, Object> updateProfile(long id, Map<String, Object> profile) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-
-            tenant = session.get(Tenant.class, id);
-            System.out.println(tenant);
-
-            if (tenant != null) {
-                tenant.setUsername((String) profile.get("username"));
-                tenant.setDob(TimeFormat.stringToDate((String) profile.get("dob")));
-                tenant.setDob(LocalDate.parse((String) profile.get("dob")));
-                tenant.setEmail((String) profile.get("email"));
-                tenant.setPhoneNumber(profile.get("phoneNumber").toString());
-                tenant.setPaymentMethod((Payment.paymentMethod) profile.get("paymentMethod"));
-                transaction.commit();
-                result.put("status", "success");
-                result.put("message", "Address updated successfully");
-            } else {
-                result.put("status", "failed");
-                result.put("message", "Tenant not found");
-            }
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-            result.put("status", "failed");
-            result.put("message", e.getMessage());
+            throw new DataAccessException("Failed to get tenant.", e);
         }
-        return result;
     }
 
     @Override
-    public Map<String, Object> updateUserImage(long id, String imageLink) {
+    public boolean updateProfile(long id, Map<String, Object> profile) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
             tenant = session.get(Tenant.class, id);
 
-            if (tenant != null) {
-                tenant.setProfileImage(imageLink);
-                session.persist(tenant);
-                transaction.commit();
-                result.put("status", "success");
-                result.put("message", "Image updated successfully");
-            } else {
-                result.put("status", "failed");
-                result.put("message", "Tenant not found");
-            }
-            return result;
-        } catch (Exception e) {
+            if (tenant == null) throw new DataAccessException("Failed to get tenant.");
+
+            tenant.setUsername((String) profile.get("username"));
+            tenant.setDob(TimeFormat.stringToDate((String) profile.get("dob")));
+            tenant.setDob(LocalDate.parse((String) profile.get("dob")));
+            tenant.setEmail((String) profile.get("email"));
+            tenant.setPhoneNumber(profile.get("phoneNumber").toString());
+            tenant.setPaymentMethod((Payment.paymentMethod) profile.get("paymentMethod"));
+
+            transaction.commit();
+            return true;
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            result.put("status", "failed");
-            result.put("message", e.getMessage());
             e.printStackTrace();
+            throw new DataAccessException("Failed to update tenant.", e);
         }
-        return result;
     }
 
     @Override
-    public Map<String, Object> updateAddress(long id, Map<String, Object> data) {
+    public boolean updateUserImage(long id, String imageLink) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            tenant = session.get(Tenant.class, id);
+            if (tenant == null) throw new DataAccessException("Failed to get tenant.");
+
+            tenant.setProfileImage(imageLink);
+            session.persist(tenant);
+            transaction.commit();
+            return true;
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            throw new DataAccessException("Failed to update tenant.", e);
+        }
+    }
+
+    @Override
+    public boolean updateAddress(long id, Map<String, Object> data) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             Query<Tenant> query = session.createQuery("SELECT t from Tenant t where t.id = :id", Tenant.class);
             query.setParameter("id", id);
             tenant = query.uniqueResult();
 
-            if (tenant != null) {
-                if (tenant.getAddress() != null) {
-                    Address address = tenant.getAddress();
-                    address.setCity(data.get("province").toString());
-                    address.setDistrict(data.get("district").toString());
-                    address.setWard(data.get("ward").toString());
-                    address.setNumber(data.get("streetNumber").toString());
-                    address.setStreet(data.get("streetName").toString());
-                } else {
-                    Address address = new Address();
-                    address.setCity(data.get("province").toString());
-                    address.setDistrict(data.get("district").toString());
-                    address.setWard(data.get("ward").toString());
-                    address.setNumber(data.get("streetNumber").toString());
-                    address.setStreet(data.get("streetName").toString());
-                    tenant.setAddress(address);
-                }
-                transaction.commit();
-                result.put("status", "success");
-                result.put("message", "Address updated successfully");
-            } else {
-                result.put("status", "failed");
-                result.put("message", "Tenant not found");
+            if (tenant == null) throw new DataAccessException("Failed to get tenant.");
+
+            Address address = tenant.getAddress();
+            if (address == null) {
+                Address newAddress = new Address();
+                tenant.setAddress(newAddress);
             }
+
+            address.setCity(data.get("province").toString());
+            address.setDistrict(data.get("district").toString());
+            address.setWard(data.get("ward").toString());
+            address.setNumber(data.get("streetNumber").toString());
+            address.setStreet(data.get("streetName").toString());
+            session.merge(tenant);
+            transaction.commit();
+            return true;
+
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-            result.put("status", "failed");
-            result.put("message", e.getMessage());
+            throw new DataAccessException("Failed to update tenant.", e);
         }
-        return result;
     }
 
     @Override
-    public Map<String, Object> updatePassword(long id, String oldPassword, String newPassword) {
+    public boolean updatePassword(long id, String oldPassword, String newPassword) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
             tenant = session.get(Tenant.class, id);
-
-            if (tenant.checkPassword(oldPassword)) {
-                System.out.println("after");
-                System.out.println(tenant.checkPassword(oldPassword));
-                tenant.setPassword(newPassword);
-            } else {
-                result.put("status", "failed");
-                result.put("message", "Password does not match");
-                return result;
+            if (tenant == null) {
+                throw new DataAccessException("No host found with id " + id);
             }
+
+            if (!tenant.checkPassword(oldPassword)) {
+                throw new DataAccessException("Password not match");
+            }
+
+            tenant.setPassword(newPassword);
+            session.merge(tenant);
             transaction.commit();
-            result.put("status", "success");
-            result.put("message", "Password changed successfully");
-        } catch (Exception e) {
+
+            return true;
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-            result.put("status", "failed");
-            result.put("message", e.getMessage());
+            throw new DataAccessException("Error while updating password from database " + e.getMessage());
         }
-        return result;
     }
 }
